@@ -100,7 +100,7 @@ struct Triangle {
 
 	inline Vec min() const { const Vec EPSV{ EPS, EPS, EPS }; return v0.min(v1.min(v2)) - EPSV; };
 	inline Vec max() const { const Vec EPSV{ EPS, EPS, EPS }; return v0.max(v1.max(v2)) - EPSV; };
-	inline Vec centroid() const { return (max() - min()) * .5; };
+	inline Vec centroid() const { return (max() + min()) * .5; };
 
 	inline bool intersect(const Ray &ray, Intersection &isect) const {
 		/// Möller–Trumbore Ray-Triangle intersection algorithm
@@ -355,6 +355,8 @@ inline Scene* loadScene(const std::string &scenePath) {
 						}
 					}
 					meshFile.close();
+					std::cout << "Successfully loaded: " << meshPath << std::endl;
+
 				}
 				else {
 					std::cout << "Error loading: " << meshPath << std::endl;
@@ -363,14 +365,15 @@ inline Scene* loadScene(const std::string &scenePath) {
 				continue;
 			}
 		}
+		std::cout << "Successfully loaded scene: " << scenePath << std::endl;
 	}
 	else {
 		std::cout << "Error loading scene: " << scenePath << std::endl;
 		std::exit(-1);
 	}
 
-	std::cout << "Building BVH Tree with Median Splits" << std::endl;
-	auto start = MEL::Wtime();
+	std::cout << "Building BVH Tree with SAH Splits" << std::endl;
+	auto startTime = MEL::Wtime();
 
 	// Create root node
 	scene->mesh.shrink_to_fit(); // Optimize the vector that was passed
@@ -402,33 +405,171 @@ inline Scene* loadScene(const std::string &scenePath) {
 			b1 = b1.max(c);
 		}
 
+		// Mid index for partitioning
+		int midElem = -1;
+		typename std::vector<Triangle>::iterator start = scene->mesh.begin() + currentNode->startElem,
+												 end   = scene->mesh.begin() + currentNode->endElem,
+												 mid;
+
 		// Is it worth splitting?
 		if (numGeom <= 1) {
 			continue;
 		}
+		else if (numGeom <= 4) {
+			// Median Splits
+			midElem = (currentNode->startElem + (numGeom / 2));
+			mid = scene->mesh.begin() + midElem;
 
-		// Mid index for partitioning
-		int midElem = -1;
-		typename std::vector<Triangle>::iterator start = scene->mesh.begin() + currentNode->startElem,
-												 end = scene->mesh.begin() + currentNode->endElem,
-												 mid;
-		midElem = (currentNode->startElem + (numGeom / 2));
-		mid = scene->mesh.begin() + midElem;
+			// Sort the tree such that all nodes before the split plane are in the first half of the vector
+			const int splitAxis = (b1 - b0).maxAxis();
+			std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
+				const Vec ac = a.centroid(), bc = b.centroid();
+				switch (splitAxis) {
+				case 0:
+					return ac.x < bc.x;
+				case 1:
+					return ac.y < bc.y;
+				case 2:
+					return ac.z < bc.z;
+				};
+				return false;
+			});
+		}
+		else {
+			// SAH Splits
+			const int numBuckets = 8;
+			struct SAH_Bucket {
+				int count = 0;
+				Vec b0{ INF, INF, INF }, b1{ -INF, -INF, -INF };
+			} bucketsX[numBuckets], bucketsY[numBuckets], bucketsZ[numBuckets];
 
-		// Sort the tree such that all nodes before the split plane are in the first half of the vector
-		const int splitAxis = (b1 - b0).maxAxis();
-		std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
-			const Vec ac = a.centroid(), bc = b.centroid();
-			switch (splitAxis) {
-			case 0:
-				return ac.x < bc.x;
-			case 1:
-				return ac.y < bc.y;
-			case 2:
-				return ac.z < bc.z;
+			// Current node data
+			const Vec bboxMin = currentNode->v0;
+			const Vec bboxMax = currentNode->v1;
+
+			// Compute the nodes bounding box
+			Vec dBox0{ INF, INF, INF }, dBox1{ -INF, -INF, -INF };
+			for (int i = currentNode->startElem; i < currentNode->endElem; ++i) {
+				// Geom elem data
+				const Triangle &elem = scene->mesh[i];
+				const Vec elemBox0 = elem.min(), elemBox1 = elem.max();
+				const Vec elemCentroid = elem.centroid();
+				dBox0 = dBox0.min(elemCentroid);
+				dBox1 = dBox1.max(elemCentroid);
+
+				// Work out which bucket the current elems goes in
+				int bX = (int) floor((double) numBuckets * ((elemCentroid.x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
+				int bY = (int) floor((double) numBuckets * ((elemCentroid.y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
+				int bZ = (int) floor((double) numBuckets * ((elemCentroid.z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
+				bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
+				bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
+				bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
+
+				// Update the buckets
+				bucketsX[bX].count++; bucketsX[bX].b0 = bucketsX[bX].b0.min(elemBox0); bucketsX[bX].b1 = bucketsX[bX].b1.max(elemBox1);
+				bucketsY[bY].count++; bucketsY[bY].b0 = bucketsY[bY].b0.min(elemBox0); bucketsY[bY].b1 = bucketsY[bY].b1.max(elemBox1); 
+				bucketsZ[bZ].count++; bucketsZ[bZ].b0 = bucketsZ[bZ].b0.min(elemBox0); bucketsZ[bZ].b1 = bucketsZ[bZ].b1.max(elemBox1);
+			}
+
+			// A neat structure to make calculating relative costs easier
+			struct SAH_CostBucket {
+				Vec b0b0{ INF, INF, INF }, b0b1{ -INF, -INF, -INF };
+				Vec b1b0{ INF, INF, INF }, b1b1{ -INF, -INF, -INF };
+				int c0 = 0, c1 = 0;
 			};
-			return false;
-		});
+
+			// Initial cost values
+			double cXCost = INF, cYCost = INF, cZCost = INF;
+			int cXi = 0, cYi = 0, cZi = 0;
+
+			// Calculate costs for each bucket and track smallest cost indices
+			for (int i = 0; i < numBuckets; ++i) {
+				// Cost data
+				SAH_CostBucket cX, cY, cZ;
+
+				// Left node sweep
+				for (int j = 0; j <= i; ++j) {
+					cX.b0b0 = cX.b0b0.min(bucketsX[j].b0); cX.b0b1 = cX.b0b1.max(bucketsX[j].b1); cX.c0 += bucketsX[j].count;
+					cY.b0b0 = cY.b0b0.min(bucketsY[j].b0); cY.b0b1 = cY.b0b1.max(bucketsY[j].b1); cY.c0 += bucketsY[j].count;
+					cZ.b0b0 = cZ.b0b0.min(bucketsZ[j].b0); cZ.b0b1 = cZ.b0b1.max(bucketsZ[j].b1); cZ.c0 += bucketsZ[j].count;
+				}
+
+				// Right node sweep
+				for (int j = (i + 1); j < numBuckets; ++j) {
+					cX.b1b0 = cX.b1b0.min(bucketsX[j].b0); cX.b1b1 = cX.b1b1.max(bucketsX[j].b1); cX.c1 += bucketsX[j].count;
+					cY.b1b0 = cY.b1b0.min(bucketsY[j].b0); cY.b1b1 = cY.b1b1.max(bucketsY[j].b1); cY.c1 += bucketsY[j].count;
+					cZ.b1b0 = cZ.b1b0.min(bucketsZ[j].b0); cZ.b1b1 = cZ.b1b1.max(bucketsZ[j].b1); cZ.c1 += bucketsZ[j].count;
+				}
+
+				auto surfaceArea = [](Vec v0, Vec v1) -> double {
+					const Vec s = (v1 - v0); return ((s.x * s.y) + (s.x * s.z) + (s.y * s.z)) * 2.0;
+				};
+
+				// Calculate cost per axis
+				const double SA = surfaceArea(currentNode->v0, currentNode->v1);
+				const double costX = .125 * ((((double) cX.c0 * surfaceArea(cX.b0b0, cX.b0b1)) + ((double) cX.c1 * surfaceArea(cX.b1b0, cX.b1b1))) / SA);
+				const double costY = .125 * ((((double) cY.c0 * surfaceArea(cY.b0b0, cY.b0b1)) + ((double) cY.c1 * surfaceArea(cY.b1b0, cY.b1b1))) / SA);
+				const double costZ = .125 * ((((double) cZ.c0 * surfaceArea(cZ.b0b0, cZ.b0b1)) + ((double) cZ.c1 * surfaceArea(cZ.b1b0, cZ.b1b1))) / SA);
+
+				// Update costs if less than current minimums
+				if (i == 0 || costX < cXCost) { cXCost = costX; cXi = i; }
+				if (i == 0 || costY < cYCost) { cYCost = costY; cYi = i; }
+				if (i == 0 || costZ < cZCost) { cZCost = costZ; cZi = i; }
+			}
+
+			Vec dim = dBox1 - dBox0;
+			const double DTHRESH = (EPS * 2.);
+			if (dim.x < DTHRESH) cXCost = INF;
+			if (dim.y < DTHRESH) cYCost = INF;
+			if (dim.z < DTHRESH) cZCost = INF;
+
+			// Select the best axis and use std::partition to split the current 
+			// sub-section of the original vector into a "left" and "right" sub-list
+			if (cXCost < cYCost && cXCost < cZCost) {
+				mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+					int bX = (int) floor((double) numBuckets * ((a.centroid().x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
+					bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
+					return (bX <= cXi);
+				});
+				midElem = std::distance(scene->mesh.begin(), mid);
+			}
+			else if (cYCost < cXCost && cYCost < cZCost) {
+				mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+					int bY = (int) floor((double) numBuckets * ((a.centroid().y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
+					bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
+					return (bY <= cYi);
+				});
+				midElem = std::distance(scene->mesh.begin(), mid);
+			}
+			else if (cZCost < cXCost && cZCost < cYCost) {
+				mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+					int bZ = (int) floor((double) numBuckets * ((a.centroid().z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
+					bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
+					return (bZ <= cZi);
+				});
+				midElem = std::distance(scene->mesh.begin(), mid);
+			}
+			else {
+				// Median Splits
+				midElem = (currentNode->startElem + (numGeom / 2));
+				mid = scene->mesh.begin() + midElem;
+
+				// Sort the tree such that all nodes before the split plane are in the first half of the vector
+				const int splitAxis = (b1 - b0).maxAxis();
+				std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
+					const Vec ac = a.centroid(), bc = b.centroid();
+					switch (splitAxis) {
+					case 0:
+						return ac.x < bc.x;
+					case 1:
+						return ac.y < bc.y;
+					case 2:
+						return ac.z < bc.z;
+					};
+					return false;
+				});
+			}
+		}		
 
 		// Create child nodes based on partition
 		numNodes += 2;
@@ -439,9 +580,9 @@ inline Scene* loadScene(const std::string &scenePath) {
 		treeStack.push({ currentNode->rightChild, depth + 1 });
 		treeStack.push({ currentNode->leftChild,  depth + 1 });
 	}
-	auto end = MEL::Wtime();
+	auto endTime = MEL::Wtime();
 	std::cout << "BVH Tree constructed of ( " << numNodes <<  " ) nodes in " 
-			  << std::setprecision(4) << (end - start) << "s" << std::endl;
+			  << std::setprecision(4) << (endTime - startTime) << "s" << std::endl;
 	return scene;
 };
 
@@ -727,14 +868,14 @@ int main(int argc, char *argv[]) {
 	const int w = scene->camera.w, h = scene->camera.h;
 	/// Use wR for image width as BMP files require the
 	/// width be padded to a multiple of four bytes
-	const int R = (w % 4), wR = w + R;
+	const int R = ((w * 3) % 4), wR = (w * 3) + (4 - R);
 
 	char *filmPtr = nullptr;
 	MEL::Win filmWin;
 	if (rank == 0) {
 		/// Root has the main film and exposes it to the workers
-		filmPtr = MEL::MemAlloc<char>(wR * h * 3);
-		filmWin = MEL::WinCreate(filmPtr, wR * h * 3, comm);
+		filmPtr = MEL::MemAlloc<char>(wR * h);
+		filmWin = MEL::WinCreate(filmPtr, wR * h, comm);
 	}
 	else {
 		/// Workers don't expose anything
@@ -742,7 +883,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	auto typeColour		= MEL::TypeCreateContiguous(MEL::Datatype::UNSIGNED_CHAR, 3);
-	auto typeFilm		= MEL::TypeCreateContiguous(typeColour, wR * h);
+	auto typeFilm		= MEL::TypeCreateContiguous(MEL::Datatype::UNSIGNED_CHAR, wR * h);
 	auto sharedIndex	= MEL::SharedCreate<int>(1, rank, size, 0, comm);
 
 	/// Work distribution by blocks
@@ -774,7 +915,7 @@ int main(int argc, char *argv[]) {
 				  bh = std::min(blockSize, h - by);
 
 		/// Helper types for moving data
-		auto typeGlobalBlock = MEL::TypeCreateSubArray2D(typeColour, bx, by, bw, bh, wR, h);
+		auto typeGlobalBlock = MEL::TypeCreateSubArray2D(MEL::Datatype::UNSIGNED_CHAR, bx * 3, by, bw * 3, bh, wR, h);
 		auto typeLocalBlock  = MEL::TypeCreateContiguous(typeColour, bw * bh);
 
 		/// Allocate local image block
@@ -811,7 +952,7 @@ int main(int argc, char *argv[]) {
 		auto file = MEL::FileOpenIndividual("output.bmp", MEL::FileMode::CREATE | MEL::FileMode::WRONLY);
 		
 		/// BMP 24-bpp Header
-		const int R = (w % 4), wR = w + R, fileSize = 0x36 + (wR * h);
+		const int fileSize = 0x36 + (wR * h);
 		unsigned char hdr[0x36] = { 66, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0x36, 0, 0, 0, 
 									40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24 };
 		*((int*) (hdr + 0x02)) = fileSize;  /// Total file size
