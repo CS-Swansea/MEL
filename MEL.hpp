@@ -246,6 +246,13 @@ namespace MEL {
         return ptr;
     };
 
+	template<typename T>
+	inline T* MemAlloc(const Aint size, const T &val) {
+		T *ptr = MemAlloc<T>(size);
+		for (Aint i = 0; i < size; ++i) ptr[i] = val;
+		return ptr;
+	};
+
     template<typename T, typename ...Args>
     inline T* MemConstruct(Args &&...args) {
         T *ptr = MemAlloc<T>(1);
