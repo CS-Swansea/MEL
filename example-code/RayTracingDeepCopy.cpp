@@ -14,25 +14,37 @@
 
 /// C++11 RNG
 struct RNG {
-    std::uniform_real_distribution<double> dist;
+#if !defined(USE_C_RNG)
+	std::uniform_real_distribution<double> dist;
     std::mt19937 eng;
 	RNG() : RNG(0) {};
 	RNG(const unsigned long s) : dist(0., 1.), eng() { seed(s); };
     inline void seed(const unsigned long s) { eng.seed(s); };
     inline double operator()() { return dist(eng); };
+#else
+	RNG() {};
+	RNG(const unsigned long s) { seed(s); };
+	inline void seed(const unsigned long s) { srand(s); };
+	inline double operator()() { 
+		double r;
+		#pragma omp critical
+		r = (double) rand() / (double) RAND_MAX;
+		return r; 
+	};
+#endif
 };
 
 /// C++11 Multi-Threaded RNG
 struct MT_RNG {
     RNG *rngs = nullptr;
 	int num_threads = 0;
-	MT_RNG() : MT_RNG(0) {};
-    MT_RNG(const unsigned long s) {
+	MT_RNG(const unsigned long s) {
 		num_threads = omp_get_max_threads();
 		rngs = new RNG[num_threads];
-        for (int i = 0; i < num_threads; ++i) rngs[i] = RNG(time(nullptr) + s + i);
+		const unsigned long t = time(nullptr);
+        for (int i = 0; i < num_threads; ++i) rngs[i] = RNG(t + s + i);
     };
-	MT_RNG(const MT_RNG &old)           = delete;
+	MT_RNG(const MT_RNG &old) = delete;
 	MT_RNG operator=(const MT_RNG &old) = delete;
 	MT_RNG(MT_RNG &&old)                = delete;
 	MT_RNG operator=(MT_RNG &&old)      = delete;
@@ -44,7 +56,7 @@ struct MT_RNG {
 
 /// Colour Correction
 inline unsigned char ColourCorrect(const double x) {
-	const auto Gamma_Uncharted = [](const double x) {
+	const auto Gamma_Uncharted = [](const double x) -> double {
         constexpr double A = 0.15, B = 0.5, C = 0.1, D = 0.2, E = 0.02, F = 0.30;
         return ((x * (A * x + C * B) + D * E) / (x * (A * x * B) + D * F)) - E / F;
     };
@@ -241,7 +253,7 @@ struct Scene {
         // Stack based traversal
         std::stack<std::pair<const TreeNode*, double>> treeStack;
         double rootDist;
-        if (rootNode->intersect(invRay, rootDist, isect.distance)) treeStack.push({ rootNode, rootDist });
+        if (rootNode->intersect(invRay, rootDist, isect.distance)) treeStack.emplace( rootNode, rootDist );
 
         // While the stack is not empty there is work to be done
         bool found = false;
@@ -269,19 +281,19 @@ struct Scene {
             const bool rHit = currentNode->rightChild->intersect(invRay, rDist, isect.distance);
             if (lHit && rHit) {
                 if (lDist < rDist) {
-                    treeStack.push({ currentNode->rightChild, rDist });
-                    treeStack.push({ currentNode->leftChild,  lDist });
+                    treeStack.emplace( currentNode->rightChild, rDist );
+					treeStack.emplace( currentNode->leftChild, lDist );
                 }
                 else {
-                    treeStack.push({ currentNode->leftChild,  lDist });
-                    treeStack.push({ currentNode->rightChild, rDist });
+					treeStack.emplace( currentNode->leftChild, lDist );
+					treeStack.emplace( currentNode->rightChild, rDist );
                 }
             }
             else if (lHit) {
-                treeStack.push({ currentNode->leftChild,  lDist });
+				treeStack.emplace( currentNode->leftChild, lDist );
             }
             else if (rHit) {
-                treeStack.push({ currentNode->rightChild, rDist });
+				treeStack.emplace( currentNode->rightChild, rDist );
             }
         }
         return found;
@@ -298,12 +310,12 @@ struct Scene {
 	};
 	inline void addObj(const int material, const std::string &meshPath) {
 		/// Helpers
-		const auto hasPrefix = [](const std::string &str, const std::string &prefix) {
-			return (str.size() >= prefix.size()) && (std::mismatch(prefix.cbegin(), prefix.cend(), str.cbegin()).first == prefix.cend());
+		const auto hasPrefix = [](const std::string &str, const std::string &prefix) -> bool {
+			return (str.size() >= prefix.size()) && (std::mismatch(prefix.begin(), prefix.end(), str.begin()).first == prefix.end());
 		};
-		const auto split = [](const std::string &str, const char delim) {
+		const auto split = [](const std::string &str, const char delim) -> std::vector<std::string> {
 			std::vector<std::string> result; result.reserve(16);
-			size_t start{}, end;
+			size_t start = 0, end;
 			while ((end = str.find(delim, start)) != std::string::npos) {
 				if (str[start] != ' ') result.push_back(str.substr(start, (end - start)));
 				start = end + 1;
@@ -361,18 +373,16 @@ struct Scene {
 		std::cout << "Building BVH Tree with SAH Splits" << std::endl;
 		auto startTime = MEL::Wtime();
 
-		// Create root node
-		mesh.shrink_to_fit(); // Optimize the vector that was passed
-		int numNodes = 1;
-
 		// Clear root node if it already exists
 		MEL::MemDestruct(rootNode);
+		// Create root node
+		int numNodes = 1;
 		rootNode = MEL::MemConstruct<TreeNode>(0, mesh.size());
 
 		// Stack based traversal
 		// We track tree nodes and their depth in the tree
 		std::stack<std::pair<TreeNode*, int>> treeStack;
-		treeStack.push({ rootNode, 0 }); // <- Depth 0
+		treeStack.emplace( rootNode, 0 ); // <- Depth 0
 
 		// While the stack is not empty there is work to be done
 		while (!treeStack.empty()) {
@@ -428,8 +438,9 @@ struct Scene {
 				// SAH Splits
 				const int numBuckets = 8;
 				struct SAH_Bucket {
-					int count = 0;
-					Vec b0{ INF, INF, INF }, b1{ -INF, -INF, -INF };
+					int count;
+					Vec b0, b1;
+					SAH_Bucket() : count(0), b0{ INF, INF, INF }, b1{ -INF, -INF, -INF } {};
 				} bucketsX[numBuckets], bucketsY[numBuckets], bucketsZ[numBuckets];
 
 				// Current node data
@@ -462,9 +473,11 @@ struct Scene {
 
 				// A neat structure to make calculating relative costs easier
 				struct SAH_CostBucket {
-					Vec b0b0{ INF, INF, INF }, b0b1{ -INF, -INF, -INF };
-					Vec b1b0{ INF, INF, INF }, b1b1{ -INF, -INF, -INF };
-					int c0 = 0, c1 = 0;
+					Vec b0b0, b0b1, b1b0, b1b1;
+					int c0, c1;
+					SAH_CostBucket() : c0(0), c1(0), 
+					                   b0b0{ INF, INF, INF }, b0b1{ -INF, -INF, -INF }, 
+									   b1b0{ INF, INF, INF }, b1b1{ -INF, -INF, -INF } {};
 				};
 
 				// Initial cost values
@@ -566,8 +579,8 @@ struct Scene {
 			currentNode->rightChild = MEL::MemConstruct<TreeNode>(midElem,   currentNode->endElem);
 
 			// Push new nodes onto the working stack
-			treeStack.push({ currentNode->rightChild, depth + 1 });
-			treeStack.push({ currentNode->leftChild,  depth + 1 });
+			treeStack.emplace( currentNode->rightChild, depth + 1 );
+			treeStack.emplace( currentNode->leftChild,  depth + 1 );
 		}
 		auto endTime = MEL::Wtime();
 		std::cout << "BVH Tree constructed of ( " << numNodes <<  " ) nodes in " 
@@ -797,7 +810,7 @@ inline Vec render(MT_RNG &rng, const Scene *scene, const int x, const int y, con
 };
 
 int main(int argc, char *argv[]) {
-    MEL::Init(argc, argv);
+    MEL::Init(argc, argv); 
 
     /// Who are we?
     MEL::Comm comm = MEL::Comm::WORLD;
@@ -886,7 +899,7 @@ int main(int argc, char *argv[]) {
     /// ****************************************** ///
     
 	/// Multi-Threaded Random Number Generator
-	MT_RNG rng(rank);
+	MT_RNG rng(rank); // Seed with MPI rank
 
     /// Allocate image plane
     const int w = scene->camera.w, h = scene->camera.h;
