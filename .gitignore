@@ -159,3 +159,7 @@ $RECYCLE.BIN/
 *.vcxproj
 *.props
 *.bmp
+*.aux
+*.out
+*.gz
+latex/reference-card.pdf
