@@ -598,6 +598,7 @@ namespace MEL {
     struct Datatype {
         static const Datatype    DATATYPE_NULL,
                                 
+								CHAR,
                                 SIGNED_CHAR,
                                 WCHAR,
                                 UNSIGNED_CHAR,
@@ -660,6 +661,7 @@ namespace MEL {
 #ifdef MEL_IMPLEMENTATION
     const Datatype Datatype::DATATYPE_NULL       = Datatype(MPI_DATATYPE_NULL);
 
+	const Datatype Datatype::CHAR                = Datatype(MPI_CHAR);
     const Datatype Datatype::SIGNED_CHAR         = Datatype(MPI_SIGNED_CHAR);
     const Datatype Datatype::WCHAR               = Datatype(MPI_WCHAR);
     const Datatype Datatype::UNSIGNED_CHAR       = Datatype(MPI_UNSIGNED_CHAR);
@@ -739,8 +741,8 @@ namespace MEL {
 
         for (int i = 0; i < num; ++i) {
             datatypes[i]        = blocks[i].datatype;
-            blockLengths[i]        = blocks[i].length;
-            offsets[i]            = blocks[i].offset;
+            blockLengths[i]     = blocks[i].length;
+            offsets[i]          = blocks[i].offset;
         }
         return TypeCreateStruct(num, &datatypes[0], &blockLengths[0], &offsets[0]);
     };
