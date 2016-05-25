@@ -157,4 +157,5 @@ $RECYCLE.BIN/
 *.sln
 *.filters
 *.vcxproj
+*.props
 *.bmp
