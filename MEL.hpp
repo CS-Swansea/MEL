@@ -22,7 +22,6 @@ namespace MEL {
     /// Helper types to keep things in MEL namespace
     typedef MPI_Aint   Aint;
     typedef MPI_Offset Offset;
-
 #ifdef MEL_3
     typedef MPI_Count  Count;
 #endif
@@ -34,6 +33,12 @@ namespace MEL {
 #define MEL_THROW(v, message) { (v); }
 #endif
     
+	/**
+	 * Calls MPI_Abort with the given error code and prints a string message to stderr
+	 *
+	 * @param ierr		The error code to throw
+	 * @param message	The message to print to stderr describing what happened
+	 */
     inline void Abort(int ierr, const std::string &message) {
         char error_string[BUFSIZ];
         int length_of_error_string, error_class, rank, size;
@@ -53,18 +58,35 @@ namespace MEL {
     };
 
     /// Setup and teardown
+
+	/**
+	 * Tests if MPI_Init has been successfully called
+	 * 
+	 * @return Returns whether MPI is initialized as a bool
+	 */
     inline bool IsInitialized() {
         int init;
         MEL_THROW( MPI_Initialized(&init), "Initialized" );
         return init != 0;
     };
 
+	/**
+	 * Tests if MPI_Finalize has been successfully called
+	 * 
+	 * @return Returns whether MPI is finalized as a bool
+	 */
     inline bool IsFinalized() {
         int fin; 
         MEL_THROW( MPI_Finalized(&fin), "Finalized" );
         return fin != 0;
     };
 
+	/**
+	 * Call MPI_Init and setup default error handling
+	 *
+	 * @param argc		Forwarded from program main
+	 * @param argv		Forwarded from program main
+	 */
     inline void Init(int &argc, char **&argv) {
         if (!IsInitialized()) {
             MEL_THROW( MPI_Init(&argc, &argv), "Init" );
@@ -73,25 +95,49 @@ namespace MEL {
         MEL_THROW( MPI_Comm_set_errhandler(MPI_COMM_WORLD, MPI_ERRORS_RETURN), "Initialize::SetErrorHandler" );
     };
 
+	/**
+	 * Call MPI_Finalize
+	 */
     inline void Finalize() {
         if (!IsFinalized()) {
             MEL_THROW( MPI_Finalize(), "Finalize");
         }
     };
 
+	/**
+	 * MEL alternative to std::exit
+	 *
+	 * @param errcode	The error code to exit with
+	 */
     inline void Exit(const int errcode) {
         MEL::Abort(errcode, "EXIT");
     };
 
+	/**
+	 * MEL alternative to std::exit
+	 *
+	 * @param errcode	The error code to exit with
+	 * @param msg		A message to print to stderr as the program exits
+	 */
     inline void Exit(const int errcode, const std::string &msg) {
         std::cerr << msg << std::endl;
         MEL::Abort(errcode, "EXIT");
     };
 
+	/**
+	 * Gets the current wall time since epoch in seconds
+	 * 
+	 * @return Returns the current wall time as a double
+	 */
     inline double Wtime() {
         return MPI_Wtime();
     };
 
+	/**
+	 * Gets the current system tick
+	 * 
+	 * @return Returns the current system tick as a double
+	 */
     inline double Wtick() {
         return MPI_Wtick();
     };
