@@ -168,6 +168,12 @@ namespace MEL {
 
     typedef void(*ErrorHandlerFunc)(MPI_Comm*, int*, ...);
     
+	/**
+	 * A default error handler that can be attached to MPI objects to give basic error catching
+	 * 
+	 * @param comm		Comm world in which the error occured
+	 * @param ierr		The error code that was thrown
+	 */
     inline void DefaultErrorHandler(MPI_Comm *comm, int *ierr, ...) {
         char error_string[BUFSIZ];
         int length_of_error_string, error_class, rank, size;
@@ -186,49 +192,111 @@ namespace MEL {
         MPI_Abort(*comm, *ierr);
     };
 
+	/**
+	 * Add an error class for MPI to reference
+	 * 
+	 * @return Returns the new error class code that was added
+	 */
     inline int AddErrorClass() {
         int err;
         MEL_THROW( MPI_Add_error_class(&err), "ErrorHandler::AddErrorClass" );
         return err;
     };
-    inline int AddErrorCode(const int errClass) {
+    
+	/**
+	 * Add an error code to an exisiting error class for MPI to reference
+	 * 
+	 * @param errClass	The error class to add the error code to
+	 * @return			Returns the new error code that was added
+	 */
+	inline int AddErrorCode(const int errClass) {
         int err;
         MEL_THROW( MPI_Add_error_code(errClass, &err), "ErrorHandler::AddErrorCode" );
         return err;
     };
+
+	/**
+	 * Add an error code to a new error class for MPI to reference
+	 * 
+	 * @return			Returns the new error code that was added
+	 */
     inline int AddErrorCode() {
         return AddErrorCode(AddErrorClass());
     };
+
+	/**
+	 * Add an error string to an existing error code for MPI to reference
+	 * 
+	 * @param err		The error code to bind the string to
+	 * @param str		The error string
+	 */
     inline void AddErrorString(const int err, const std::string &str) {
         MEL_THROW( MPI_Add_error_string(err, str.c_str()), "ErrorHandler::AddErrorString" );
     };
-    inline int AddErrorString(const std::string &str) {
+    
+	/**
+	 * Add an error string to a new existing error code for MPI to reference
+	 * 
+	 * @param str		The error string
+	 * @return			Returns the new error code added
+	 */
+	inline int AddErrorString(const std::string &str) {
         const int err = AddErrorCode();
         AddErrorString(err, str);
         return err;
     };
 
+	/**
+	 * Get the error class code of the given error code
+	 * 
+	 * @param errCode	The error code
+	 * @return			Returns the error class
+	 */
     inline int GetErrorClass(const int errCode) {
         int err;
         MEL_THROW( MPI_Error_class(errCode, &err), "ErrorHandler::GetErrorClass" );
         return err;
     };
-    inline std::string GetErrorString(const int errCode) {
+    
+	/**
+	 * Get the error class code of the given error code
+	 * 
+	 * @param errCode	The error code
+	 * @return			Returns the error class
+	 */
+	inline std::string GetErrorString(const int errCode) {
         std::string str; str.resize(BUFSIZ); int len;
         MEL_THROW( MPI_Error_string(errCode, &str[0], &len), "ErrorHandler::GetErrorString" );
         str.resize(len);
         return str;
     };
 
+	/**
+	 * Free an error handler that was previously added
+	 * 
+	 * @param errHndl	The error handler object that references the bound function
+	 */
     inline void ErrorHandlerFree(ErrorHandler &errHndl) {
         MEL_THROW( MPI_Errhandler_free((MPI_Errhandler*) &errHndl), "ErrorHandler::Free" );
         //errHndl = MEL::ErrorHandler::ERRHANDLER_NULL;
     };
 
-    inline void ErrorHandlerFree(std::vector<ErrorHandler> &errHndls) {
-        for (auto &e : errHndls) ErrorHandlerFree(e);
-    };
+	/**
+	* Free a vector Error Handlers
+	*
+	* @param errHndls	A std::vector of Error Handlers
+	*/
+	inline void ErrorHandlerFree(std::vector<ErrorHandler> &errHndls) {
+		for (auto &d : errHndls) ErrorHandlerFree(d);
+	};
 
+	/**
+	 * Free the varadic set of error handlers provided
+	 * 
+	 * @param d0		The first error handler to free
+	 * @param d1		The second error handler to free
+	 * @param args		The varadic set of remaining error handlers to free
+	 */
     template<typename T0, typename T1, typename ...Args>
     inline void ErrorHandlerFree(T0 &d0, T1 &d1, Args &&...args) {
         ErrorHandlerFree(d0);
@@ -239,6 +307,12 @@ namespace MEL {
     ///  Memory Allocation
     /// ----------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Allocate a block of memory for 'size' number of type T
+	 * 
+	 * @param size		The number of elements of type T to allocate
+	 * @return			Returns the pointer to the allocated memory
+	 */
     template<typename T>
     inline T* MemAlloc(const Aint size) {
         T *ptr;
@@ -246,6 +320,13 @@ namespace MEL {
         return ptr;
     };
 
+	/**
+	 * Allocate a block of memory for 'size' number of type T and assign a default value
+	 * 
+	 * @param size		The number of elements of type T to allocate
+	 * @param val		The value to set each element equal to
+	 * @return			Returns the pointer to the allocated memory
+	 */
 	template<typename T>
 	inline T* MemAlloc(const Aint size, const T &val) {
 		T *ptr = MemAlloc<T>(size);
@@ -253,6 +334,12 @@ namespace MEL {
 		return ptr;
 	};
 
+	/**
+	 * Allocate a single object of type T and construct it with the set of varadic arguments
+	 * 
+	 * @param args		The set of varadic arguments to construct the object with
+	 * @return			Returns the pointer to the allocated memory
+	 */
     template<typename T, typename ...Args>
     inline T* MemConstruct(Args &&...args) {
         T *ptr = MemAlloc<T>(1);
@@ -260,6 +347,11 @@ namespace MEL {
         return ptr;
     };
 
+	/**
+	 * Free a pointer allocated with MPI_Alloc or the MEL equivilant functions
+	 * 
+	 * @param args		The pointer to free
+	 */
     template<typename T>
     inline void MemFree(T *&ptr) {
         if (ptr != nullptr) {
@@ -268,12 +360,25 @@ namespace MEL {
         }
     };
 
+	/**
+	 * Free the varadic set of pointers provided
+	 * 
+	 * @param d0		The first pointer to free
+	 * @param d1		The second pointer to free
+	 * @param args		The varadic set of remaining pointers to free
+	 */
     template<typename T0, typename T1, typename ...Args>
     inline void MemFree(T0 &d0, T1 &d1, Args &&...args) {
         MemFree(d0);
         MemFree(d1, args...);
     };
 
+	/**
+	 * Call the destructor for each element of the given array and then free the memory
+	 * 
+	 * @param ptr		The pointer to the memory to be destructed
+	 * @param len		The length of the array
+	 */
     template<typename T>
     inline void MemDestruct(T *&ptr, const Aint len = 1) {
         if (ptr == nullptr) return;
@@ -356,58 +461,137 @@ namespace MEL {
     typedef MPI_Info    Info;
 
     /// Error handling
+
+	/**
+	 * Create a Comm error handler by directly passing the function to use
+	 * 
+	 * @param func		The function to use as an error handler
+	 * @return			Returns an object that MPI can use to reference the error handler
+	 */
     inline ErrorHandler CommCreateErrorHandler(ErrorHandlerFunc func) {
         MPI_Errhandler errHndl;
         MEL_THROW( MPI_Comm_create_errhandler((MPI_Comm_errhandler_function*) func, &errHndl), "Comm::CreateErrorHandler" );
         return ErrorHandler(errHndl);
     };
-    inline void CommSetErrorHandler(const Comm &comm, const ErrorHandler &errHndl) {
+	
+	/**
+	 * Set a Comm error handler by passing the a error handler reference
+	 *
+	 * @param comm		The comm world to attach the error handler to
+	 * @param errHndl	The reference to a bound error handler
+	 */
+	inline void CommSetErrorHandler(const Comm &comm, const ErrorHandler &errHndl) {
         MEL_THROW( MPI_Comm_set_errhandler((MPI_Comm) comm, (MPI_Errhandler) errHndl), "Comm::SetErrorHandler" );
     };
-    inline void CommSetErrorHandler(const Comm &comm, ErrorHandlerFunc func) {
+    
+	/**
+	 * Set a Comm error handler by directly passing the function to use
+	 *
+	 * @param comm		The comm world to attach the error handler to
+	 * @param func		The function to use as an error handler
+	 */
+	inline void CommSetErrorHandler(const Comm &comm, ErrorHandlerFunc func) {
         CommSetErrorHandler(comm, CommCreateErrorHandler(func));
     };
-    inline ErrorHandler CommGetErrorHandler(const Comm &comm) {
+    
+	/**
+	 * Get the Comm error handler attached to a comm world
+	 *
+	 * @param comm		The comm world to get the error handler of
+	 * @return			Returns a reference to a bound error handler
+	 */
+	inline ErrorHandler CommGetErrorHandler(const Comm &comm) {
         MPI_Errhandler errHndl;
         MEL_THROW( MPI_Comm_get_errhandler((MPI_Comm) comm, &errHndl), "Comm::GetErrorHandler");
         return ErrorHandler(errHndl);
     };
 
     /// Who am i
+
+	/**
+	 * Get the Comm rank of the process
+	 *
+	 * @param comm		The comm world to get the rank in
+	 * @return			Returns the rank or the process within comm
+	 */
     inline int CommRank(const Comm &comm) {
         int r; 
         MEL_THROW( MPI_Comm_rank((MPI_Comm) comm, &r), "Comm::Rank" );
         return r;
     };
-    inline int CommSize(const Comm &comm) {
+    
+	/**
+	 * Get the Comm world size
+	 *
+	 * @param comm		The comm world to get the size of
+	 * @return			Returns the size of the comm world
+	 */
+	inline int CommSize(const Comm &comm) {
         int s; 
         MEL_THROW( MPI_Comm_size((MPI_Comm) comm, &s), "Comm::Size" );
         return s;
     };
-    inline int CommRemoteSize(const Comm &comm) {
+    
+	/**
+	 * Get the Comm world remote size
+	 *
+	 * @param comm		The comm world to get the remote size of
+	 * @return			Returns the remote size of the comm world
+	 */
+	inline int CommRemoteSize(const Comm &comm) {
         int s; 
         MEL_THROW( MPI_Comm_remote_size((MPI_Comm) comm, &s), "Comm::RemoteSize" );
         return s;
     };
 
     /// Creation
+
+	/**
+	 * Split a comm world into seperate comms. Processes with the same colour will end up in the same comm world
+	 *
+	 * @param comm		The comm world to split
+	 * @param colour	The group that this process will end up in in the new comm world
+	 * @return			Returns a new comm world
+	 */
     inline Comm CommSplit(const Comm &comm, int color) {
         MPI_Comm out_comm;
         MEL_THROW( MPI_Comm_split((MPI_Comm) comm, color, CommRank(comm), &out_comm), "Comm::Split" );
         return Comm(out_comm);
     };
-    inline Comm CommDuplicate(const Comm &comm) {
+    
+	/**
+	 * Duplicate a comm world so that it can be handled independently.
+	 *
+	 * @param comm		The comm world to duplicate
+	 * @return			Returns a new comm world
+	 */
+	inline Comm CommDuplicate(const Comm &comm) {
         MPI_Comm out_comm;
         MEL_THROW( MPI_Comm_dup((MPI_Comm) comm, &out_comm), "Comm::Duplicate" );
         return Comm(out_comm);
     };
     
 #ifdef MEL_3
+
+	/**
+	 * Non-Blocking Duplicate a comm world so that it can be handled independently.
+	 *
+	 * @param comm		The comm world to duplicate
+	 * @param rq		A request object that will signify when the comm world has been fully duplicated
+	 * @return			Returns a new comm world
+	 */
     inline Comm CommIduplicate(const Comm &comm, Request &rq) {
         MPI_Comm out_comm;
         MEL_THROW( MPI_Comm_idup((MPI_Comm) comm, &out_comm, (MPI_Request*) &rq), "Comm::Iduplicate" );
         return Comm(out_comm);
     };
+
+	/**
+	 * Non-Blocking Duplicate a comm world so that it can be handled independently.
+	 *
+	 * @param comm		The comm world to duplicate
+	 * @return			Returns a std::pair of the new comm world and a request object
+	 */
     inline std::pair<Comm, Request> CommIduplicate(const Comm &comm) {
         Request rq;
         Comm out_comm = CommIduplicate(comm, rq);
@@ -415,19 +599,42 @@ namespace MEL {
     };
 #endif
     
+	/**
+	 * Get the group of a comm world
+	 *
+	 * @param comm		The comm world to get the group of
+	 * @return			Returns a Group object representing the processes in comm
+	 */
     inline Group CommGetGroup(const Comm &comm) {
         MPI_Group group;
         MEL_THROW( MPI_Comm_group((MPI_Comm) comm, &group), "Comm::GetGroup" );
         return Group(group);
     };
-    inline Comm CommCreateFromGroup(const Comm &comm, const Group &group) {
+    
+	/**
+	 * Create a comm object from an existing comm object and a group object
+	 *
+	 * @param comm		The comm world to build off of
+	 * @param group		The group to use to build the new comm object
+	 * @return			Returns a new comm object
+	 */
+	inline Comm CommCreateFromGroup(const Comm &comm, const Group &group) {
         MPI_Comm out_comm;
         MEL_THROW( MPI_Comm_create((MPI_Comm) comm, (MPI_Group) group, &out_comm), "Comm::CreateFromGroup" );
         return Comm(out_comm);
     };
 
 #ifdef MEL_3
-    inline Comm CommCreateFromGroup(const Comm &comm, const Group &group, const int tag) {
+    
+	/**
+	 * Create a comm object from an existing comm object and a group object. This is a non-collective version
+	 *
+	 * @param comm		The comm world to build off of
+	 * @param group		The group to use to build the new comm object
+	 * @param tag		The tag to use
+	 * @return			Returns a new comm object
+	 */
+	inline Comm CommCreateFromGroup(const Comm &comm, const Group &group, const int tag) {
         MPI_Comm out_comm;
         MEL_THROW( MPI_Comm_create_group((MPI_Comm) comm, (MPI_Group) group, tag, &out_comm), "Comm::CreateFromGroup" );
         return Comm(out_comm);
@@ -435,122 +642,288 @@ namespace MEL {
 #endif
 
     /// Deletion
+
+	/**
+	 * Free a comm world
+	 *
+	 * @param comm		The comm world to free
+	 */
     inline void CommFree(Comm &comm) {
         MEL_THROW( MPI_Comm_disconnect((MPI_Comm*) &comm), "Comm::Free" );
         comm = Comm::COMM_NULL;
     };
 
-    inline void CommFree(std::vector<Comm> &comms) {
-        for (auto &e : comms) CommFree(e);
-    };
+	/**
+	 * Free a vector comm world
+	 *
+	 * @param comms	A std::vector of comm world
+	 */
+	inline void CommFree(std::vector<Comm> &comms) {
+		for (auto &d : comms) CommFree(d);
+	};
 
-    template<typename T0, typename T1, typename ...Args>
+    /**
+	 * Free the varadic set of comm worlds provided
+	 * 
+	 * @param d0		The first comm world to free
+	 * @param d1		The second comm world to free
+	 * @param args		The varadic set of remaining comm worlds to free
+	 */
+	template<typename T0, typename T1, typename ...Args>
     inline void CommFree(T0 &d0, T1 &d1, Args &&...args) {
         CommFree(d0);
         CommFree(d1, args...);
     };
 
     /// Testing
+
+	/**
+	 * Test if a comm world is the null comm world
+	 *
+	 * @param comm		The comm world to test
+	 * @return			Returns true if comm is the null comm world
+	 */
     inline bool CommIsNULL(const Comm &comm) {
         return (MPI_Comm) comm == MPI_COMM_NULL;
     };
 
     /// Synchronization
+
+	/**
+	 * Collective operation that forces all processes to wait until they are all at the barrier
+	 *
+	 * @param comm		The comm world to synchronize
+	 */
     inline void Barrier(const Comm &comm) {
         MEL_THROW( MPI_Barrier((MPI_Comm) comm), "Comm::Barrier" );
     };
 
 #ifdef MEL_3
-    inline void Ibarrier(const Comm &comm, Request &rq) {
+    
+	/**
+	 * Collective operation that forces all processes to wait until they are all at the barrier
+	 *
+	 * @param comm		The comm world to synchronize
+	 * @param rq		A reference to a request object used to determine when the barrier has been reached by all processes in comm
+	 */
+	inline void Ibarrier(const Comm &comm, Request &rq) {
         MEL_THROW( MPI_Ibarrier((MPI_Comm) comm, (MPI_Request*) &rq), "Comm::IBarrier" );
     };
-    inline Request Ibarrier(const Comm &comm) {
+    
+	/**
+	 * Collective operation that forces all processes to wait until they are all at the barrier
+	 *
+	 * @param comm		The comm world to synchronize
+	 * @return			Returns a request object used to determine when the barrier has been reached by all processes in comm
+	 */
+	inline Request Ibarrier(const Comm &comm) {
         Request rq{};
         Ibarrier(comm, rq);
         return rq;
     };
 #endif
     
+	/**
+	 * Blocking operation to wait until a request object has completed
+	 *
+	 * @param rq		The request object to wait for
+	 */
     inline void Wait(Request &rq) {
         MEL_THROW( MPI_Wait((MPI_Request*) &rq, MPI_STATUS_IGNORE), "Comm::Wait" );
     };
-    inline bool Test(Request &rq) {
+    
+	/**
+	 * Non-Blocking operation to test if a request object has completed
+	 *
+	 * @param rq		The request object to test
+	 */
+	inline bool Test(Request &rq) {
         int f;
         MEL_THROW( MPI_Test((MPI_Request*) &rq, &f, MPI_STATUS_IGNORE), "Comm::Test" );
         return f != 0;
     };
 
     /// All wait
+
+	/**
+	 * Blocking operation to wait until all request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 */
     inline void Waitall(Request *ptr, int num) {
         MEL_THROW( MPI_Waitall(num, (MPI_Request*) ptr, MPI_STATUS_IGNORE), "Comm::Waitall" );
     };
-    inline void Waitall(std::vector<Request> &rqs) {
+    
+	/**
+	 * Blocking operation to wait until all request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 */
+	inline void Waitall(std::vector<Request> &rqs) {
         Waitall(&rqs[0], rqs.size());
     };
 
     /// All test
+
+	/**
+	 * Non-Blocking operation to test if all request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 */
     inline bool Testall(Request *ptr, int num) {
         int f;
         MEL_THROW( MPI_Testall(num, (MPI_Request*) ptr, &f, MPI_STATUS_IGNORE), "Comm::Testall" );
         return f != 0;
     };
+
+	/**
+	 * Non-Blocking operation to test if all request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 */
     inline bool Testall(std::vector<Request> &rqs) {
         return Testall(&rqs[0], rqs.size());
     };
 
     /// Any wait
+
+	/**
+	 * Blocking operation to wait until any of the request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 * @return			Returns the index of the completed request
+	 */
     inline int Waitany(Request *ptr, int num) {
         int idx;
         MEL_THROW( MPI_Waitany(num, (MPI_Request*) ptr, &idx, MPI_STATUS_IGNORE), "Comm::Waitany" );
         return idx;
     };
-    inline int Waitany(std::vector<Request> &rqs) {
+    
+	/**
+	 * Blocking operation to wait until any of the request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 * @return			Returns the index of the completed request
+	 */
+	inline int Waitany(std::vector<Request> &rqs) {
         return Waitany(&rqs[0], rqs.size());
     };
 
     /// Any test
+
+	/**
+	 * Non-Blocking operation to test if any of the request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 * @return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
+	 */
     inline std::pair<bool, int> Testany(Request *ptr, int num) {
         int idx, f;
         MEL_THROW( MPI_Testany(num, (MPI_Request*) ptr, &idx, &f, MPI_STATUS_IGNORE), "Comm::Testany" );
         return std::make_pair(f != 0, idx);
     };
-    inline std::pair<bool, int> Testany(std::vector<Request> &rqs) {
+    
+	/**
+	 * Non-Blocking operation to test if any of the request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 * @return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
+	 */
+	inline std::pair<bool, int> Testany(std::vector<Request> &rqs) {
         return Testany(&rqs[0], rqs.size());
     };
 
     /// Some wait
+
+	/**
+	 * Blocking operation to wait until some of the request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 * @return			Returns a std::vector of indices of the completed requests
+	 */
     inline std::vector<int> Waitsome(Request *ptr, int num) {
         std::vector<int> idx(num); int onum;
         MEL_THROW( MPI_Waitsome(num, (MPI_Request*) ptr, &onum, &idx[0], MPI_STATUS_IGNORE), "Comm::Waitsome" );
         idx.resize(onum);
         return idx;
     };
-    inline std::vector<int> Waitsome(std::vector<Request> &rqs) {
+    
+	/**
+	 * Blocking operation to wait until some of the request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 * @return			Returns a std::vector of indices of the completed requests
+	 */
+	inline std::vector<int> Waitsome(std::vector<Request> &rqs) {
         return Waitsome(&rqs[0], rqs.size());
     };
 
     /// Some test
+
+	/**
+	 * Non-Blocking operation to test if some of the request objects in an array have completed
+	 *
+	 * @param ptr		Pointer to the array of request objects
+	 * @param num		The length of the array
+	 * @return			Returns a std::vector of indices of the completed requests
+	 */
     inline std::vector<int> Testsome(Request *ptr, int num) {
         std::vector<int> idx(num); int onum;
         MEL_THROW( MPI_Testsome(num, (MPI_Request*) ptr, &onum, &idx[0], MPI_STATUS_IGNORE), "Comm::Testsome" );
         idx.resize(onum);
         return idx;
     };
+
+	/**
+	 * Non-Blocking operation to test if some of the request objects in an array have completed
+	 *
+	 * @param rqs		A std::vector of request objects to wait for
+	 * @return			Returns a std::vector of indices of the completed requests
+	 */
     inline std::vector<int> Testsome(std::vector<Request> &rqs) {
         return Testsome(&rqs[0], rqs.size());
     };
 
     /// Set ops
+
+	/**
+	 * Perform a set union of two comm groups
+	 *
+	 * @param lhs		The first operand of the union
+	 * @param rhs		The second operand of the union
+	 * @return			Returns the union of the two groups
+	 */
     inline Group GroupUnion(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
         MEL_THROW( MPI_Group_union((MPI_Group) lhs, (MPI_Group) rhs, &out_group), "Group::Union" );
         return Group(out_group);
     };
-    inline Group GroupDifference(const Group& lhs, const Group& rhs) {
+    
+	/**
+	 * Perform a set difference of two comm groups
+	 *
+	 * @param lhs		The first operand of the difference
+	 * @param rhs		The second operand of the difference
+	 * @return			Returns the difference of the two groups
+	 */
+	inline Group GroupDifference(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
         MEL_THROW( MPI_Group_difference((MPI_Group) lhs, (MPI_Group) rhs, &out_group), "Group::Difference" );
         return Group(out_group);
     };
+
+	/**
+	 * Perform a set intersection of two comm groups
+	 *
+	 * @param lhs		The first operand of the intersection
+	 * @param rhs		The second operand of the intersection
+	 * @return			Returns the intersection of the two groups
+	 */
     inline Group GroupIntersection(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
         MEL_THROW( MPI_Group_intersection((MPI_Group) lhs, (MPI_Group) rhs, &out_group), "Group::Intersection" );
@@ -558,85 +931,182 @@ namespace MEL {
     };
 
     /// Include Ranks
+
+	/**
+	 * Create a comm group including just the ranks from an exisitng group given in an array
+	 *
+	 * @param group		The original group to build off of
+	 * @param ranks		Pointer to the array of ranks
+	 * @param num		The length of the array
+	 * @return			Returns the new groups
+	 */
     inline Group GroupInclude(const Group& group, const int *ranks, const int num) {
         MPI_Group out_group;
         MEL_THROW( MPI_Group_incl((MPI_Group) group, num, ranks, &out_group), "Group::Include" );
         return Group(out_group);
     };
-    inline Group GroupInclude(const Group& group, const std::vector<int> &ranks) {
+    
+	/**
+	 * Create a comm group including just the ranks from an exisitng group given in an array
+	 *
+	 * @param group		The original group to build off of
+	 * @param rqs		A std::vector of ranks
+	 * @return			Returns the new groups
+	 */
+	inline Group GroupInclude(const Group& group, const std::vector<int> &ranks) {
         return GroupInclude(group, &ranks[0], ranks.size());
-    };
-    inline Group GroupIncludeRange(const Group& group, const int **ranks, const int num) {
-        MPI_Group out_group;
-        MEL_THROW( MPI_Group_range_incl((MPI_Group) group, num, (int(*)[3]) ranks, &out_group), "Group::IncludeRange" );
-        return Group(out_group);
-    };
-    inline Group GroupIncludeRange(const Group& group, const std::vector<int[3]> &ranks) {
-        return GroupIncludeRange(group, (const int**) &ranks[0], (int) ranks.size());
     };
 
     /// Exclude Ranks
+
+	/**
+	 * Create a comm group excluding just the ranks from an exisitng group given in an array
+	 *
+	 * @param group		The original group to build off of
+	 * @param ranks		Pointer to the array of ranks
+	 * @param num		The length of the array
+	 * @return			Returns the new groups
+	 */
     inline Group GroupExclude(const Group& group, const int *ranks, const int num) {
         MPI_Group out_group;
         MEL_THROW( MPI_Group_excl((MPI_Group) group, num, ranks, &out_group), "Group::Exclude" );
         return Group(out_group);
     };
+
+	/**
+	 * Create a comm group excluding just the ranks from an exisitng group given in an array
+	 *
+	 * @param group		The original group to build off of
+	 * @param rqs		A std::vector of ranks
+	 * @return			Returns the new groups
+	 */
     inline Group GroupExclude(const Group& group, const std::vector<int> &ranks) {
         return GroupExclude(group, &ranks[0], ranks.size());
     };
-    inline Group GroupExcludeRange(const Group& group, const int **ranks, const int num) {
-        MPI_Group out_group;
-        MEL_THROW( MPI_Group_range_excl((MPI_Group) group, num, (int(*)[3]) ranks, &out_group), "Group::ExcludeRange" );
-        return Group(out_group);
-    };
-    inline Group GroupExcludeRange(const Group& group, const std::vector<int[3]> &ranks) {
-        return GroupExcludeRange(group, (const int**) &ranks[0], (int) ranks.size());
-    };
         
     /// Comparisons
+
+	/**
+	 * Compare two comm groups
+	 *
+	 * @param lhs		The first operand of the compare
+	 * @param rhs		The second operand of the compare
+	 * @return			Returns the comparison of two groups
+	 */
     inline int GroupCompare(const Group& lhs, const Group& rhs) {
         int r; 
         MEL_THROW( MPI_Group_compare((MPI_Group) lhs, (MPI_Group) rhs, &r), "Group::Compare" );
         return r;
     };
-    inline bool GroupIsSimilar(const Group& lhs, const Group& rhs) {
+    
+	/**
+	 * Compare if two comm groups are similar
+	 *
+	 * @param lhs		The first operand of the compare
+	 * @param rhs		The second operand of the compare
+	 * @return			Returns true if the groups are similar
+	 */
+	inline bool GroupIsSimilar(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_SIMILAR;
     };
-    inline bool GroupIsIdentical(const Group& lhs, const Group& rhs) {
+    
+	/**
+	 * Compare if two comm groups are identical
+	 *
+	 * @param lhs		The first operand of the compare
+	 * @param rhs		The second operand of the compare
+	 * @return			Returns true if the groups are identical
+	 */
+	inline bool GroupIsIdentical(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_IDENT;
     };
+
+	/**
+	 * Compare if two comm groups are congruent
+	 *
+	 * @param lhs		The first operand of the compare
+	 * @param rhs		The second operand of the compare
+	 * @return			Returns true if the groups are congruent
+	 */
     inline bool GroupIsCongruent(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_CONGRUENT;
     };
+
+	/**
+	 * Compare if two comm groups are unequal
+	 *
+	 * @param lhs		The first operand of the compare
+	 * @param rhs		The second operand of the compare
+	 * @return			Returns true if the groups are unequal
+	 */
     inline bool GroupIsUnequal(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_UNEQUAL;
     };
+
+	/**
+	 * Compare if a comm group is the null comm group
+	 *
+	 * @param group		The group to test
+	 * @return			Returns true if the group is the null group
+	 */
     inline bool GroupIsNULL(const Group &group) {
         return (MPI_Group) group == MPI_GROUP_NULL;
     };
 
     /// Who am i
+
+	/**
+	 * Gets the rank of the process within the given comm group
+	 *
+	 * @param group		The group to use
+	 * @return			Returns the rank within the given group
+	 */
     inline int GroupRank(const Group &group) {
         int r; 
         MEL_THROW( MPI_Group_rank((MPI_Group) group, &r), "Group::Rank" );
         return r;
     };
-    inline int GroupSize(const Group &group) {
+    
+	/**
+	 * Gets the size of the given comm group
+	 *
+	 * @param group		The group to use
+	 * @return			Returns the size of the given group
+	 */
+	inline int GroupSize(const Group &group) {
         int s; 
         MEL_THROW( MPI_Group_size((MPI_Group) group, &s), "Group::Size" );
         return s;
     };
 
     /// Deletion
-    inline void GroupFree(Group &group) {
+    
+	/**
+	 * Frees a comm group
+	 *
+	 * @param group		The group to free
+	 */
+	inline void GroupFree(Group &group) {
         MEL_THROW( MPI_Group_free((MPI_Group*) &group), "Group::Free" );
         //group = MPI_GROUP_NULL; // Done automatically
     };
 
-    inline void GroupFree(std::vector<Group> &groups) {
-        for (auto &e : groups) GroupFree(e);
-    };
-
+	/**
+	 * Free a vector comm group
+	 *
+	 * @param groups	A std::vector of comm group
+	 */
+	inline void GroupFree(std::vector<Group> &groups) {
+		for (auto &d : groups) GroupFree(d);
+	};
+ 
+	/**
+	 * Free the varadic set of comm groups provided
+	 * 
+	 * @param d0		The first comm groups to free
+	 * @param d1		The second comm groups to free
+	 * @param args		The varadic set of remaining comm groups to free
+	 */
     template<typename T0, typename T1, typename ...Args>
     inline void GroupFree(T0 &d0, T1 &d1, Args &&...args) {
         GroupFree(d0);
@@ -685,11 +1155,11 @@ namespace MEL {
                                 DOUBLE_COMPLEX,
                                 LONG_DOUBLE_COMPLEX,
                                 BOOL,
+								COUNT,
 #endif
 
                                 AINT,
-                                OFFSET,
-                                COUNT;
+                                OFFSET;
 
         MPI_Datatype datatype;
 
@@ -750,18 +1220,20 @@ namespace MEL {
     const Datatype Datatype::DOUBLE_COMPLEX      = Datatype(MPI_CXX_DOUBLE_COMPLEX);
     const Datatype Datatype::LONG_DOUBLE_COMPLEX = Datatype(MPI_CXX_LONG_DOUBLE_COMPLEX);
     const Datatype Datatype::BOOL                = Datatype(MPI_CXX_BOOL);
+	const Datatype Datatype::COUNT               = Datatype(MPI_COUNT);
 #endif
 
     const Datatype Datatype::AINT                = Datatype(MPI_AINT);
     const Datatype Datatype::OFFSET              = Datatype(MPI_OFFSET);
-
-#ifdef MEL_3
-    const Datatype Datatype::COUNT               = Datatype(MPI_COUNT);
 #endif
 
-#endif
-
-
+	/**
+	 * Create a derived type representing a contiguous block of an elementary type
+	 *
+	 * @param datatype	The base type to use
+	 * @param length	The number of elements in the new type
+	 * @return			Returns a new type
+	 */
     inline Datatype TypeCreateContiguous(const Datatype &datatype, const int length) {
         Datatype dt;
         MEL_THROW( MPI_Type_contiguous(length, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeContiguous" );
@@ -769,6 +1241,15 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a struct
+	 *
+	 * @param num			The number of members within the struct
+	 * @param datatypes		Pointer to an array of datatypes
+	 * @param blockLengths	Pointer to an array of block lengths
+	 * @param offsets		Pointer to an array of offsets
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateStruct(const int num, const Datatype *datatypes, const int *blockLengths, const Aint *offsets) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_struct(num, blockLengths, (MPI_Aint*) offsets, (MPI_Datatype*) datatypes, (MPI_Datatype*) &dt), "Datatype::TypeStruct" );
@@ -786,6 +1267,12 @@ namespace MEL {
         TypeStruct_Block(const Datatype &_dt, Aint _off) : datatype(_dt), length(1), offset(_off) {};
     };
 
+	/**
+	 * Create a derived type representing a struct
+	 *
+	 * @param blocks		A std::vector of triples representing the size of the current member block
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateStruct(const std::vector<TypeStruct_Block> &blocks) {
         const int num = blocks.size();
         std::vector<Datatype>    datatypes(num);
@@ -800,6 +1287,16 @@ namespace MEL {
         return TypeCreateStruct(num, &datatypes[0], &blockLengths[0], &offsets[0]);
     };
 
+	/**
+	 * Create a derived type representing a sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param num			The number of dimensions of the data
+	 * @param starts		Pointer to an array of start indices
+	 * @param subSizes		Pointer to an array of sub sizes
+	 * @param sizes			Pointer to an array of sizes of the parent array
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray(const Datatype &datatype, const int num, const int *starts, const int *subSizes, const int *sizes) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_subarray(num, sizes, subSizes, starts, MPI_ORDER_C, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeSubArray" );
@@ -814,6 +1311,13 @@ namespace MEL {
         TypeSubArray_Dim(const int _start, const int _size, const int _extent) :start(_start), size(_size), extent(_extent) {};
     };
 
+	/**
+	 * Create a derived type representing a sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param dims			A std::vector of triples representing the start, sub size, and parent size of each dimension of the data
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray(const Datatype &datatype, const std::vector<TypeSubArray_Dim> &dims) {
         const int numDims = dims.size();
         std::vector<int>    starts(numDims);
@@ -828,6 +1332,15 @@ namespace MEL {
         return TypeCreateSubArray(datatype, numDims, &sizes[0], &subSizes[0], &starts[0]);
     };
 
+	/**
+	 * Create a derived type representing a 1D sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param x				The start index in the x dimension
+	 * @param sx			The sub size in the x dimension	
+	 * @param dx			The parent size in the x dimension
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray1D(const Datatype &datatype, const int x, const int sx, const int dx) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_subarray(1, &dx, &sx, &x, MPI_ORDER_C, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeSubArray1D" );
@@ -835,6 +1348,18 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a 2D sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param x				The start index in the x dimension
+	 * @param y				The start index in the y dimension
+	 * @param sx			The sub size in the x dimension	
+	 * @param sy			The sub size in the y dimension
+	 * @param dx			The parent size in the x dimension
+	 * @param dy			The parent size in the y dimension
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray2D(const Datatype &datatype,
                                          const int x,    const int y, 
                                          const int sx,   const int sy,
@@ -848,6 +1373,21 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a 3D sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param x				The start index in the x dimension
+	 * @param y				The start index in the y dimension
+	 * @param z				The start index in the z dimension
+	 * @param sx			The sub size in the x dimension	
+	 * @param sy			The sub size in the y dimension
+	 * @param sz			The sub size in the z dimension
+	 * @param dx			The parent size in the x dimension
+	 * @param dy			The parent size in the y dimension
+	 * @param dz			The parent size in the z dimension
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray3D(const Datatype &datatype,
                                          const int x,    const int y,    const int z, 
                                          const int sx, const int sy, const int sz,
@@ -861,6 +1401,24 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a 4D sub array
+	 *
+	 * @param datatype		The datatype of the parent array
+	 * @param x				The start index in the x dimension
+	 * @param y				The start index in the y dimension
+	 * @param z				The start index in the z dimension
+	 * @param w				The start index in the w dimension
+	 * @param sx			The sub size in the x dimension	
+	 * @param sy			The sub size in the y dimension
+	 * @param sz			The sub size in the z dimension
+	 * @param sw			The sub size in the w dimension
+	 * @param dx			The parent size in the x dimension
+	 * @param dy			The parent size in the y dimension
+	 * @param dz			The parent size in the z dimension
+	 * @param dw			The parent size in the w dimension
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateSubArray4D(const Datatype &datatype,
                                          const int x,  const int y,  const int z,  const int w,
                                          const int sx, const int sy, const int sz, const int sw,
@@ -875,6 +1433,15 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks at different offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of blocks
+	 * @param lengths		Pointer to an array of block lengths
+	 * @param displs		Pointer to an array of block displacements
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateIndexed(const Datatype &datatype, const int num, const int *lengths, const int *displs) {
         Datatype dt;
         MEL_THROW( MPI_Type_indexed(num, lengths, displs, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeIndexed" );
@@ -889,6 +1456,13 @@ namespace MEL {
         TypeIndexed_Block(int _len, int _displ) : length(_len), displ(_displ) {};
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks at different offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param blocks		A std::vector of pairs representing the length and displacement of the blocks
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateIndexed(const Datatype &datatype, const std::vector<TypeIndexed_Block> &blocks) {
         const int num = blocks.size();
         std::vector<int>    lengths(num);
@@ -901,6 +1475,15 @@ namespace MEL {
         return TypeCreateIndexed(datatype, num, &lengths[0], &displs[0]);
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of blocks
+	 * @param lengths		Pointer to an array of block lengths
+	 * @param displs		Pointer to an array of block displacements
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateHIndexed(const Datatype &datatype, const int num, const int *lengths, const Aint *displs) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_hindexed(num, lengths, displs, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeHIndexed" );
@@ -916,6 +1499,13 @@ namespace MEL {
         TypeHIndexed_Block(int _len, Aint _displ) : length(_len), displ(_displ) {};
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param blocks		A std::vector of pairs representing the length and displacement of the blocks
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateHIndexed(const Datatype &datatype, const std::vector<TypeHIndexed_Block> &blocks) {
         const int num = blocks.size();
         std::vector<int>    lengths(num);
@@ -928,6 +1518,15 @@ namespace MEL {
         return TypeCreateHIndexed(datatype, num, &lengths[0], &displs[0]);
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks of the same length at different offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of blocks
+	 * @param length		The common block length
+	 * @param displs		Pointer to an array of block displacements
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateIndexedBlock(const Datatype &datatype, const int num, const int length, const int *displs) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_indexed_block(num, length, displs, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeIndexedBlock" );
@@ -935,22 +1534,58 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a set of contiguous blocks of the same length at different offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param length		The common block length
+	 * @param blocks		A std::vector representing the displacement of the blocks
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateIndexedBlock(const Datatype &datatype, const int length, const std::vector<int> &displs) {
         return TypeCreateIndexedBlock(datatype, displs.size(), length, &displs[0]);
     };
 
 #ifdef MEL_3
+
+	/**
+	 * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of blocks
+	 * @param length		The common block length
+	 * @param displs		Pointer to an array of block displacements
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateHIndexedBlock(const Datatype &datatype, const int num, const int length, const Aint *displs) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_hindexed_block(num, length, displs, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeHIndexedBlock" );
         MEL_THROW( MPI_Type_commit((MPI_Datatype*) &dt), "Datatype::TypeCommit(TypeHIndexedBlock)" );
         return dt;
     };
+
+	/**
+	 * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param length		The common block length
+	 * @param blocks		A std::vector representing the displacement of the blocks
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateHIndexedBlock(const Datatype &datatype, const int length, const std::vector<Aint> &displs) {
         return TypeCreateHIndexedBlock(datatype, displs.size(), length, &displs[0]);
     };
 #endif
-
+	
+	/**
+	 * Create a derived type representing a strided sub array of a parent array
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of strided regions
+	 * @param length		The common block length of the strided regions
+	 * @param stride		The number of elements between each region
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateVector(const Datatype &datatype, const int num, const int length, const int stride) {
         Datatype dt;
         MEL_THROW( MPI_Type_vector(num, length, stride, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeVector" );
@@ -958,6 +1593,15 @@ namespace MEL {
         return dt;
     };
 
+	/**
+	 * Create a derived type representing a strided sub array of a parent array, using byte offsets
+	 *
+	 * @param datatype		The datatype of the elements
+	 * @param num			The number of strided regions
+	 * @param length		The common block length of the strided regions
+	 * @param stride		The number of bytes between each region
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeCreateHVector(const Datatype &datatype, const int num, const int length, const Aint stride) {
         Datatype dt;
         MEL_THROW( MPI_Type_create_hvector(num, length, stride, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeHVector" );
@@ -965,80 +1609,59 @@ namespace MEL {
         return dt;
     };
 
-    enum class Distribute : int {
-        NONE      = MPI_DISTRIBUTE_NONE, 
-        BLOCK     = MPI_DISTRIBUTE_BLOCK,
-        CYCLIC    = MPI_DISTRIBUTE_CYCLIC,
-    };
-
-    enum {
-        DFLT_DARG = MPI_DISTRIBUTE_DFLT_DARG
-    };
-
-    inline Datatype TypeCreateDArray(const Datatype &datatype, const int rank, const int size, const int numDims, const int *gsizes, const Distribute *distribs, const int *dargs, const int *psizes) {
-        Datatype dt;
-        MEL_THROW( MPI_Type_create_darray(size, rank, numDims, gsizes, (int*) distribs, dargs, psizes, MPI_ORDER_C, (MPI_Datatype) datatype, (MPI_Datatype*) &dt), "Datatype::TypeDArray" );
-        MEL_THROW( MPI_Type_commit((MPI_Datatype*) &dt), "Datatype::TypeCommit(TypeDArray)" );
-        return dt;
-    };
-
-    inline Datatype TypeCreateDArray(const Datatype &datatype, const Comm &comm, const int numDims, const int *gsizes, const Distribute *distribs, const int *dargs, const int *psizes) {
-        return TypeCreateDArray(datatype, CommRank(comm), CommSize(comm), numDims, gsizes, distribs, dargs, psizes);
-    };
-
-    struct TypeDArray_Dim {
-        int gsize, darg, psize;
-        Distribute distrib;
-
-        TypeDArray_Dim() : gsize(0), distrib(MEL::Distribute::NONE), darg(0), psize(0) {};
-        TypeDArray_Dim(const int _gsize, const Distribute _distrib, const int _darg, const int _psize)
-                        : gsize(_gsize), distrib(_distrib), darg(_darg), psize(_psize) {};
-    };
-
-    inline Datatype TypeCreateDArray(const Datatype &datatype, const int rank, const int size, const std::vector<TypeDArray_Dim> &dims) {
-        const int numDims = dims.size();
-        std::vector<int>        gsizes(numDims);
-        std::vector<Distribute> distribs(numDims);
-        std::vector<int>        dargs(numDims);
-        std::vector<int>        psizes(numDims);
-
-        for (int i = 0; i < numDims; ++i) {
-            gsizes[i]   = dims[i].gsize;
-            distribs[i] = dims[i].distrib;
-            dargs[i]    = dims[i].darg;
-            psizes[i]   = dims[i].psize;
-        }
-        return TypeCreateDArray(datatype, rank, size, numDims, &gsizes[0], &distribs[0], &dargs[0], &psizes[0]);
-    };
-
-    inline Datatype TypeCreateDArray(const Datatype &datatype, const Comm &comm, const std::vector<TypeDArray_Dim> &dims) {
-        return TypeCreateDArray(datatype, CommRank(comm), CommSize(comm), dims);
-    };
-
+	/**
+	 * Duplicate a derived type so it can be managed independently
+	 *
+	 * @param datatype		The datatype to duplicate
+	 * @return				Returns a new type
+	 */
     inline Datatype TypeDuplicate(const Datatype &datatype) {
         MPI_Datatype out_datatype;
         MEL_THROW( MPI_Type_dup((MPI_Datatype) datatype, &out_datatype), "Datatype::Duplicate" );
         return Datatype(out_datatype);
     };
 
+	/**
+	 * Compute the contiguous packed size of a datatype
+	 *
+	 * @param datatype		The datatype to size
+	 * @return				Returns the contiguous size of the datatype in bytes
+	 */
     inline int TypeSize(const Datatype &datatype) {
         int out_size;
         MEL_THROW( MPI_Type_size((MPI_Datatype) datatype, &out_size), "Datatype::Size" );
         return out_size;
     };
 
+	/**
+	 * Compute the extent of a datatype
+	 *
+	 * @param datatype		The datatype to get the extent of 
+	 * @return				Returns a std::pair of the datatype extent and lower bound
+	 */
     inline std::pair<Aint, Aint> TypeExtent(const Datatype &datatype) {
         Aint out_lb, out_ext;
         MEL_THROW( MPI_Type_get_extent((MPI_Datatype) datatype, &out_lb, &out_ext), "Datatype::Extent" );
         return std::make_pair(out_lb, out_ext);
     };
 
+	/**
+	 * Compute the extent of a datatype and discard the lower bound
+	 *
+	 * @param datatype		The datatype to get the extent of 
+	 * @return				Returns the datatype extent
+	 */
     inline Aint TypeGetExtent(const Datatype &datatype) {
         Aint out_lb, out_ext;
         MEL_THROW( MPI_Type_get_extent((MPI_Datatype) datatype, &out_lb, &out_ext), "Datatype::GetExtent" );
         return out_ext;
     };
 
+	/**
+	 * Free a derived datatype
+	 *
+	 * @param datatype		The datatype to free
+	 */
     inline void TypeFree(Datatype &datatype) {
         if (datatype != MEL::Datatype::DATATYPE_NULL) {
             MEL_THROW( MPI_Type_free((MPI_Datatype*) &datatype), "Datatype::Free" );
@@ -1046,10 +1669,22 @@ namespace MEL {
         }
     };
 
+	/**
+	 * Free a vector datatypes
+	 * 
+	 * @param datatypes	A std::vector of derived datatypes
+	 */
     inline void TypeFree(std::vector<Datatype> &datatypes) {
         for (auto &d : datatypes) TypeFree(d);
     };
-
+	
+	/**
+	 * Free the varadic set of datatypes provided
+	 * 
+	 * @param d0		The first datatype to free
+	 * @param d1		The second datatype to free
+	 * @param args		The varadic set of remaining datatypes to free
+	 */
     template<typename T0, typename T1, typename ...Args>
     inline void TypeFree(T0 &d0, T1 &d1, Args &&...args) {
         TypeFree(d0);
@@ -1060,27 +1695,64 @@ namespace MEL {
     ///  Topology
     /// ----------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Compute the 'ideal' dimensions for a topolgy over n-processes
+	 * 
+	 * @param numProcs	The number of processes in the topology
+	 * @param numDims	The number of dimensions in the topology
+	 * @param dims		Pointer to an (already allocated) array of length numDims
+	 */
     inline void TopoCartesianMakeDims(const int numProcs, const int numDims, int *dims) {
         MEL_THROW( MPI_Dims_create(numProcs, numDims, dims), "Topo::Cartesian::MakeDims" );
     };
 
+	/**
+	 * Compute the 'ideal' dimensions for a topolgy over n-processes
+	 * 
+	 * @param comm		The comm object the topology should represent
+	 * @param numDims	The number of dimensions in the topology
+	 * @param dims		Pointer to an (already allocated) array of length numDims
+	 */
     inline void TopoCartesianMakeDims(const Comm &comm, const int numDims, int *dims) {
         TopoCartesianMakeDims(CommSize(comm), numDims, dims);
     };
 
+	/**
+	 * Compute the 'ideal' dimensions for a topolgy over n-processes
+	 * 
+	 * @param numProcs	The number of processes in the topology
+	 * @param numDims	The number of dimensions in the topology
+	 * @return			Returns a std::vector of dimension sizes
+	 */
     inline std::vector<int> TopoCartesianMakeDims(const int numProcs, const int numDims) {
         std::vector<int> dims(numDims);
         TopoCartesianMakeDims(numProcs, numDims, &dims[0]);
         return dims;
     };
 
+	/**
+	 * Compute the 'ideal' dimensions for a topolgy over n-processes
+	 * 
+	 * @param comm		The comm object the topology should represent
+	 * @param numDims	The number of dimensions in the topology
+	 * @return			Returns a std::vector of dimension sizes
+	 */
     inline std::vector<int> TopoCartesianMakeDims(const Comm &comm, const int numDims) {
         return TopoCartesianMakeDims(CommSize(comm), numDims);
     };
 
-    inline Comm TopoCartesianCreate(const Comm &comm, int maxdims, const int *dims, const int *periods) {
+	/**
+	 * Create a cartesian topology over a comm world
+	 * 
+	 * @param comm		The comm object the topology should represent
+	 * @param numDims	The number of dimensions in the topology
+	 * @param dims		Pointer to an array of sizes of each dimension
+	 * @param periods	Pointer to an array of logicals representing if each dimension is periodic or not
+	 * @return			Returns a Comm world with an attached topology
+	 */
+    inline Comm TopoCartesianCreate(const Comm &comm, int numdims, const int *dims, const int *periods) {
         MPI_Comm out_comm;
-        MEL_THROW( MPI_Cart_create((MPI_Comm) comm, maxdims, dims, periods, 0, &out_comm), "Topo::Cartesian::Create");
+        MEL_THROW( MPI_Cart_create((MPI_Comm) comm, numdims, dims, periods, 0, &out_comm), "Topo::Cartesian::Create");
         return Comm(out_comm);
     };
 
