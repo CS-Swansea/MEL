@@ -2686,46 +2686,138 @@ namespace MEL {
         return Request(request);
     };
 
+	/**
+	 * Read from file from a single process
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
     inline Status FileRead(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read(file, rptr, rnum, (MPI_Datatype) datatype, &status), "File::Read" );
         return status;
     };
+
+	/**
+	 * Read from file from all processes that opened the file
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
     inline Status FileReadAll(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read_all(file, rptr, rnum, (MPI_Datatype) datatype, &status), "File::ReadAll" );
         return status;
     };
+
+	/**
+	 * Read from file from a single process at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
     inline Status FileReadAt(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read_at(file, offset, rptr, rnum, (MPI_Datatype) datatype, &status), "File::ReadAt" );
         return status;
     };
+
+	/**
+	 * Read from file from all processes that opened the file at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
     inline Status FileReadAtAll(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read_at_all(file, offset, rptr, rnum, (MPI_Datatype) datatype, &status), "File::ReadAtAll" );
         return status;
     };
+
+	/**
+	 * Read from file from all processes that opened the file in sequence
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
     inline Status FileReadOrdered(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read_ordered(file, rptr, rnum, (MPI_Datatype) datatype, &status), "File::ReadOrdered" );
         return status;
     };
-    inline Status FileReadShared(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
+    
+	/**
+	 * Read from file from any processes that opened the file in parallel
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A status object
+	 */
+	inline Status FileReadShared(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_read_shared(file, rptr, rnum, (MPI_Datatype) datatype, &status), "File::ReadShared" );
         return status;
     };
+
+	/**
+	 * Non-Blocking. Read from file from a single process
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A request object
+	 */
     inline Request FileIread(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW( MPI_File_iread(file, rptr, rnum, (MPI_Datatype) datatype, &request), "File::Iread" );
         return Request(request);
     };
+
+	/**
+	 * Non-Blocking. Read from file from a single process at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A request object
+	 */
     inline Request FileIreadAt(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW(MPI_File_iread_at(file, offset, rptr, rnum, (MPI_Datatype) datatype, &request), "File::IreadAt");
         return Request(request);
     };
+
+	/**
+	 * Non-Blocking. Read from file from any process that opened the file in parallel
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @param[in] datatype			The derived type representing the elements to be read
+	 * @return						A request object
+	 */
     inline Request FileIreadShared(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW( MPI_File_iread_shared(file, rptr, rnum, (MPI_Datatype) datatype, &request), "File::IreadShared" );
@@ -2823,16 +2915,245 @@ namespace MEL {
         return Request(request);                                                                                                    \
     };                                                                                                                                
     
-
+	/**
+	 * Write to file from a single process. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
     template<typename T>
     inline Status FileWrite(const File &file, const T *sptr, const int snum) {
         return FileWrite(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
     };
 
+	/**
+	 * Write to file from a single process at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write to
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileWriteAt(const File &file, const Offset offset, const T *sptr, const int snum) {
+		return FileWriteAt(file, offset, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Write to file from all processes that opened the file. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileWriteAll(const File &file, const T *sptr, const int snum) {
+		return FileWriteAll(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Write to file from all processes that opened the file at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write to
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileWriteAtAll(const File &file, const Offset offset, const T *sptr, const int snum) {
+		return FileWriteAtAll(file, offset, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Write to file from all processes that opened the file in sequence. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileWriteOrdered(const File &file, const T *sptr, const int snum) {
+		return FileWriteOrdered(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Write to file from any processes that opened the file in parallel. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileWriteShared(const File &file, const T *sptr, const int snum) {
+		return FileWriteShared(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Read from file from a single process. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
     template<typename T>
     inline Status FileRead(const File &file, T *rptr, const int rnum) {
         return FileRead(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
     };
+
+	/**
+	 * Read from file from a single process at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileReadAt(const File &file, const Offset offset, T *rptr, const int rnum) {
+		return FileReadAt(file, offset, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Read from file from all processes that opened the file. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileReadAll(const File &file, T *rptr, const int rnum) {
+		return FileReadAll(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Read from file from all processes that opened the file at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileReadAtAll(const File &file, const Offset offset, T *rptr, const int rnum) {
+		return FileReadAtAll(file, offset, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Read from file from all processes that opened the file in sequence. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileReadOrdered(const File &file, T *rptr, const int rnum) {
+		return FileReadOrdered(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Read from file from any processes that opened the file in parallel. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A status object
+	 */
+	template<typename T>
+	inline Status FileReadShared(const File &file, T *rptr, const int rnum) {
+		return FileReadShared(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Write to file from a single process. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIwrite(const File &file, const T *sptr, const int snum) {
+		return FileIwrite(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Write to file from all processes that opened the file at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write to
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIwriteAt(const File &file, const Offset offset, const T *sptr, const int snum) {
+		return FileIwriteAt(file, offset, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Write to file from any processes that opened the file in parallel. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIwriteShared(const File &file, const T *sptr, const int snum) {
+		return FileIwriteShared(file, sptr, snum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Read from file from a single process. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIread(const File &file, T *rptr, const int rnum) {
+		return FileIread(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Read from file from a single process at the desired offset. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to read from
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIreadAt(const File &file, const Offset offset, T *rptr, const int rnum) {
+		return FileIreadAt(file, offset, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
+
+	/**
+	 * Non-Blocking. Read from file from any processes that opened the file in parallel. Element size determined by template type
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] rptr				Pointer to the memory to be read into
+	 * @param[out] rnum				The number of elements to read
+	 * @return						A request object
+	 */
+	template<typename T>
+	inline Request FileIreadShared(const File &file, T *rptr, const int rnum) {
+		return FileIreadShared(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
+	};
 
     MEL_FILE(wchar_t,                        MPI_WCHAR);
 
