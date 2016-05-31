@@ -142,10 +142,6 @@ namespace MEL {
         return MPI_Wtick();
     };
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Error Handler
-    /// ----------------------------------------------------------------------------------------------------------
-
     struct ErrorHandler {
         static const ErrorHandler ERRHANDLER_NULL;
         
@@ -303,10 +299,6 @@ namespace MEL {
         ErrorHandlerFree(d1, args...);
     };
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Memory Allocation
-    /// ----------------------------------------------------------------------------------------------------------
-
     /**
      * Allocate a block of memory for 'size' number of type T
      * 
@@ -388,10 +380,6 @@ namespace MEL {
         MemFree(ptr);
     };
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Communicators & Requests
-    /// ----------------------------------------------------------------------------------------------------------
-
     enum {
         PROC_NULL  = MPI_PROC_NULL,
         ANY_SOURCE = MPI_ANY_SOURCE,
@@ -457,10 +445,8 @@ namespace MEL {
 #endif
 
 
-    typedef MPI_Status    Status;
+    typedef MPI_Status  Status;
     typedef MPI_Info    Info;
-
-    /// Error handling
 
     /**
      * Create a Comm error handler by directly passing the function to use
@@ -506,8 +492,6 @@ namespace MEL {
         return ErrorHandler(errHndl);
     };
 
-    /// Who am i
-
     /**
      * Get the Comm rank of the process
      *
@@ -543,8 +527,6 @@ namespace MEL {
         MEL_THROW( MPI_Comm_remote_size((MPI_Comm) comm, &s), "Comm::RemoteSize" );
         return s;
     };
-
-    /// Creation
 
     /**
      * Split a comm world into seperate comms. Processes with the same colour will end up in the same comm world
@@ -641,8 +623,6 @@ namespace MEL {
     };
 #endif
 
-    /// Deletion
-
     /**
      * Free a comm world
      *
@@ -674,8 +654,6 @@ namespace MEL {
         CommFree(d0);
         CommFree(d1, args...);
     };
-
-    /// Testing
 
     /**
      * Test if a comm world is the null comm world
@@ -743,8 +721,6 @@ namespace MEL {
         return f != 0;
     };
 
-    /// All wait
-
     /**
      * Blocking operation to wait until all request objects in an array have completed
      *
@@ -763,8 +739,6 @@ namespace MEL {
     inline void Waitall(std::vector<Request> &rqs) {
         Waitall(&rqs[0], rqs.size());
     };
-
-    /// All test
 
     /**
      * Non-Blocking operation to test if all request objects in an array have completed
@@ -786,8 +760,6 @@ namespace MEL {
     inline bool Testall(std::vector<Request> &rqs) {
         return Testall(&rqs[0], rqs.size());
     };
-
-    /// Any wait
 
     /**
      * Blocking operation to wait until any of the request objects in an array have completed
@@ -837,8 +809,6 @@ namespace MEL {
         return Testany(&rqs[0], rqs.size());
     };
 
-    /// Some wait
-
     /**
      * Blocking operation to wait until some of the request objects in an array have completed
      *
@@ -863,8 +833,6 @@ namespace MEL {
         return Waitsome(&rqs[0], rqs.size());
     };
 
-    /// Some test
-
     /**
      * Non-Blocking operation to test if some of the request objects in an array have completed
      *
@@ -888,8 +856,6 @@ namespace MEL {
     inline std::vector<int> Testsome(std::vector<Request> &rqs) {
         return Testsome(&rqs[0], rqs.size());
     };
-
-    /// Set ops
 
     /**
      * Perform a set union of two comm groups
@@ -930,8 +896,6 @@ namespace MEL {
         return Group(out_group);
     };
 
-    /// Include Ranks
-
     /**
      * Create a comm group including just the ranks from an exisitng group given in an array
      *
@@ -956,8 +920,6 @@ namespace MEL {
     inline Group GroupInclude(const Group& group, const std::vector<int> &ranks) {
         return GroupInclude(group, &ranks[0], ranks.size());
     };
-
-    /// Exclude Ranks
 
     /**
      * Create a comm group excluding just the ranks from an exisitng group given in an array
@@ -984,8 +946,6 @@ namespace MEL {
         return GroupExclude(group, &ranks[0], ranks.size());
     };
         
-    /// Comparisons
-
     /**
      * Compare two comm groups
      *
@@ -1053,8 +1013,6 @@ namespace MEL {
         return (MPI_Group) group == MPI_GROUP_NULL;
     };
 
-    /// Who am i
-
     /**
      * Gets the rank of the process within the given comm group
      *
@@ -1079,8 +1037,6 @@ namespace MEL {
         return s;
     };
 
-    /// Deletion
-    
     /**
      * Frees a comm group
      *
@@ -1113,10 +1069,6 @@ namespace MEL {
         GroupFree(d1, args...);
     };
 
-
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Datatypes
-    /// ----------------------------------------------------------------------------------------------------------
 
     struct Datatype {
         static const Datatype    DATATYPE_NULL,
@@ -1691,10 +1643,6 @@ namespace MEL {
         TypeFree(d1, args...);
     };
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Topology
-    /// ----------------------------------------------------------------------------------------------------------
-
     /**
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
@@ -2020,10 +1968,6 @@ namespace MEL {
         return stencil;
     };
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Ops
-    /// ----------------------------------------------------------------------------------------------------------
-
     struct Op {
         static const Op MAX,
                         MIN,
@@ -2244,10 +2188,6 @@ namespace MEL {
     };
 
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  File IO
-    /// ----------------------------------------------------------------------------------------------------------
-
     typedef MPI_File File;
 
     enum class FileMode : int {
@@ -2325,61 +2265,154 @@ namespace MEL {
         return ErrorHandler(errHndl);
     };
 
+	/**
+	 * Get the mode a file was opened with
+	 *
+	 * @param file	The file to attach to
+	 * @return		Returns the file mode
+	 */
     inline FileMode FileGetMode(const File &file) {
         int amode;
         MEL_THROW( MPI_File_get_amode(file, &amode), "File::GetMode");
         return FileMode(amode);
     };
+
+	/**
+	 * Is the file opened in an atomic mode?
+	 *
+	 * @param file	The file to attach to
+	 * @return		Returns true is the file is opened atomically
+	 */
     inline bool FileIsAtomic(const File &file) {
         int flag;
         MEL_THROW( MPI_File_get_atomicity(file, &flag), "File::GetAtomicity");
         return flag != 0;
     };
-    inline void FileSetAtomicity(const File &file, const bool atom) {
+    
+	/**
+	 * Set the atomicity of the file handle
+	 *
+	 * @param file	The file to attach to
+	 * @param atom	Boolean value representing atomicity
+	 */
+	inline void FileSetAtomicity(const File &file, const bool atom) {
         MEL_THROW( MPI_File_set_atomicity(file, atom ? 1 : 0), "File::SetAtomicity");
     };
+
+	/**
+	 * Get the byte position of the file cursor relative to a given location
+	 *
+	 * @param file		The file to attach to
+	 * @param offset	The relative offset to measure byte distance against
+	 * @return			Returns the number of bytes from the given offset
+	 */
     inline Offset FileGetByteOffset(const File &file, const Offset offset) {
         Offset byteOffset;
         MEL_THROW( MPI_File_get_byte_offset(file, offset, &byteOffset), "File::GetByteOffset" );
         return byteOffset;
     };
+
+	/**
+	 * Get the comm group a file was opened as a part of
+	 *
+	 * @param file		The file to attach to
+	 * @return			Returns comm group the file handle belongs to
+	 */
     inline Group FileGetGroup(const File &file) {
         MPI_Group group;
         MEL_THROW( MPI_File_get_group(file, &group), "File::GetGroup");
         return Group(group);
     };
+
+	/**
+	 * Get the MPI_Info object attached to a file handle
+	 *
+	 * @param file		The file to attach to
+	 * @return			Returns the info object
+	 */
     inline Info FileGetInfo(const File &file) {
         MPI_Info info;
         MEL_THROW( MPI_File_get_info(file, &info), "File::GetInfo");
         return info;
     };
+
+	/**
+	 * Set the MPI_Info object attached to a file handle
+	 *
+	 * @param file		The file to attach to
+	 * @param info		The info object to attach
+	 */
     inline void FileSetInfo(const File &file, const Info &info) {
         MEL_THROW( MPI_File_set_info(file, info), "File::SetInfo");
     };
+
+	/**
+	 * Get the position of the file cursor
+	 *
+	 * @param file		The file to attach to
+	 * @return			Returns the location of the file cursor in bytes
+	 */
     inline Offset FileGetPosition(const File &file) {
         Offset offset;
         MEL_THROW( MPI_File_get_position(file, &offset), "File::GetPosition" );
         return offset;
     };
-    inline Offset FileGetPositionShared(const File &file) {
+    
+	/**
+	 * Get the position of the shared file cursor
+	 *
+	 * @param file		The file to attach to
+	 * @return			Returns the location of the shared file cursor in bytes
+	 */
+	inline Offset FileGetPositionShared(const File &file) {
         Offset offset;
         MEL_THROW( MPI_File_get_position_shared(file, &offset), "File::GetPositionShared" );
         return offset;
     };
+
+	/**
+	 * Get the size of the file in bytes
+	 *
+	 * @param file		The file to attach to
+	 * @return			Returns the size of the file in bytes
+	 */
     inline Offset FileGetSize(const File &file) {
         Offset size;
         MEL_THROW( MPI_File_get_size(file, &size), "File::GetSize" );
         return size;
     };
-    inline void FileSetSize(const File &file, const Offset size) {
+    
+	/**
+	 * Set the size of the file in bytes
+	 *
+	 * @param[in] file	The file to attach to
+	 * @param[in] size	The size in bytes to set the file size to
+	 */
+	inline void FileSetSize(const File &file, const Offset size) {
         MEL_THROW( MPI_File_set_size(file, size), "File::SetSize" );
     };
-    inline Aint FileGetTypeExtent(const File &file, const Datatype &datatype) {
+    
+	/**
+	 * Get the extent of the derived type set to the file handle
+	 *
+	 * @param[in] file			The file to attach to
+	 * @param[in] datatype		The derived datatype to measure the extent of
+	 * @return					Returns the extent of the type
+	 */
+	inline Aint FileGetTypeExtent(const File &file, const Datatype &datatype) {
         Aint size;
         MEL_THROW( MPI_File_get_type_extent(file, (MPI_Datatype) datatype, &size), "File::GetTypeExtent" );
         return size;
     };
 
+	/**
+	 * Open a file and return a handle to it
+	 *
+	 * @param[in] comm			The comm world to open the file with
+	 * @param[in] path			The path to the desired file
+	 * @param[in] amode			The file mode to open the file with
+	 * @return					Returns a handle to the file pointer
+	 */
     inline File FileOpen(const Comm &comm, const std::string &path, const FileMode amode) {
         MPI_File file;
         MEL_THROW( MPI_File_open((MPI_Comm) comm, path.c_str(), (int) amode, MPI_INFO_NULL, &file), "File::Open");
@@ -2387,28 +2420,72 @@ namespace MEL {
         return file;
     };
 
+	/**
+	 * Open a file on an individual process and return a handle to it
+	 *
+	 * @param[in] path			The path to the desired file
+	 * @param[in] amode			The file mode to open the file with
+	 * @return					Returns a handle to the file pointer
+	 */
     inline File FileOpenIndividual(const std::string &path, const FileMode amode) {
         return FileOpen(MEL::Comm::SELF, path, amode);
     };
 
+	/**
+	 * Delete a file by its path
+	 *
+	 * @param[in] path			The path to the file to be deleted
+	 */
     inline void FileDelete(const std::string &path) {
         MEL_THROW( MPI_File_delete(path.c_str(), MPI_INFO_NULL), "File::Delete");
     };
+
+	/**
+	 * Close the file attached to the given file handle
+	 *
+	 * @param[in] file			The file handle to be closed
+	 */
     inline void FileClose(File &file) {
         MEL_THROW( MPI_File_close(&file), "File::Close");
     };
 
+	/**
+	 * Preallocate the opened file to the given size on the file system
+	 *
+	 * @param[in] file			The file to be preallocated
+	 * @param[in] fileSize		The size of the file in bytes
+	 */
     inline void FilePreallocate(const File &file, const Offset fileSize) {
         MEL_THROW( MPI_File_preallocate(file, fileSize), "File::Preallocate" );
     };
 
+	/**
+	 * Move the file cursor to a specific position
+	 *
+	 * @param[in] file			The file
+	 * @param[in] offset		The position to move the file cursor to
+	 * @param[in] seekMode		The mode to move the cursor by
+	 */
     inline void FileSeek(const File &file, const Offset offset, const SeekMode seekMode = MEL::SeekMode::SET) {
         MEL_THROW( MPI_File_seek(file, offset, (int) seekMode), "File::Seek" );
     };
+
+	/**
+	 * Move the shared file cursor to a specific position. The same values must be provided by all processes
+	 *
+	 * @param[in] file			The shared file
+	 * @param[in] offset		The position to move the file cursor to
+	 * @param[in] seekMode		The mode to move the cursor by
+	 */
     inline void FileSeekShared(const File &file, const Offset offset, const SeekMode seekMode = MEL::SeekMode::SET) {
         MEL_THROW( MPI_File_seek_shared(file, offset, (int) seekMode), "File::SeekShared" );
     };
 
+	/**
+	 * Force all queued and pending disk operations on a file to be completed
+	 *
+	 * @param[in] file			The file to be synchronized
+	 */
     inline void FileSync(const File &file) {
         MEL_THROW( MPI_File_sync(file), "File::Sync");
     };
@@ -2422,63 +2499,187 @@ namespace MEL {
                 : offset(_offset), elementaryType(_elementaryType), fileType(_fileType), datarep(_datarep) {};
     };
 
+	/**
+	 * Set the view of a file handle for subsequent read/writes
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset from start of the file
+	 * @param[in] elementaryType	The derived type representing the type of each element to be written
+	 * @param[in] fileType			The derived type representing the structure of data to be written
+	 * @param[in] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
+	 */
     inline void FileSetView(const File &file, const Offset offset, const Datatype elementaryType, const Datatype fileType, const std::string &datarep = "native") {
         MEL_THROW( MPI_File_set_view(file, offset, (MPI_Datatype) elementaryType, (MPI_Datatype) fileType, datarep.c_str(), MPI_INFO_NULL), "File::SetView" );    
     };
+
+	/**
+	 * Set the view of a file handle for subsequent read/writes
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] view				A utility structure that stores the values of a file view
+	 */
     inline void FileSetView(const File &file, const FileView &view) {
         FileSetView(file, view.offset, view.elementaryType, view.fileType, view.datarep);
     };
 
+	/**
+	 * Get the view attached to a file handle
+	 *
+	 * @param[in] file				The file handle
+	 * @param[out] offset			Byte offset from start of the file
+	 * @param[out] elementaryType	The derived type representing the type of each element to be written
+	 * @param[out] fileType			The derived type representing the structure of data to be written
+	 * @param[out] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
+	 */
     inline void FileGetView(const File &file, Offset &offset, Datatype &elementaryType, Datatype &fileType, std::string &datarep) {
         datarep.resize(BUFSIZ);
         MEL_THROW( MPI_File_get_view(file, &offset, (MPI_Datatype*) &elementaryType, (MPI_Datatype*) &fileType, (char*) &datarep[0]), "File::GetView" ); 
     };
+
+	/**
+	 * Get the view attached to a file handle
+	 *
+	 * @param[in] file				The file handle
+	 * @return						Returns a utility structure that stores the values of a file view
+	 */
     inline FileView FileGetView(const File &file) {
         FileView view;
         FileGetView(file, view.offset, view.elementaryType, view.fileType, view.datarep);
         return view;
     };
 
+	/**
+	 * Write to file from a single process
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
     inline Status FileWrite(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write(file, sptr, snum, (MPI_Datatype) datatype, &status), "File::Write" );
         return status;
     };
-    inline Status FileWriteAll(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
+    
+	/**
+	 * Write to file from all processes that opened the file
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
+	inline Status FileWriteAll(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write_all(file, sptr, snum, (MPI_Datatype) datatype, &status), "File::WriteAll" );
         return status;
     };
+
+	/**
+	 * Write to file from a single process at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write at
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
     inline Status FileWriteAt(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write_at(file, offset, sptr, snum, (MPI_Datatype) datatype, &status), "File::WriteAt" );
         return status;
     };
-    inline Status FileWriteAtAll(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
+    
+	/**
+	 * Write to file from all processes that opened the file at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write at
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
+	inline Status FileWriteAtAll(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write_at_all(file, offset, sptr, snum, (MPI_Datatype) datatype, &status), "File::WriteAtAll" );
         return status;
     };
+
+	/**
+	 * Write to file from all processes that opened the file in sequence
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
     inline Status FileWriteOrdered(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write_ordered(file, sptr, snum, (MPI_Datatype) datatype, &status), "File::WriteOrdered" );
         return status;
     };
+
+	/**
+	 * Write to file from any processes that opened the file in parallel
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A status object
+	 */
     inline Status FileWriteShared(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
         MEL_THROW( MPI_File_write_shared(file, sptr, snum, (MPI_Datatype) datatype, &status), "File::WriteShared" );
         return status;
     };
+
+	/**
+	 * Non-Blocking. Write to file from a single processes 
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A request object
+	 */
     inline Request FileIwrite(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW( MPI_File_iwrite(file, sptr, snum, (MPI_Datatype) datatype, &request), "File::Iwrite" );
         return Request(request);
     };
-    inline Request FileIwriteAt(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
+    
+	/**
+	 * Non-Blocking. Write to file from a single process at the desired offset
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] offset			Byte offset into the file to write to
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A request object
+	 */
+	inline Request FileIwriteAt(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW(MPI_File_iwrite_at(file, offset, sptr, snum, (MPI_Datatype) datatype, &request), "File::IwriteAt");
         return Request(request);
     };
+
+	/**
+	 * Non-Blocking. Write to file from any processes that opened the file in parallel
+	 *
+	 * @param[in] file				The file handle
+	 * @param[in] sptr				Pointer to the memory to be written
+	 * @param[in] snum				The number of elements to write
+	 * @param[in] datatype			The derived type representing the elements to be written
+	 * @return						A request object
+	 */
     inline Request FileIwriteShared(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
         MEL_THROW( MPI_File_iwrite_shared(file, sptr, snum, (MPI_Datatype) datatype, &request), "File::IwriteShared" );
@@ -2657,10 +2858,6 @@ namespace MEL {
 #endif
 
 #undef MEL_FILE
-
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Point to Point - SEND
-    /// ----------------------------------------------------------------------------------------------------------
 
     inline void Send(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                
         MEL_THROW( MPI_Send(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm), "Comm::Send" );                                            
@@ -2928,10 +3125,6 @@ namespace MEL {
 
 #undef MEL_SEND
 
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Point to Point - RECV
-    /// ----------------------------------------------------------------------------------------------------------
-
     /// Prob incomming message
     inline Status Probe(const int source, const int tag, const Comm &comm) {
         MPI_Status status{};
@@ -3112,10 +3305,6 @@ namespace MEL {
     };
 
 #undef MEL_RECV
-
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Collectives
-    /// ----------------------------------------------------------------------------------------------------------
 
     /* Bcast */                                                                                                                        
     inline void Bcast(void *ptr, const int num, const Datatype &datatype, const int root, const Comm &comm) {                                                                            
@@ -3554,10 +3743,6 @@ namespace MEL {
 
 #undef MEL_COLLECTIVE
 #undef MEL_3_COLLECTIVE
-
-    /// ----------------------------------------------------------------------------------------------------------
-    ///  Remote Memory Access - RMA
-    /// ----------------------------------------------------------------------------------------------------------
 
     enum class LockType {
         EXCLUSIVE = MPI_LOCK_EXCLUSIVE,
