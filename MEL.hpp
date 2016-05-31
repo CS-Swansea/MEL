@@ -33,11 +33,16 @@ namespace MEL {
 #define MEL_THROW(v, message) { (v); }
 #endif
     
+	/**
+ 	 * \defgroup Errors Error Handling
+	 */
+
     /**
+	 * \ingroup  Errors
      * Calls MPI_Abort with the given error code and prints a string message to stderr
      *
-     * @param ierr		The error code to throw
-     * @param message	The message to print to stderr describing what happened
+     * \param[in] ierr		The error code to throw
+     * \param[in] message	The message to print to stderr describing what happened
      */
     inline void Abort(int ierr, const std::string &message) {
         char error_string[BUFSIZ];
@@ -62,7 +67,7 @@ namespace MEL {
     /**
      * Tests if MPI_Init has been successfully called
      * 
-     * @return Returns whether MPI is initialized as a bool
+     * \return Returns whether MPI is initialized as a bool
      */
     inline bool IsInitialized() {
         int init;
@@ -73,7 +78,7 @@ namespace MEL {
     /**
      * Tests if MPI_Finalize has been successfully called
      * 
-     * @return Returns whether MPI is finalized as a bool
+     * \return Returns whether MPI is finalized as a bool
      */
     inline bool IsFinalized() {
         int fin; 
@@ -84,8 +89,8 @@ namespace MEL {
     /**
      * Call MPI_Init and setup default error handling
      *
-     * @param argc		Forwarded from program main
-     * @param argv		Forwarded from program main
+     * \param[in] argc		Forwarded from program main
+     * \param[in] argv		Forwarded from program main
      */
     inline void Init(int &argc, char **&argv) {
         if (!IsInitialized()) {
@@ -105,19 +110,21 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * MEL alternative to std::exit
      *
-     * @param errcode	The error code to exit with
+     * \param[in] errcode	The error code to exit with
      */
     inline void Exit(const int errcode) {
         MEL::Abort(errcode, "EXIT");
     };
 
     /**
+     * \ingroup  Errors
      * MEL alternative to std::exit
      *
-     * @param errcode	The error code to exit with
-     * @param msg		A message to print to stderr as the program exits
+     * \param[in] errcode	The error code to exit with
+     * \param[in] msg		A message to print to stderr as the program exits
      */
     inline void Exit(const int errcode, const std::string &msg) {
         std::cerr << msg << std::endl;
@@ -127,7 +134,7 @@ namespace MEL {
     /**
      * Gets the current wall time since epoch in seconds
      * 
-     * @return Returns the current wall time as a double
+     * \return Returns the current wall time as a double
      */
     inline double Wtime() {
         return MPI_Wtime();
@@ -136,7 +143,7 @@ namespace MEL {
     /**
      * Gets the current system tick
      * 
-     * @return Returns the current system tick as a double
+     * \return Returns the current system tick as a double
      */
     inline double Wtick() {
         return MPI_Wtick();
@@ -165,10 +172,11 @@ namespace MEL {
     typedef void(*ErrorHandlerFunc)(MPI_Comm*, int*, ...);
     
     /**
+     * \ingroup  Errors
      * A default error handler that can be attached to MPI objects to give basic error catching
      * 
-     * @param comm		Comm world in which the error occured
-     * @param ierr		The error code that was thrown
+     * \param[in] comm		Comm world in which the error occured
+     * \param[in] ierr		The error code that was thrown
      */
     inline void DefaultErrorHandler(MPI_Comm *comm, int *ierr, ...) {
         char error_string[BUFSIZ];
@@ -189,9 +197,10 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * Add an error class for MPI to reference
      * 
-     * @return Returns the new error class code that was added
+     * \return Returns the new error class code that was added
      */
     inline int AddErrorClass() {
         int err;
@@ -200,10 +209,11 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Errors
      * Add an error code to an exisiting error class for MPI to reference
      * 
-     * @param errClass	The error class to add the error code to
-     * @return			Returns the new error code that was added
+     * \param[in] errClass	The error class to add the error code to
+     * \return			Returns the new error code that was added
      */
     inline int AddErrorCode(const int errClass) {
         int err;
@@ -212,9 +222,10 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * Add an error code to a new error class for MPI to reference
      * 
-     * @return			Returns the new error code that was added
+     * \return			Returns the new error code that was added
      */
     inline int AddErrorCode() {
         return AddErrorCode(AddErrorClass());
@@ -223,8 +234,8 @@ namespace MEL {
     /**
      * Add an error string to an existing error code for MPI to reference
      * 
-     * @param err		The error code to bind the string to
-     * @param str		The error string
+     * \param[in] err		The error code to bind the string to
+     * \param[in] str		The error string
      */
     inline void AddErrorString(const int err, const std::string &str) {
         MEL_THROW( MPI_Add_error_string(err, str.c_str()), "ErrorHandler::AddErrorString" );
@@ -233,8 +244,8 @@ namespace MEL {
     /**
      * Add an error string to a new existing error code for MPI to reference
      * 
-     * @param str		The error string
-     * @return			Returns the new error code added
+     * \param[in] str		The error string
+     * \return			Returns the new error code added
      */
     inline int AddErrorString(const std::string &str) {
         const int err = AddErrorCode();
@@ -245,8 +256,8 @@ namespace MEL {
     /**
      * Get the error class code of the given error code
      * 
-     * @param errCode	The error code
-     * @return			Returns the error class
+     * \param[in] errCode	The error code
+     * \return			Returns the error class
      */
     inline int GetErrorClass(const int errCode) {
         int err;
@@ -257,8 +268,8 @@ namespace MEL {
     /**
      * Get the error class code of the given error code
      * 
-     * @param errCode	The error code
-     * @return			Returns the error class
+     * \param[in] errCode	The error code
+     * \return			Returns the error class
      */
     inline std::string GetErrorString(const int errCode) {
         std::string str; str.resize(BUFSIZ); int len;
@@ -270,7 +281,7 @@ namespace MEL {
     /**
      * Free an error handler that was previously added
      * 
-     * @param errHndl	The error handler object that references the bound function
+     * \param[in] errHndl	The error handler object that references the bound function
      */
     inline void ErrorHandlerFree(ErrorHandler &errHndl) {
         MEL_THROW( MPI_Errhandler_free((MPI_Errhandler*) &errHndl), "ErrorHandler::Free" );
@@ -280,7 +291,7 @@ namespace MEL {
     /**
     * Free a vector Error Handlers
     *
-    * @param errHndls	A std::vector of Error Handlers
+    * \param[in] errHndls	A std::vector of Error Handlers
     */
     inline void ErrorHandlerFree(std::vector<ErrorHandler> &errHndls) {
         for (auto &d : errHndls) ErrorHandlerFree(d);
@@ -289,9 +300,9 @@ namespace MEL {
     /**
      * Free the varadic set of error handlers provided
      * 
-     * @param d0		The first error handler to free
-     * @param d1		The second error handler to free
-     * @param args		The varadic set of remaining error handlers to free
+     * \param[in] d0		The first error handler to free
+     * \param[in] d1		The second error handler to free
+     * \param[in] args		The varadic set of remaining error handlers to free
      */
     template<typename T0, typename T1, typename ...Args>
     inline void ErrorHandlerFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -302,8 +313,8 @@ namespace MEL {
     /**
      * Allocate a block of memory for 'size' number of type T
      * 
-     * @param size		The number of elements of type T to allocate
-     * @return			Returns the pointer to the allocated memory
+     * \param[in] size		The number of elements of type T to allocate
+     * \return			Returns the pointer to the allocated memory
      */
     template<typename T>
     inline T* MemAlloc(const Aint size) {
@@ -315,9 +326,9 @@ namespace MEL {
     /**
      * Allocate a block of memory for 'size' number of type T and assign a default value
      * 
-     * @param size		The number of elements of type T to allocate
-     * @param val		The value to set each element equal to
-     * @return			Returns the pointer to the allocated memory
+     * \param[in] size		The number of elements of type T to allocate
+     * \param[in] val		The value to set each element equal to
+     * \return			Returns the pointer to the allocated memory
      */
     template<typename T>
     inline T* MemAlloc(const Aint size, const T &val) {
@@ -329,8 +340,8 @@ namespace MEL {
     /**
      * Allocate a single object of type T and construct it with the set of varadic arguments
      * 
-     * @param args		The set of varadic arguments to construct the object with
-     * @return			Returns the pointer to the allocated memory
+     * \param[in] args		The set of varadic arguments to construct the object with
+     * \return			Returns the pointer to the allocated memory
      */
     template<typename T, typename ...Args>
     inline T* MemConstruct(Args &&...args) {
@@ -342,7 +353,7 @@ namespace MEL {
     /**
      * Free a pointer allocated with MPI_Alloc or the MEL equivilant functions
      * 
-     * @param args		The pointer to free
+     * \param[in] ptr		The pointer to free
      */
     template<typename T>
     inline void MemFree(T *&ptr) {
@@ -355,9 +366,9 @@ namespace MEL {
     /**
      * Free the varadic set of pointers provided
      * 
-     * @param d0		The first pointer to free
-     * @param d1		The second pointer to free
-     * @param args		The varadic set of remaining pointers to free
+     * \param[in] d0		The first pointer to free
+     * \param[in] d1		The second pointer to free
+     * \param[in] args		The varadic set of remaining pointers to free
      */
     template<typename T0, typename T1, typename ...Args>
     inline void MemFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -368,8 +379,8 @@ namespace MEL {
     /**
      * Call the destructor for each element of the given array and then free the memory
      * 
-     * @param ptr		The pointer to the memory to be destructed
-     * @param len		The length of the array
+     * \param[in] ptr		The pointer to the memory to be destructed
+     * \param[in] len		The length of the array
      */
     template<typename T>
     inline void MemDestruct(T *&ptr, const Aint len = 1) {
@@ -451,8 +462,8 @@ namespace MEL {
     /**
      * Create a Comm error handler by directly passing the function to use
      * 
-     * @param func		The function to use as an error handler
-     * @return			Returns an object that MPI can use to reference the error handler
+     * \param[in] func		The function to use as an error handler
+     * \return			Returns an object that MPI can use to reference the error handler
      */
     inline ErrorHandler CommCreateErrorHandler(ErrorHandlerFunc func) {
         MPI_Errhandler errHndl;
@@ -463,8 +474,8 @@ namespace MEL {
     /**
      * Set a Comm error handler by passing the a error handler reference
      *
-     * @param comm		The comm world to attach the error handler to
-     * @param errHndl	The reference to a bound error handler
+     * \param[in] comm		The comm world to attach the error handler to
+     * \param[in] errHndl	The reference to a bound error handler
      */
     inline void CommSetErrorHandler(const Comm &comm, const ErrorHandler &errHndl) {
         MEL_THROW( MPI_Comm_set_errhandler((MPI_Comm) comm, (MPI_Errhandler) errHndl), "Comm::SetErrorHandler" );
@@ -473,8 +484,8 @@ namespace MEL {
     /**
      * Set a Comm error handler by directly passing the function to use
      *
-     * @param comm		The comm world to attach the error handler to
-     * @param func		The function to use as an error handler
+     * \param[in] comm		The comm world to attach the error handler to
+     * \param[in] func		The function to use as an error handler
      */
     inline void CommSetErrorHandler(const Comm &comm, ErrorHandlerFunc func) {
         CommSetErrorHandler(comm, CommCreateErrorHandler(func));
@@ -483,8 +494,8 @@ namespace MEL {
     /**
      * Get the Comm error handler attached to a comm world
      *
-     * @param comm		The comm world to get the error handler of
-     * @return			Returns a reference to a bound error handler
+     * \param[in] comm		The comm world to get the error handler of
+     * \return			Returns a reference to a bound error handler
      */
     inline ErrorHandler CommGetErrorHandler(const Comm &comm) {
         MPI_Errhandler errHndl;
@@ -495,8 +506,8 @@ namespace MEL {
     /**
      * Get the Comm rank of the process
      *
-     * @param comm		The comm world to get the rank in
-     * @return			Returns the rank or the process within comm
+     * \param[in] comm		The comm world to get the rank in
+     * \return			Returns the rank or the process within comm
      */
     inline int CommRank(const Comm &comm) {
         int r; 
@@ -507,8 +518,8 @@ namespace MEL {
     /**
      * Get the Comm world size
      *
-     * @param comm		The comm world to get the size of
-     * @return			Returns the size of the comm world
+     * \param[in] comm		The comm world to get the size of
+     * \return			Returns the size of the comm world
      */
     inline int CommSize(const Comm &comm) {
         int s; 
@@ -519,8 +530,8 @@ namespace MEL {
     /**
      * Get the Comm world remote size
      *
-     * @param comm		The comm world to get the remote size of
-     * @return			Returns the remote size of the comm world
+     * \param[in] comm		The comm world to get the remote size of
+     * \return			Returns the remote size of the comm world
      */
     inline int CommRemoteSize(const Comm &comm) {
         int s; 
@@ -531,21 +542,21 @@ namespace MEL {
     /**
      * Split a comm world into seperate comms. Processes with the same colour will end up in the same comm world
      *
-     * @param comm		The comm world to split
-     * @param colour	The group that this process will end up in in the new comm world
-     * @return			Returns a new comm world
+     * \param[in] comm		The comm world to split
+     * \param[in] colour	The group that this process will end up in in the new comm world
+     * \return			Returns a new comm world
      */
-    inline Comm CommSplit(const Comm &comm, int color) {
+    inline Comm CommSplit(const Comm &comm, int colour) {
         MPI_Comm out_comm;
-        MEL_THROW( MPI_Comm_split((MPI_Comm) comm, color, CommRank(comm), &out_comm), "Comm::Split" );
+        MEL_THROW( MPI_Comm_split((MPI_Comm) comm, colour, CommRank(comm), &out_comm), "Comm::Split" );
         return Comm(out_comm);
     };
     
     /**
      * Duplicate a comm world so that it can be handled independently.
      *
-     * @param comm		The comm world to duplicate
-     * @return			Returns a new comm world
+     * \param[in] comm		The comm world to duplicate
+     * \return			Returns a new comm world
      */
     inline Comm CommDuplicate(const Comm &comm) {
         MPI_Comm out_comm;
@@ -558,9 +569,9 @@ namespace MEL {
     /**
      * Non-Blocking Duplicate a comm world so that it can be handled independently.
      *
-     * @param comm		The comm world to duplicate
-     * @param rq		A request object that will signify when the comm world has been fully duplicated
-     * @return			Returns a new comm world
+     * \param[in] comm		The comm world to duplicate
+     * \param[out] rq		A request object that will signify when the comm world has been fully duplicated
+     * \return			Returns a new comm world
      */
     inline Comm CommIduplicate(const Comm &comm, Request &rq) {
         MPI_Comm out_comm;
@@ -571,8 +582,8 @@ namespace MEL {
     /**
      * Non-Blocking Duplicate a comm world so that it can be handled independently.
      *
-     * @param comm		The comm world to duplicate
-     * @return			Returns a std::pair of the new comm world and a request object
+     * \param[in] comm		The comm world to duplicate
+     * \return			Returns a std::pair of the new comm world and a request object
      */
     inline std::pair<Comm, Request> CommIduplicate(const Comm &comm) {
         Request rq;
@@ -584,8 +595,8 @@ namespace MEL {
     /**
      * Get the group of a comm world
      *
-     * @param comm		The comm world to get the group of
-     * @return			Returns a Group object representing the processes in comm
+     * \param[in] comm		The comm world to get the group of
+     * \return			Returns a Group object representing the processes in comm
      */
     inline Group CommGetGroup(const Comm &comm) {
         MPI_Group group;
@@ -596,9 +607,9 @@ namespace MEL {
     /**
      * Create a comm object from an existing comm object and a group object
      *
-     * @param comm		The comm world to build off of
-     * @param group		The group to use to build the new comm object
-     * @return			Returns a new comm object
+     * \param[in] comm		The comm world to build off of
+     * \param[in] group		The group to use to build the new comm object
+     * \return			Returns a new comm object
      */
     inline Comm CommCreateFromGroup(const Comm &comm, const Group &group) {
         MPI_Comm out_comm;
@@ -611,10 +622,10 @@ namespace MEL {
     /**
      * Create a comm object from an existing comm object and a group object. This is a non-collective version
      *
-     * @param comm		The comm world to build off of
-     * @param group		The group to use to build the new comm object
-     * @param tag		The tag to use
-     * @return			Returns a new comm object
+     * \param[in] comm		The comm world to build off of
+     * \param[in] group		The group to use to build the new comm object
+     * \param[in] tag		The tag to use
+     * \return			Returns a new comm object
      */
     inline Comm CommCreateFromGroup(const Comm &comm, const Group &group, const int tag) {
         MPI_Comm out_comm;
@@ -626,7 +637,7 @@ namespace MEL {
     /**
      * Free a comm world
      *
-     * @param comm		The comm world to free
+     * \param[in] comm		The comm world to free
      */
     inline void CommFree(Comm &comm) {
         MEL_THROW( MPI_Comm_disconnect((MPI_Comm*) &comm), "Comm::Free" );
@@ -636,7 +647,7 @@ namespace MEL {
     /**
      * Free a vector comm world
      *
-     * @param comms	A std::vector of comm world
+     * \param[in] comms	A std::vector of comm world
      */
     inline void CommFree(std::vector<Comm> &comms) {
         for (auto &d : comms) CommFree(d);
@@ -645,9 +656,9 @@ namespace MEL {
     /**
      * Free the varadic set of comm worlds provided
      * 
-     * @param d0		The first comm world to free
-     * @param d1		The second comm world to free
-     * @param args		The varadic set of remaining comm worlds to free
+     * \param[in] d0		The first comm world to free
+     * \param[in] d1		The second comm world to free
+     * \param[in] args		The varadic set of remaining comm worlds to free
      */
     template<typename T0, typename T1, typename ...Args>
     inline void CommFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -658,8 +669,8 @@ namespace MEL {
     /**
      * Test if a comm world is the null comm world
      *
-     * @param comm		The comm world to test
-     * @return			Returns true if comm is the null comm world
+     * \param[in] comm		The comm world to test
+     * \return			Returns true if comm is the null comm world
      */
     inline bool CommIsNULL(const Comm &comm) {
         return (MPI_Comm) comm == MPI_COMM_NULL;
@@ -670,7 +681,7 @@ namespace MEL {
     /**
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
-     * @param comm		The comm world to synchronize
+     * \param[in] comm		The comm world to synchronize
      */
     inline void Barrier(const Comm &comm) {
         MEL_THROW( MPI_Barrier((MPI_Comm) comm), "Comm::Barrier" );
@@ -681,8 +692,8 @@ namespace MEL {
     /**
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
-     * @param comm		The comm world to synchronize
-     * @param rq		A reference to a request object used to determine when the barrier has been reached by all processes in comm
+     * \param[in] comm		The comm world to synchronize
+     * \param[out] rq		A reference to a request object used to determine when the barrier has been reached by all processes in comm
      */
     inline void Ibarrier(const Comm &comm, Request &rq) {
         MEL_THROW( MPI_Ibarrier((MPI_Comm) comm, (MPI_Request*) &rq), "Comm::IBarrier" );
@@ -691,8 +702,8 @@ namespace MEL {
     /**
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
-     * @param comm		The comm world to synchronize
-     * @return			Returns a request object used to determine when the barrier has been reached by all processes in comm
+     * \param[in] comm		The comm world to synchronize
+     * \return			Returns a request object used to determine when the barrier has been reached by all processes in comm
      */
     inline Request Ibarrier(const Comm &comm) {
         Request rq{};
@@ -704,7 +715,7 @@ namespace MEL {
     /**
      * Blocking operation to wait until a request object has completed
      *
-     * @param rq		The request object to wait for
+     * \param[in] rq		The request object to wait for
      */
     inline void Wait(Request &rq) {
         MEL_THROW( MPI_Wait((MPI_Request*) &rq, MPI_STATUS_IGNORE), "Comm::Wait" );
@@ -713,7 +724,7 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if a request object has completed
      *
-     * @param rq		The request object to test
+     * \param[in] rq		The request object to test
      */
     inline bool Test(Request &rq) {
         int f;
@@ -724,8 +735,8 @@ namespace MEL {
     /**
      * Blocking operation to wait until all request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
      */
     inline void Waitall(Request *ptr, int num) {
         MEL_THROW( MPI_Waitall(num, (MPI_Request*) ptr, MPI_STATUS_IGNORE), "Comm::Waitall" );
@@ -734,7 +745,7 @@ namespace MEL {
     /**
      * Blocking operation to wait until all request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
+     * \param[in] rqs		A std::vector of request objects to wait for
      */
     inline void Waitall(std::vector<Request> &rqs) {
         Waitall(&rqs[0], rqs.size());
@@ -743,8 +754,8 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if all request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
      */
     inline bool Testall(Request *ptr, int num) {
         int f;
@@ -755,7 +766,7 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if all request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
+     * \param[in] rqs		A std::vector of request objects to wait for
      */
     inline bool Testall(std::vector<Request> &rqs) {
         return Testall(&rqs[0], rqs.size());
@@ -764,9 +775,9 @@ namespace MEL {
     /**
      * Blocking operation to wait until any of the request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
-     * @return			Returns the index of the completed request
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
+     * \return			Returns the index of the completed request
      */
     inline int Waitany(Request *ptr, int num) {
         int idx;
@@ -777,8 +788,8 @@ namespace MEL {
     /**
      * Blocking operation to wait until any of the request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
-     * @return			Returns the index of the completed request
+     * \param[in] rqs		A std::vector of request objects to wait for
+     * \return			Returns the index of the completed request
      */
     inline int Waitany(std::vector<Request> &rqs) {
         return Waitany(&rqs[0], rqs.size());
@@ -789,9 +800,9 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if any of the request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
-     * @return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
+     * \return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
      */
     inline std::pair<bool, int> Testany(Request *ptr, int num) {
         int idx, f;
@@ -802,8 +813,8 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if any of the request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
-     * @return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
+     * \param[in] rqs		A std::vector of request objects to wait for
+     * \return			Returns a std::pair of a bool and int representing if any had completed, and if so what index
      */
     inline std::pair<bool, int> Testany(std::vector<Request> &rqs) {
         return Testany(&rqs[0], rqs.size());
@@ -812,9 +823,9 @@ namespace MEL {
     /**
      * Blocking operation to wait until some of the request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
-     * @return			Returns a std::vector of indices of the completed requests
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
+     * \return			Returns a std::vector of indices of the completed requests
      */
     inline std::vector<int> Waitsome(Request *ptr, int num) {
         std::vector<int> idx(num); int onum;
@@ -826,8 +837,8 @@ namespace MEL {
     /**
      * Blocking operation to wait until some of the request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
-     * @return			Returns a std::vector of indices of the completed requests
+     * \param[in] rqs		A std::vector of request objects to wait for
+     * \return			Returns a std::vector of indices of the completed requests
      */
     inline std::vector<int> Waitsome(std::vector<Request> &rqs) {
         return Waitsome(&rqs[0], rqs.size());
@@ -836,9 +847,9 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if some of the request objects in an array have completed
      *
-     * @param ptr		Pointer to the array of request objects
-     * @param num		The length of the array
-     * @return			Returns a std::vector of indices of the completed requests
+     * \param[in] ptr		Pointer to the array of request objects
+     * \param[in] num		The length of the array
+     * \return			Returns a std::vector of indices of the completed requests
      */
     inline std::vector<int> Testsome(Request *ptr, int num) {
         std::vector<int> idx(num); int onum;
@@ -850,8 +861,8 @@ namespace MEL {
     /**
      * Non-Blocking operation to test if some of the request objects in an array have completed
      *
-     * @param rqs		A std::vector of request objects to wait for
-     * @return			Returns a std::vector of indices of the completed requests
+     * \param[in] rqs		A std::vector of request objects to wait for
+     * \return			Returns a std::vector of indices of the completed requests
      */
     inline std::vector<int> Testsome(std::vector<Request> &rqs) {
         return Testsome(&rqs[0], rqs.size());
@@ -860,9 +871,9 @@ namespace MEL {
     /**
      * Perform a set union of two comm groups
      *
-     * @param lhs		The first operand of the union
-     * @param rhs		The second operand of the union
-     * @return			Returns the union of the two groups
+     * \param[in] lhs		The first operand of the union
+     * \param[in] rhs		The second operand of the union
+     * \return			Returns the union of the two groups
      */
     inline Group GroupUnion(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
@@ -873,9 +884,9 @@ namespace MEL {
     /**
      * Perform a set difference of two comm groups
      *
-     * @param lhs		The first operand of the difference
-     * @param rhs		The second operand of the difference
-     * @return			Returns the difference of the two groups
+     * \param[in] lhs		The first operand of the difference
+     * \param[in] rhs		The second operand of the difference
+     * \return			Returns the difference of the two groups
      */
     inline Group GroupDifference(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
@@ -886,9 +897,9 @@ namespace MEL {
     /**
      * Perform a set intersection of two comm groups
      *
-     * @param lhs		The first operand of the intersection
-     * @param rhs		The second operand of the intersection
-     * @return			Returns the intersection of the two groups
+     * \param[in] lhs		The first operand of the intersection
+     * \param[in] rhs		The second operand of the intersection
+     * \return			Returns the intersection of the two groups
      */
     inline Group GroupIntersection(const Group& lhs, const Group& rhs) {
         MPI_Group out_group;
@@ -899,10 +910,10 @@ namespace MEL {
     /**
      * Create a comm group including just the ranks from an exisitng group given in an array
      *
-     * @param group		The original group to build off of
-     * @param ranks		Pointer to the array of ranks
-     * @param num		The length of the array
-     * @return			Returns the new groups
+     * \param[in] group		The original group to build off of
+     * \param[in] ranks		Pointer to the array of ranks
+     * \param[in] num		The length of the array
+     * \return			Returns the new groups
      */
     inline Group GroupInclude(const Group& group, const int *ranks, const int num) {
         MPI_Group out_group;
@@ -913,9 +924,9 @@ namespace MEL {
     /**
      * Create a comm group including just the ranks from an exisitng group given in an array
      *
-     * @param group		The original group to build off of
-     * @param rqs		A std::vector of ranks
-     * @return			Returns the new groups
+     * \param[in] group		The original group to build off of
+     * \param[in] ranks		A std::vector of ranks
+     * \return			Returns the new groups
      */
     inline Group GroupInclude(const Group& group, const std::vector<int> &ranks) {
         return GroupInclude(group, &ranks[0], ranks.size());
@@ -924,10 +935,10 @@ namespace MEL {
     /**
      * Create a comm group excluding just the ranks from an exisitng group given in an array
      *
-     * @param group		The original group to build off of
-     * @param ranks		Pointer to the array of ranks
-     * @param num		The length of the array
-     * @return			Returns the new groups
+     * \param[in] group		The original group to build off of
+     * \param[in] ranks		Pointer to the array of ranks
+     * \param[in] num		The length of the array
+     * \return			Returns the new groups
      */
     inline Group GroupExclude(const Group& group, const int *ranks, const int num) {
         MPI_Group out_group;
@@ -938,9 +949,9 @@ namespace MEL {
     /**
      * Create a comm group excluding just the ranks from an exisitng group given in an array
      *
-     * @param group		The original group to build off of
-     * @param rqs		A std::vector of ranks
-     * @return			Returns the new groups
+     * \param[in] group		The original group to build off of
+     * \param[in] ranks		A std::vector of ranks
+     * \return			Returns the new groups
      */
     inline Group GroupExclude(const Group& group, const std::vector<int> &ranks) {
         return GroupExclude(group, &ranks[0], ranks.size());
@@ -949,9 +960,9 @@ namespace MEL {
     /**
      * Compare two comm groups
      *
-     * @param lhs		The first operand of the compare
-     * @param rhs		The second operand of the compare
-     * @return			Returns the comparison of two groups
+     * \param[in] lhs		The first operand of the compare
+     * \param[in] rhs		The second operand of the compare
+     * \return			Returns the comparison of two groups
      */
     inline int GroupCompare(const Group& lhs, const Group& rhs) {
         int r; 
@@ -962,9 +973,9 @@ namespace MEL {
     /**
      * Compare if two comm groups are similar
      *
-     * @param lhs		The first operand of the compare
-     * @param rhs		The second operand of the compare
-     * @return			Returns true if the groups are similar
+     * \param[in] lhs		The first operand of the compare
+     * \param[in] rhs		The second operand of the compare
+     * \return			Returns true if the groups are similar
      */
     inline bool GroupIsSimilar(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_SIMILAR;
@@ -973,9 +984,9 @@ namespace MEL {
     /**
      * Compare if two comm groups are identical
      *
-     * @param lhs		The first operand of the compare
-     * @param rhs		The second operand of the compare
-     * @return			Returns true if the groups are identical
+     * \param[in] lhs		The first operand of the compare
+     * \param[in] rhs		The second operand of the compare
+     * \return			Returns true if the groups are identical
      */
     inline bool GroupIsIdentical(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_IDENT;
@@ -984,9 +995,9 @@ namespace MEL {
     /**
      * Compare if two comm groups are congruent
      *
-     * @param lhs		The first operand of the compare
-     * @param rhs		The second operand of the compare
-     * @return			Returns true if the groups are congruent
+     * \param[in] lhs		The first operand of the compare
+     * \param[in] rhs		The second operand of the compare
+     * \return			Returns true if the groups are congruent
      */
     inline bool GroupIsCongruent(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_CONGRUENT;
@@ -995,9 +1006,9 @@ namespace MEL {
     /**
      * Compare if two comm groups are unequal
      *
-     * @param lhs		The first operand of the compare
-     * @param rhs		The second operand of the compare
-     * @return			Returns true if the groups are unequal
+     * \param[in] lhs		The first operand of the compare
+     * \param[in] rhs		The second operand of the compare
+     * \return			Returns true if the groups are unequal
      */
     inline bool GroupIsUnequal(const Group& lhs, const Group& rhs) {
         return GroupCompare(lhs, rhs) == MPI_UNEQUAL;
@@ -1006,8 +1017,8 @@ namespace MEL {
     /**
      * Compare if a comm group is the null comm group
      *
-     * @param group		The group to test
-     * @return			Returns true if the group is the null group
+     * \param[in] group		The group to test
+     * \return			Returns true if the group is the null group
      */
     inline bool GroupIsNULL(const Group &group) {
         return (MPI_Group) group == MPI_GROUP_NULL;
@@ -1016,8 +1027,8 @@ namespace MEL {
     /**
      * Gets the rank of the process within the given comm group
      *
-     * @param group		The group to use
-     * @return			Returns the rank within the given group
+     * \param[in] group		The group to use
+     * \return			Returns the rank within the given group
      */
     inline int GroupRank(const Group &group) {
         int r; 
@@ -1028,8 +1039,8 @@ namespace MEL {
     /**
      * Gets the size of the given comm group
      *
-     * @param group		The group to use
-     * @return			Returns the size of the given group
+     * \param[in] group		The group to use
+     * \return			Returns the size of the given group
      */
     inline int GroupSize(const Group &group) {
         int s; 
@@ -1040,7 +1051,7 @@ namespace MEL {
     /**
      * Frees a comm group
      *
-     * @param group		The group to free
+     * \param[in] group		The group to free
      */
     inline void GroupFree(Group &group) {
         MEL_THROW( MPI_Group_free((MPI_Group*) &group), "Group::Free" );
@@ -1050,7 +1061,7 @@ namespace MEL {
     /**
      * Free a vector comm group
      *
-     * @param groups	A std::vector of comm group
+     * \param[in] groups	A std::vector of comm group
      */
     inline void GroupFree(std::vector<Group> &groups) {
         for (auto &d : groups) GroupFree(d);
@@ -1059,9 +1070,9 @@ namespace MEL {
     /**
      * Free the varadic set of comm groups provided
      * 
-     * @param d0		The first comm groups to free
-     * @param d1		The second comm groups to free
-     * @param args		The varadic set of remaining comm groups to free
+     * \param[in] d0		The first comm groups to free
+     * \param[in] d1		The second comm groups to free
+     * \param[in] args		The varadic set of remaining comm groups to free
      */
     template<typename T0, typename T1, typename ...Args>
     inline void GroupFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -1182,9 +1193,9 @@ namespace MEL {
     /**
      * Create a derived type representing a contiguous block of an elementary type
      *
-     * @param datatype	The base type to use
-     * @param length	The number of elements in the new type
-     * @return			Returns a new type
+     * \param[in] datatype	The base type to use
+     * \param[in] length	The number of elements in the new type
+     * \return			Returns a new type
      */
     inline Datatype TypeCreateContiguous(const Datatype &datatype, const int length) {
         Datatype dt;
@@ -1196,11 +1207,11 @@ namespace MEL {
     /**
      * Create a derived type representing a struct
      *
-     * @param num			The number of members within the struct
-     * @param datatypes		Pointer to an array of datatypes
-     * @param blockLengths	Pointer to an array of block lengths
-     * @param offsets		Pointer to an array of offsets
-     * @return				Returns a new type
+     * \param[in] num			The number of members within the struct
+     * \param[in] datatypes		Pointer to an array of datatypes
+     * \param[in] blockLengths	Pointer to an array of block lengths
+     * \param[in] offsets		Pointer to an array of offsets
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateStruct(const int num, const Datatype *datatypes, const int *blockLengths, const Aint *offsets) {
         Datatype dt;
@@ -1222,8 +1233,8 @@ namespace MEL {
     /**
      * Create a derived type representing a struct
      *
-     * @param blocks		A std::vector of triples representing the size of the current member block
-     * @return				Returns a new type
+     * \param[in] blocks		A std::vector of triples representing the size of the current member block
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateStruct(const std::vector<TypeStruct_Block> &blocks) {
         const int num = blocks.size();
@@ -1242,12 +1253,12 @@ namespace MEL {
     /**
      * Create a derived type representing a sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param num			The number of dimensions of the data
-     * @param starts		Pointer to an array of start indices
-     * @param subSizes		Pointer to an array of sub sizes
-     * @param sizes			Pointer to an array of sizes of the parent array
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] num			The number of dimensions of the data
+     * \param[in] starts		Pointer to an array of start indices
+     * \param[in] subSizes		Pointer to an array of sub sizes
+     * \param[in] sizes			Pointer to an array of sizes of the parent array
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray(const Datatype &datatype, const int num, const int *starts, const int *subSizes, const int *sizes) {
         Datatype dt;
@@ -1266,32 +1277,32 @@ namespace MEL {
     /**
      * Create a derived type representing a sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param dims			A std::vector of triples representing the start, sub size, and parent size of each dimension of the data
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] dims			A std::vector of triples representing the start, sub size, and parent size of each dimension of the data
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray(const Datatype &datatype, const std::vector<TypeSubArray_Dim> &dims) {
-        const int numDims = dims.size();
-        std::vector<int>    starts(numDims);
-        std::vector<int>    subSizes(numDims);
-        std::vector<int>    sizes(numDims);
+        const int numdims = dims.size();
+        std::vector<int>    starts(numdims);
+        std::vector<int>    subSizes(numdims);
+        std::vector<int>    sizes(numdims);
 
-        for (int i = 0; i < numDims; ++i) {
+        for (int i = 0; i < numdims; ++i) {
             starts[i]   = dims[i].start;
             subSizes[i] = dims[i].size;
             sizes[i]    = dims[i].extent;
         }
-        return TypeCreateSubArray(datatype, numDims, &sizes[0], &subSizes[0], &starts[0]);
+        return TypeCreateSubArray(datatype, numdims, &sizes[0], &subSizes[0], &starts[0]);
     };
 
     /**
      * Create a derived type representing a 1D sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param x				The start index in the x dimension
-     * @param sx			The sub size in the x dimension	
-     * @param dx			The parent size in the x dimension
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] x				The start index in the x dimension
+     * \param[in] sx			The sub size in the x dimension	
+     * \param[in] dx			The parent size in the x dimension
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray1D(const Datatype &datatype, const int x, const int sx, const int dx) {
         Datatype dt;
@@ -1303,14 +1314,14 @@ namespace MEL {
     /**
      * Create a derived type representing a 2D sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param x				The start index in the x dimension
-     * @param y				The start index in the y dimension
-     * @param sx			The sub size in the x dimension	
-     * @param sy			The sub size in the y dimension
-     * @param dx			The parent size in the x dimension
-     * @param dy			The parent size in the y dimension
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] x				The start index in the x dimension
+     * \param[in] y				The start index in the y dimension
+     * \param[in] sx			The sub size in the x dimension	
+     * \param[in] sy			The sub size in the y dimension
+     * \param[in] dx			The parent size in the x dimension
+     * \param[in] dy			The parent size in the y dimension
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray2D(const Datatype &datatype,
                                          const int x,    const int y, 
@@ -1328,17 +1339,17 @@ namespace MEL {
     /**
      * Create a derived type representing a 3D sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param x				The start index in the x dimension
-     * @param y				The start index in the y dimension
-     * @param z				The start index in the z dimension
-     * @param sx			The sub size in the x dimension	
-     * @param sy			The sub size in the y dimension
-     * @param sz			The sub size in the z dimension
-     * @param dx			The parent size in the x dimension
-     * @param dy			The parent size in the y dimension
-     * @param dz			The parent size in the z dimension
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] x				The start index in the x dimension
+     * \param[in] y				The start index in the y dimension
+     * \param[in] z				The start index in the z dimension
+     * \param[in] sx			The sub size in the x dimension	
+     * \param[in] sy			The sub size in the y dimension
+     * \param[in] sz			The sub size in the z dimension
+     * \param[in] dx			The parent size in the x dimension
+     * \param[in] dy			The parent size in the y dimension
+     * \param[in] dz			The parent size in the z dimension
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray3D(const Datatype &datatype,
                                          const int x,    const int y,    const int z, 
@@ -1356,20 +1367,20 @@ namespace MEL {
     /**
      * Create a derived type representing a 4D sub array
      *
-     * @param datatype		The datatype of the parent array
-     * @param x				The start index in the x dimension
-     * @param y				The start index in the y dimension
-     * @param z				The start index in the z dimension
-     * @param w				The start index in the w dimension
-     * @param sx			The sub size in the x dimension	
-     * @param sy			The sub size in the y dimension
-     * @param sz			The sub size in the z dimension
-     * @param sw			The sub size in the w dimension
-     * @param dx			The parent size in the x dimension
-     * @param dy			The parent size in the y dimension
-     * @param dz			The parent size in the z dimension
-     * @param dw			The parent size in the w dimension
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the parent array
+     * \param[in] x				The start index in the x dimension
+     * \param[in] y				The start index in the y dimension
+     * \param[in] z				The start index in the z dimension
+     * \param[in] w				The start index in the w dimension
+     * \param[in] sx			The sub size in the x dimension	
+     * \param[in] sy			The sub size in the y dimension
+     * \param[in] sz			The sub size in the z dimension
+     * \param[in] sw			The sub size in the w dimension
+     * \param[in] dx			The parent size in the x dimension
+     * \param[in] dy			The parent size in the y dimension
+     * \param[in] dz			The parent size in the z dimension
+     * \param[in] dw			The parent size in the w dimension
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateSubArray4D(const Datatype &datatype,
                                          const int x,  const int y,  const int z,  const int w,
@@ -1388,11 +1399,11 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks at different offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of blocks
-     * @param lengths		Pointer to an array of block lengths
-     * @param displs		Pointer to an array of block displacements
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of blocks
+     * \param[in] lengths		Pointer to an array of block lengths
+     * \param[in] displs		Pointer to an array of block displacements
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateIndexed(const Datatype &datatype, const int num, const int *lengths, const int *displs) {
         Datatype dt;
@@ -1411,9 +1422,9 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks at different offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param blocks		A std::vector of pairs representing the length and displacement of the blocks
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] blocks		A std::vector of pairs representing the length and displacement of the blocks
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateIndexed(const Datatype &datatype, const std::vector<TypeIndexed_Block> &blocks) {
         const int num = blocks.size();
@@ -1430,11 +1441,11 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of blocks
-     * @param lengths		Pointer to an array of block lengths
-     * @param displs		Pointer to an array of block displacements
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of blocks
+     * \param[in] lengths		Pointer to an array of block lengths
+     * \param[in] displs		Pointer to an array of block displacements
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateHIndexed(const Datatype &datatype, const int num, const int *lengths, const Aint *displs) {
         Datatype dt;
@@ -1454,9 +1465,9 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param blocks		A std::vector of pairs representing the length and displacement of the blocks
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] blocks		A std::vector of pairs representing the length and displacement of the blocks
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateHIndexed(const Datatype &datatype, const std::vector<TypeHIndexed_Block> &blocks) {
         const int num = blocks.size();
@@ -1473,11 +1484,11 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of blocks
-     * @param length		The common block length
-     * @param displs		Pointer to an array of block displacements
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of blocks
+     * \param[in] length		The common block length
+     * \param[in] displs		Pointer to an array of block displacements
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateIndexedBlock(const Datatype &datatype, const int num, const int length, const int *displs) {
         Datatype dt;
@@ -1489,10 +1500,10 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param length		The common block length
-     * @param blocks		A std::vector representing the displacement of the blocks
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] length		The common block length
+     * \param[in] displs		A std::vector representing the displacement of the blocks
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateIndexedBlock(const Datatype &datatype, const int length, const std::vector<int> &displs) {
         return TypeCreateIndexedBlock(datatype, displs.size(), length, &displs[0]);
@@ -1503,11 +1514,11 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of blocks
-     * @param length		The common block length
-     * @param displs		Pointer to an array of block displacements
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of blocks
+     * \param[in] length		The common block length
+     * \param[in] displs		Pointer to an array of block displacements
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateHIndexedBlock(const Datatype &datatype, const int num, const int length, const Aint *displs) {
         Datatype dt;
@@ -1519,10 +1530,10 @@ namespace MEL {
     /**
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param length		The common block length
-     * @param blocks		A std::vector representing the displacement of the blocks
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] length		The common block length
+     * \param[in] displs		A std::vector representing the displacement of the blocks
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateHIndexedBlock(const Datatype &datatype, const int length, const std::vector<Aint> &displs) {
         return TypeCreateHIndexedBlock(datatype, displs.size(), length, &displs[0]);
@@ -1532,11 +1543,11 @@ namespace MEL {
     /**
      * Create a derived type representing a strided sub array of a parent array
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of strided regions
-     * @param length		The common block length of the strided regions
-     * @param stride		The number of elements between each region
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of strided regions
+     * \param[in] length		The common block length of the strided regions
+     * \param[in] stride		The number of elements between each region
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateVector(const Datatype &datatype, const int num, const int length, const int stride) {
         Datatype dt;
@@ -1548,11 +1559,11 @@ namespace MEL {
     /**
      * Create a derived type representing a strided sub array of a parent array, using byte offsets
      *
-     * @param datatype		The datatype of the elements
-     * @param num			The number of strided regions
-     * @param length		The common block length of the strided regions
-     * @param stride		The number of bytes between each region
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype of the elements
+     * \param[in] num			The number of strided regions
+     * \param[in] length		The common block length of the strided regions
+     * \param[in] stride		The number of bytes between each region
+     * \return				Returns a new type
      */
     inline Datatype TypeCreateHVector(const Datatype &datatype, const int num, const int length, const Aint stride) {
         Datatype dt;
@@ -1564,8 +1575,8 @@ namespace MEL {
     /**
      * Duplicate a derived type so it can be managed independently
      *
-     * @param datatype		The datatype to duplicate
-     * @return				Returns a new type
+     * \param[in] datatype		The datatype to duplicate
+     * \return				Returns a new type
      */
     inline Datatype TypeDuplicate(const Datatype &datatype) {
         MPI_Datatype out_datatype;
@@ -1576,8 +1587,8 @@ namespace MEL {
     /**
      * Compute the contiguous packed size of a datatype
      *
-     * @param datatype		The datatype to size
-     * @return				Returns the contiguous size of the datatype in bytes
+     * \param[in] datatype		The datatype to size
+     * \return				Returns the contiguous size of the datatype in bytes
      */
     inline int TypeSize(const Datatype &datatype) {
         int out_size;
@@ -1588,8 +1599,8 @@ namespace MEL {
     /**
      * Compute the extent of a datatype
      *
-     * @param datatype		The datatype to get the extent of 
-     * @return				Returns a std::pair of the datatype extent and lower bound
+     * \param[in] datatype		The datatype to get the extent of 
+     * \return				Returns a std::pair of the datatype extent and lower bound
      */
     inline std::pair<Aint, Aint> TypeExtent(const Datatype &datatype) {
         Aint out_lb, out_ext;
@@ -1600,8 +1611,8 @@ namespace MEL {
     /**
      * Compute the extent of a datatype and discard the lower bound
      *
-     * @param datatype		The datatype to get the extent of 
-     * @return				Returns the datatype extent
+     * \param[in] datatype		The datatype to get the extent of 
+     * \return				Returns the datatype extent
      */
     inline Aint TypeGetExtent(const Datatype &datatype) {
         Aint out_lb, out_ext;
@@ -1612,7 +1623,7 @@ namespace MEL {
     /**
      * Free a derived datatype
      *
-     * @param datatype		The datatype to free
+     * \param[in] datatype		The datatype to free
      */
     inline void TypeFree(Datatype &datatype) {
         if (datatype != MEL::Datatype::DATATYPE_NULL) {
@@ -1624,7 +1635,7 @@ namespace MEL {
     /**
      * Free a vector datatypes
      * 
-     * @param datatypes	A std::vector of derived datatypes
+     * \param[in] datatypes	A std::vector of derived datatypes
      */
     inline void TypeFree(std::vector<Datatype> &datatypes) {
         for (auto &d : datatypes) TypeFree(d);
@@ -1633,9 +1644,9 @@ namespace MEL {
     /**
      * Free the varadic set of datatypes provided
      * 
-     * @param d0		The first datatype to free
-     * @param d1		The second datatype to free
-     * @param args		The varadic set of remaining datatypes to free
+     * \param[in] d0		The first datatype to free
+     * \param[in] d1		The second datatype to free
+     * \param[in] args		The varadic set of remaining datatypes to free
      */
     template<typename T0, typename T1, typename ...Args>
     inline void TypeFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -1646,57 +1657,57 @@ namespace MEL {
     /**
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
-     * @param numProcs	The number of processes in the topology
-     * @param numDims	The number of dimensions in the topology
-     * @param dims		Pointer to an (already allocated) array of length numDims
+     * \param[in] numProcs	The number of processes in the topology
+     * \param[in] numdims	The number of dimensions in the topology
+     * \param[out] dims		Pointer to an (already allocated) array of length numdims
      */
-    inline void TopoCartesianMakeDims(const int numProcs, const int numDims, int *dims) {
-        MEL_THROW( MPI_Dims_create(numProcs, numDims, dims), "Topo::Cartesian::MakeDims" );
+    inline void TopoCartesianMakeDims(const int numProcs, const int numdims, int *dims) {
+        MEL_THROW( MPI_Dims_create(numProcs, numdims, dims), "Topo::Cartesian::MakeDims" );
     };
 
     /**
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
-     * @param comm		The comm object the topology should represent
-     * @param numDims	The number of dimensions in the topology
-     * @param dims		Pointer to an (already allocated) array of length numDims
+     * \param[in] comm		The comm object the topology should represent
+     * \param[in] numdims	The number of dimensions in the topology
+     * \param[out] dims		Pointer to an (already allocated) array of length numdims
      */
-    inline void TopoCartesianMakeDims(const Comm &comm, const int numDims, int *dims) {
-        TopoCartesianMakeDims(CommSize(comm), numDims, dims);
+    inline void TopoCartesianMakeDims(const Comm &comm, const int numdims, int *dims) {
+        TopoCartesianMakeDims(CommSize(comm), numdims, dims);
     };
 
     /**
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
-     * @param numProcs	The number of processes in the topology
-     * @param numDims	The number of dimensions in the topology
-     * @return			Returns a std::vector of dimension sizes
+     * \param[in] numProcs	The number of processes in the topology
+     * \param[in] numdims	The number of dimensions in the topology
+     * \return			Returns a std::vector of dimension sizes
      */
-    inline std::vector<int> TopoCartesianMakeDims(const int numProcs, const int numDims) {
-        std::vector<int> dims(numDims);
-        TopoCartesianMakeDims(numProcs, numDims, &dims[0]);
+    inline std::vector<int> TopoCartesianMakeDims(const int numProcs, const int numdims) {
+        std::vector<int> dims(numdims);
+        TopoCartesianMakeDims(numProcs, numdims, &dims[0]);
         return dims;
     };
 
     /**
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
-     * @param comm		The comm object the topology should represent
-     * @param numDims	The number of dimensions in the topology
-     * @return			Returns a std::vector of dimension sizes
+     * \param[in] comm		The comm object the topology should represent
+     * \param[in] numdims	The number of dimensions in the topology
+     * \return			Returns a std::vector of dimension sizes
      */
-    inline std::vector<int> TopoCartesianMakeDims(const Comm &comm, const int numDims) {
-        return TopoCartesianMakeDims(CommSize(comm), numDims);
+    inline std::vector<int> TopoCartesianMakeDims(const Comm &comm, const int numdims) {
+        return TopoCartesianMakeDims(CommSize(comm), numdims);
     };
 
     /**
      * Create a cartesian topology over a comm world
      * 
-     * @param comm		The comm object the topology should represent
-     * @param numDims	The number of dimensions in the topology
-     * @param dims		Pointer to an array of sizes of each dimension
-     * @param periods	Pointer to an array of logicals representing if each dimension is periodic or not
-     * @return			Returns a Comm world with an attached topology
+     * \param[in] comm		The comm object the topology should represent
+     * \param[in] numdims	The number of dimensions in the topology
+     * \param[in] dims		Pointer to an array of sizes of each dimension
+     * \param[in] periods	Pointer to an array of logicals representing if each dimension is periodic or not
+     * \return			Returns a Comm world with an attached topology
      */
     inline Comm TopoCartesianCreate(const Comm &comm, int numdims, const int *dims, const int *periods) {
         MPI_Comm out_comm;
@@ -1715,27 +1726,27 @@ namespace MEL {
 	/**
 	 * Create a cartesian topology over a comm world
 	 *
-	 * @param comm		The comm object the topology should represent
-	 * @param dims		A std::vector of pairs representing dimension sizes and whether dimensions are periodic
-	 * @return			Returns a Comm world with an attached topology
+	 * \param[in] comm		The comm object the topology should represent
+	 * \param[in] dims		A std::vector of pairs representing dimension sizes and whether dimensions are periodic
+	 * \return			Returns a Comm world with an attached topology
 	 */
     inline Comm TopoCartesianCreate(const Comm &comm, const std::vector<TopoCartesian_Dim> &dims) {
-        const int numDims = dims.size();
-        std::vector<int>    sizes(numDims);
-        std::vector<int>    periods(numDims);
+        const int numdims = dims.size();
+        std::vector<int>    sizes(numdims);
+        std::vector<int>    periods(numdims);
 
-        for (int i = 0; i < numDims; ++i) {
+        for (int i = 0; i < numdims; ++i) {
             sizes[i]    = dims[i].size;
             periods[i]  = dims[i].periodic;
         }
-        return TopoCartesianCreate(comm, numDims, &sizes[0], &periods[0]);
+        return TopoCartesianCreate(comm, numdims, &sizes[0], &periods[0]);
     };
 
 	/**
 	 * Get the number of dimensions in an attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @return			Returns the number of dimensions in the attached cartesian topology
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \return			Returns the number of dimensions in the attached cartesian topology
 	 */
     inline int TopoCartesianNumDims(const Comm &comm) {
         int dim;
@@ -1746,9 +1757,9 @@ namespace MEL {
 	/**
 	 * Get the rank within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param coords	Pointer to an array representing the n-dim coordinates in the topology
-	 * @return			Returns the rank in the attached cartesian topology
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] coords	Pointer to an array representing the n-dim coordinates in the topology
+	 * \return			Returns the rank in the attached cartesian topology
 	 */
     inline int TopoCartesianRank(const Comm &comm, const int *coords) {
         int rank;
@@ -1759,9 +1770,9 @@ namespace MEL {
 	/**
 	 * Get the rank within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param coords	A std::vector representing the n-dim coordinates in the topology
-	 * @return			Returns the rank in the attached cartesian topology
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] coords	A std::vector representing the n-dim coordinates in the topology
+	 * \return			Returns the rank in the attached cartesian topology
 	 */
     inline int TopoCartesianRank(const Comm &comm, const std::vector<int> coords) {
         return TopoCartesianRank(comm, &coords[0]);
@@ -1770,35 +1781,35 @@ namespace MEL {
 	/**
 	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param rank		The rank within comm
-	 * @param numDims	The number of dimensions in the topology
-	 * @param coords	Pointer to an array of numDims ints representing the coordinates
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] rank		The rank within comm
+	 * \param[in] numdims	The number of dimensions in the topology
+	 * \param[out] coords	Pointer to an array of numdims ints representing the coordinates
 	 */
-    inline void TopoCartesianCoords(const Comm &comm, const int rank, int numDims, int *coords) {
-        MEL_THROW( MPI_Cart_coords((MPI_Comm) comm, rank, numDims, coords), "Topo::Cartesian::Coords");
+    inline void TopoCartesianCoords(const Comm &comm, const int rank, int numdims, int *coords) {
+        MEL_THROW( MPI_Cart_coords((MPI_Comm) comm, rank, numdims, coords), "Topo::Cartesian::Coords");
     };
 
 	/**
 	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param rank		The rank within comm
-	 * @param numDims	The number of dimensions in the topology
-	 * @return			Returns a std::vector representing the n-dim coordinates
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] rank		The rank within comm
+	 * \param[in] numdims	The number of dimensions in the topology
+	 * \return			Returns a std::vector representing the n-dim coordinates
 	 */
-	inline std::vector<int> TopoCartesianCoords(const Comm &comm, const int rank, int numDims) {
-		std::vector<int> coords(numDims);
-		TopoCartesianCoords(comm, rank, numDims, &coords[0]);
+	inline std::vector<int> TopoCartesianCoords(const Comm &comm, const int rank, int numdims) {
+		std::vector<int> coords(numdims);
+		TopoCartesianCoords(comm, rank, numdims, &coords[0]);
         return coords;
     };
 
 	/**
 	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param rank		The rank within comm
-	 * @return			Returns a std::vector representing the n-dim coordinates
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] rank		The rank within comm
+	 * \return			Returns a std::vector representing the n-dim coordinates
 	 */
     inline std::vector<int> TopoCartesianCoords(const Comm &comm, const int rank) {
         return TopoCartesianCoords(comm, rank, TopoCartesianNumDims(comm));
@@ -1807,8 +1818,8 @@ namespace MEL {
 	/**
 	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @return			Returns a std::vector representing the n-dim coordinates
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \return			Returns a std::vector representing the n-dim coordinates
 	 */
     inline std::vector<int> TopoCartesianCoords(const Comm &comm) {
         return TopoCartesianCoords(comm, CommRank(comm), TopoCartesianNumDims(comm));
@@ -1817,29 +1828,29 @@ namespace MEL {
 	/**
 	 * Get the properties of an attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param numDims	The number of dimensions in the topology
-	 * @param dims		Pointer to an array of n-dims size representing the sizes of each dimension
-	 * @param periods	Pointer to an array of n-dims size representing whether each dimension is periodic
-	 * @param coords	Pointer to an array of n-dims size representing the coordinate in each dimension
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] numdims	The number of dimensions in the topology
+	 * \param[out] dims		Pointer to an array of n-dims size representing the sizes of each dimension
+	 * \param[out] periods	Pointer to an array of n-dims size representing whether each dimension is periodic
+	 * \param[out] coords	Pointer to an array of n-dims size representing the coordinate in each dimension
 	 */
-	inline void TopoCartesianGet(const Comm &comm, int numDims, int *dims, int *periods, int *coords) {
-		MEL_THROW(MPI_Cart_get((MPI_Comm) comm, numDims, dims, periods, coords), "Topo::Cartesian::Get");
+	inline void TopoCartesianGet(const Comm &comm, int numdims, int *dims, int *periods, int *coords) {
+		MEL_THROW(MPI_Cart_get((MPI_Comm) comm, numdims, dims, periods, coords), "Topo::Cartesian::Get");
     };
 
 	/**
 	 * Get the properties of an attached cartesian topology of a comm world
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @return			Returns a std::pair of a std::vector representing the process coordinates, and a std::vector of pairs representing the dimension sizes and periods
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \return			Returns a std::pair of a std::vector representing the process coordinates, and a std::vector of pairs representing the dimension sizes and periods
 	 */
 	inline std::pair<std::vector<int>, std::vector<TopoCartesian_Dim>> TopoCartesianGet(const Comm &comm) {
-        const int numDims = TopoCartesianNumDims(comm);
-        std::vector<int> coords(numDims), dims(numDims), periods(numDims);
-        TopoCartesianGet(comm, numDims, &dims[0], &periods[0], &coords[0]);
+        const int numdims = TopoCartesianNumDims(comm);
+        std::vector<int> coords(numdims), dims(numdims), periods(numdims);
+        TopoCartesianGet(comm, numdims, &dims[0], &periods[0], &coords[0]);
 
         std::vector<TopoCartesian_Dim> r;
-        for (int i = 0; i < numDims; ++i) {
+        for (int i = 0; i < numdims; ++i) {
             r[i].size        = dims[i];
             r[i].periodic    = periods[i];
         }
@@ -1849,11 +1860,11 @@ namespace MEL {
 	/**
 	 * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param direction	The dimension to shift in
-	 * @param disp		How much to shift by
-	 * @param rank_prev	The left neighbour
-	 * @param rank_next	The right neighbour
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] direction	The dimension to shift in
+	 * \param[in] disp		How much to shift by
+	 * \param[out] rank_prev	The left neighbour
+	 * \param[out] rank_next	The right neighbour
 	 */
     inline void TopoCartesianShift(const Comm &comm, int direction, int disp, int &rank_prev, int &rank_next) {
         MEL_THROW( MPI_Cart_shift((MPI_Comm) comm, direction, disp, &rank_prev, &rank_next), "Topo::Cartesian::Shift");
@@ -1862,10 +1873,10 @@ namespace MEL {
 	/**
 	 * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @param direction	The dimension to shift in
-	 * @param disp		How much to shift by
-	 * @return			Returns a std::pair representing the ranks of the left and right neighbour
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \param[in] direction	The dimension to shift in
+	 * \param[in] disp		How much to shift by
+	 * \return			Returns a std::pair representing the ranks of the left and right neighbour
 	 */
     inline std::pair<int, int> TopoCartesianShift(const Comm &comm, int direction, int disp) {
         int rank_prev, rank_next;
@@ -1892,8 +1903,8 @@ namespace MEL {
 	/**
 	 * Create a 2D 5-point stencil of ranks representing the neighbouring processes
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @return			Returns a 2D 5-point stencil of comm ranks
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \return			Returns a 2D 5-point stencil of comm ranks
 	 */
     inline CartesianStencil2D5P TopoCartesianStencil2D5P(const Comm &comm) {
         CartesianStencil2D5P stencil;
@@ -1926,8 +1937,8 @@ namespace MEL {
 	/**
 	 * Create a 2D 9-point stencil of ranks representing the neighbouring processes
 	 *
-	 * @param comm		The comm object the topology is attached to
-	 * @return			Returns a 2D 9-point stencil of comm ranks
+	 * \param[in] comm		The comm object the topology is attached to
+	 * \return			Returns a 2D 9-point stencil of comm ranks
 	 */
     inline CartesianStencil2D9P TopoCartesianStencil2D9P(const Comm &comm) {
         CartesianStencil2D9P stencil;
@@ -2090,8 +2101,8 @@ namespace MEL {
 	/**
 	 * Create a derived operation for reduction type functions
 	 *
-	 * @param commute	Is the operation commutative?
-	 * @return			Returns a handle to a new Op
+	 * \param[in] commute	Is the operation commutative?
+	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, T(*F)(T&, T&)>
     inline Op CreateOp(bool commute = true) {
@@ -2103,8 +2114,8 @@ namespace MEL {
 	/**
 	 * Create a derived operation for reduction type functions
 	 *
-	 * @param commute	Is the operation commutative?
-	 * @return			Returns a handle to a new Op
+	 * \param[in] commute	Is the operation commutative?
+	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, T(*F)(T&, T&, Datatype)>
     inline Op CreateOp(bool commute = true) {
@@ -2118,8 +2129,8 @@ namespace MEL {
 	/**
 	 * Create a derived operation for reduction type functions
 	 *
-	 * @param commute	Is the operation commutative?
-	 * @return			Returns a handle to a new Op
+	 * \param[in] commute	Is the operation commutative?
+	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int)>
     inline Op CreateOp(bool commute = true) {
@@ -2131,8 +2142,8 @@ namespace MEL {
 	/**
 	 * Create a derived operation for reduction type functions
 	 *
-	 * @param commute	Is the operation commutative?
-	 * @return			Returns a handle to a new Op
+	 * \param[in] commute	Is the operation commutative?
+	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int, Datatype)>
     inline Op CreateOp(bool commute = true) {
@@ -2146,8 +2157,8 @@ namespace MEL {
 	/**
 	 * Create a derived operation for reduction type functions
 	 *
-	 * @param commute	Is the operation commutative?
-	 * @return			Returns a handle to a new Op
+	 * \param[in] commute	Is the operation commutative?
+	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int*, MPI_Datatype*)>
     inline Op CreateOp(bool commute = true) {
@@ -2159,7 +2170,7 @@ namespace MEL {
 	/**
 	 * Free a derived operation
 	 *
-	 * @param op		The op to free
+	 * \param[in] op		The op to free
 	 */
     inline void OpFree(Op &op) {
         MEL_THROW( MPI_Op_free((MPI_Op*) &op ), "Op::Free" );
@@ -2168,7 +2179,7 @@ namespace MEL {
 	/**
 	 * Free a std::vector of derived operations
 	 *
-	 * @param ops		A std::vector of ops to be freed
+	 * \param[in] ops		A std::vector of ops to be freed
 	 */
     inline void OpFree(std::vector<Op> &ops) {
         for (auto &e : ops) OpFree(e);
@@ -2177,9 +2188,9 @@ namespace MEL {
 	/**
 	 * Free a varadic set of derived operations
 	 *
-	 * @param d0		The first op to free
-	 * @param d1		The second op to free
-	 * @param args		The remaining ops to free
+	 * \param[in] d0		The first op to free
+	 * \param[in] d1		The second op to free
+	 * \param[in] args		The remaining ops to free
 	 */
     template<typename T0, typename T1, typename ...Args>
     inline void OpFree(T0 &d0, T1 &d1, Args &&...args) {
@@ -2207,9 +2218,9 @@ namespace MEL {
 	/**
 	 * Logical OR of two file access modes
 	 *
-	 * @param a		The first file mode
-	 * @param b		The second file mode
-	 * @return		The combined file mode
+	 * \param[in] a		The first file mode
+	 * \param[in] b		The second file mode
+	 * \return		The combined file mode
 	 */
     inline FileMode operator|(const FileMode &a, const FileMode &b) {
         return static_cast<FileMode>(static_cast<int>(a) | static_cast<int>(b));
@@ -2224,8 +2235,8 @@ namespace MEL {
 	/**
 	 * Create a file error handler
 	 *
-	 * @param func	The function to use
-	 * @return		Returns a handle to an error handler
+	 * \param[in] func	The function to use
+	 * \return		Returns a handle to an error handler
 	 */
     inline ErrorHandler FileCreateErrorHandler(ErrorHandlerFunc func) {
         MPI_Errhandler errHndl;
@@ -2236,8 +2247,8 @@ namespace MEL {
 	/**
 	 * Set the error handler for a file
 	 *
-	 * @param file		The file to attach to
-	 * @param errHndl	The handler to use
+	 * \param[in] file		The file to attach to
+	 * \param[in] errHndl	The handler to use
 	 */
     inline void FileSetErrorHandler(const File &file, const ErrorHandler &errHndl) {
         MEL_THROW( MPI_File_set_errhandler(file, (MPI_Errhandler) errHndl), "File::SetErrorHandler" );
@@ -2246,8 +2257,8 @@ namespace MEL {
 	/**
 	 * Set the error handler for a file
 	 *
-	 * @param file	The file to attach to
-	 * @param func	The function to use
+	 * \param[in] file	The file to attach to
+	 * \param[in] func	The function to use
 	 */
 	inline void FileSetErrorHandler(const File &file, ErrorHandlerFunc func) {
         FileSetErrorHandler(file, FileCreateErrorHandler(func));
@@ -2256,8 +2267,8 @@ namespace MEL {
 	/**
 	 * Get the error handler for a file
 	 *
-	 * @param file	The file to attach to
-	 * @return		Returns a handle to the error handler
+	 * \param[in] file	The file to attach to
+	 * \return		Returns a handle to the error handler
 	 */
 	inline ErrorHandler FileGetErrorHandler(const File &file) {
         MPI_Errhandler errHndl;
@@ -2268,8 +2279,8 @@ namespace MEL {
 	/**
 	 * Get the mode a file was opened with
 	 *
-	 * @param file	The file to attach to
-	 * @return		Returns the file mode
+	 * \param[in] file	The file to attach to
+	 * \return		Returns the file mode
 	 */
     inline FileMode FileGetMode(const File &file) {
         int amode;
@@ -2280,8 +2291,8 @@ namespace MEL {
 	/**
 	 * Is the file opened in an atomic mode?
 	 *
-	 * @param file	The file to attach to
-	 * @return		Returns true is the file is opened atomically
+	 * \param[in] file	The file to attach to
+	 * \return		Returns true is the file is opened atomically
 	 */
     inline bool FileIsAtomic(const File &file) {
         int flag;
@@ -2292,8 +2303,8 @@ namespace MEL {
 	/**
 	 * Set the atomicity of the file handle
 	 *
-	 * @param file	The file to attach to
-	 * @param atom	Boolean value representing atomicity
+	 * \param[in] file	The file to attach to
+	 * \param[in] atom	Boolean value representing atomicity
 	 */
 	inline void FileSetAtomicity(const File &file, const bool atom) {
         MEL_THROW( MPI_File_set_atomicity(file, atom ? 1 : 0), "File::SetAtomicity");
@@ -2302,9 +2313,9 @@ namespace MEL {
 	/**
 	 * Get the byte position of the file cursor relative to a given location
 	 *
-	 * @param file		The file to attach to
-	 * @param offset	The relative offset to measure byte distance against
-	 * @return			Returns the number of bytes from the given offset
+	 * \param[in] file		The file to attach to
+	 * \param[in] offset	The relative offset to measure byte distance against
+	 * \return			Returns the number of bytes from the given offset
 	 */
     inline Offset FileGetByteOffset(const File &file, const Offset offset) {
         Offset byteOffset;
@@ -2315,8 +2326,8 @@ namespace MEL {
 	/**
 	 * Get the comm group a file was opened as a part of
 	 *
-	 * @param file		The file to attach to
-	 * @return			Returns comm group the file handle belongs to
+	 * \param[in] file		The file to attach to
+	 * \return			Returns comm group the file handle belongs to
 	 */
     inline Group FileGetGroup(const File &file) {
         MPI_Group group;
@@ -2327,8 +2338,8 @@ namespace MEL {
 	/**
 	 * Get the MPI_Info object attached to a file handle
 	 *
-	 * @param file		The file to attach to
-	 * @return			Returns the info object
+	 * \param[in] file		The file to attach to
+	 * \return			Returns the info object
 	 */
     inline Info FileGetInfo(const File &file) {
         MPI_Info info;
@@ -2339,8 +2350,8 @@ namespace MEL {
 	/**
 	 * Set the MPI_Info object attached to a file handle
 	 *
-	 * @param file		The file to attach to
-	 * @param info		The info object to attach
+	 * \param[in] file		The file to attach to
+	 * \param[in] info		The info object to attach
 	 */
     inline void FileSetInfo(const File &file, const Info &info) {
         MEL_THROW( MPI_File_set_info(file, info), "File::SetInfo");
@@ -2349,8 +2360,8 @@ namespace MEL {
 	/**
 	 * Get the position of the file cursor
 	 *
-	 * @param file		The file to attach to
-	 * @return			Returns the location of the file cursor in bytes
+	 * \param[in] file		The file to attach to
+	 * \return			Returns the location of the file cursor in bytes
 	 */
     inline Offset FileGetPosition(const File &file) {
         Offset offset;
@@ -2361,8 +2372,8 @@ namespace MEL {
 	/**
 	 * Get the position of the shared file cursor
 	 *
-	 * @param file		The file to attach to
-	 * @return			Returns the location of the shared file cursor in bytes
+	 * \param[in] file		The file to attach to
+	 * \return			Returns the location of the shared file cursor in bytes
 	 */
 	inline Offset FileGetPositionShared(const File &file) {
         Offset offset;
@@ -2373,8 +2384,8 @@ namespace MEL {
 	/**
 	 * Get the size of the file in bytes
 	 *
-	 * @param file		The file to attach to
-	 * @return			Returns the size of the file in bytes
+	 * \param[in] file		The file to attach to
+	 * \return			Returns the size of the file in bytes
 	 */
     inline Offset FileGetSize(const File &file) {
         Offset size;
@@ -2385,8 +2396,8 @@ namespace MEL {
 	/**
 	 * Set the size of the file in bytes
 	 *
-	 * @param[in] file	The file to attach to
-	 * @param[in] size	The size in bytes to set the file size to
+	 * \param[in] file	The file to attach to
+	 * \param[in] size	The size in bytes to set the file size to
 	 */
 	inline void FileSetSize(const File &file, const Offset size) {
         MEL_THROW( MPI_File_set_size(file, size), "File::SetSize" );
@@ -2395,9 +2406,9 @@ namespace MEL {
 	/**
 	 * Get the extent of the derived type set to the file handle
 	 *
-	 * @param[in] file			The file to attach to
-	 * @param[in] datatype		The derived datatype to measure the extent of
-	 * @return					Returns the extent of the type
+	 * \param[in] file			The file to attach to
+	 * \param[in] datatype		The derived datatype to measure the extent of
+	 * \return					Returns the extent of the type
 	 */
 	inline Aint FileGetTypeExtent(const File &file, const Datatype &datatype) {
         Aint size;
@@ -2408,10 +2419,10 @@ namespace MEL {
 	/**
 	 * Open a file and return a handle to it
 	 *
-	 * @param[in] comm			The comm world to open the file with
-	 * @param[in] path			The path to the desired file
-	 * @param[in] amode			The file mode to open the file with
-	 * @return					Returns a handle to the file pointer
+	 * \param[in] comm			The comm world to open the file with
+	 * \param[in] path			The path to the desired file
+	 * \param[in] amode			The file mode to open the file with
+	 * \return					Returns a handle to the file pointer
 	 */
     inline File FileOpen(const Comm &comm, const std::string &path, const FileMode amode) {
         MPI_File file;
@@ -2423,9 +2434,9 @@ namespace MEL {
 	/**
 	 * Open a file on an individual process and return a handle to it
 	 *
-	 * @param[in] path			The path to the desired file
-	 * @param[in] amode			The file mode to open the file with
-	 * @return					Returns a handle to the file pointer
+	 * \param[in] path			The path to the desired file
+	 * \param[in] amode			The file mode to open the file with
+	 * \return					Returns a handle to the file pointer
 	 */
     inline File FileOpenIndividual(const std::string &path, const FileMode amode) {
         return FileOpen(MEL::Comm::SELF, path, amode);
@@ -2434,7 +2445,7 @@ namespace MEL {
 	/**
 	 * Delete a file by its path
 	 *
-	 * @param[in] path			The path to the file to be deleted
+	 * \param[in] path			The path to the file to be deleted
 	 */
     inline void FileDelete(const std::string &path) {
         MEL_THROW( MPI_File_delete(path.c_str(), MPI_INFO_NULL), "File::Delete");
@@ -2443,7 +2454,7 @@ namespace MEL {
 	/**
 	 * Close the file attached to the given file handle
 	 *
-	 * @param[in] file			The file handle to be closed
+	 * \param[in] file			The file handle to be closed
 	 */
     inline void FileClose(File &file) {
         MEL_THROW( MPI_File_close(&file), "File::Close");
@@ -2452,8 +2463,8 @@ namespace MEL {
 	/**
 	 * Preallocate the opened file to the given size on the file system
 	 *
-	 * @param[in] file			The file to be preallocated
-	 * @param[in] fileSize		The size of the file in bytes
+	 * \param[in] file			The file to be preallocated
+	 * \param[in] fileSize		The size of the file in bytes
 	 */
     inline void FilePreallocate(const File &file, const Offset fileSize) {
         MEL_THROW( MPI_File_preallocate(file, fileSize), "File::Preallocate" );
@@ -2462,9 +2473,9 @@ namespace MEL {
 	/**
 	 * Move the file cursor to a specific position
 	 *
-	 * @param[in] file			The file
-	 * @param[in] offset		The position to move the file cursor to
-	 * @param[in] seekMode		The mode to move the cursor by
+	 * \param[in] file			The file
+	 * \param[in] offset		The position to move the file cursor to
+	 * \param[in] seekMode		The mode to move the cursor by
 	 */
     inline void FileSeek(const File &file, const Offset offset, const SeekMode seekMode = MEL::SeekMode::SET) {
         MEL_THROW( MPI_File_seek(file, offset, (int) seekMode), "File::Seek" );
@@ -2473,9 +2484,9 @@ namespace MEL {
 	/**
 	 * Move the shared file cursor to a specific position. The same values must be provided by all processes
 	 *
-	 * @param[in] file			The shared file
-	 * @param[in] offset		The position to move the file cursor to
-	 * @param[in] seekMode		The mode to move the cursor by
+	 * \param[in] file			The shared file
+	 * \param[in] offset		The position to move the file cursor to
+	 * \param[in] seekMode		The mode to move the cursor by
 	 */
     inline void FileSeekShared(const File &file, const Offset offset, const SeekMode seekMode = MEL::SeekMode::SET) {
         MEL_THROW( MPI_File_seek_shared(file, offset, (int) seekMode), "File::SeekShared" );
@@ -2484,7 +2495,7 @@ namespace MEL {
 	/**
 	 * Force all queued and pending disk operations on a file to be completed
 	 *
-	 * @param[in] file			The file to be synchronized
+	 * \param[in] file			The file to be synchronized
 	 */
     inline void FileSync(const File &file) {
         MEL_THROW( MPI_File_sync(file), "File::Sync");
@@ -2502,11 +2513,11 @@ namespace MEL {
 	/**
 	 * Set the view of a file handle for subsequent read/writes
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset from start of the file
-	 * @param[in] elementaryType	The derived type representing the type of each element to be written
-	 * @param[in] fileType			The derived type representing the structure of data to be written
-	 * @param[in] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset from start of the file
+	 * \param[in] elementaryType	The derived type representing the type of each element to be written
+	 * \param[in] fileType			The derived type representing the structure of data to be written
+	 * \param[in] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
 	 */
     inline void FileSetView(const File &file, const Offset offset, const Datatype elementaryType, const Datatype fileType, const std::string &datarep = "native") {
         MEL_THROW( MPI_File_set_view(file, offset, (MPI_Datatype) elementaryType, (MPI_Datatype) fileType, datarep.c_str(), MPI_INFO_NULL), "File::SetView" );    
@@ -2515,8 +2526,8 @@ namespace MEL {
 	/**
 	 * Set the view of a file handle for subsequent read/writes
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] view				A utility structure that stores the values of a file view
+	 * \param[in] file				The file handle
+	 * \param[in] view				A utility structure that stores the values of a file view
 	 */
     inline void FileSetView(const File &file, const FileView &view) {
         FileSetView(file, view.offset, view.elementaryType, view.fileType, view.datarep);
@@ -2525,11 +2536,11 @@ namespace MEL {
 	/**
 	 * Get the view attached to a file handle
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] offset			Byte offset from start of the file
-	 * @param[out] elementaryType	The derived type representing the type of each element to be written
-	 * @param[out] fileType			The derived type representing the structure of data to be written
-	 * @param[out] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
+	 * \param[in] file				The file handle
+	 * \param[out] offset			Byte offset from start of the file
+	 * \param[out] elementaryType	The derived type representing the type of each element to be written
+	 * \param[out] fileType			The derived type representing the structure of data to be written
+	 * \param[out] datarep			String argument telling the MPI implementation how data is represented. Default is "native"
 	 */
     inline void FileGetView(const File &file, Offset &offset, Datatype &elementaryType, Datatype &fileType, std::string &datarep) {
         datarep.resize(BUFSIZ);
@@ -2539,8 +2550,8 @@ namespace MEL {
 	/**
 	 * Get the view attached to a file handle
 	 *
-	 * @param[in] file				The file handle
-	 * @return						Returns a utility structure that stores the values of a file view
+	 * \param[in] file				The file handle
+	 * \return						Returns a utility structure that stores the values of a file view
 	 */
     inline FileView FileGetView(const File &file) {
         FileView view;
@@ -2551,11 +2562,11 @@ namespace MEL {
 	/**
 	 * Write to file from a single process
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
     inline Status FileWrite(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2566,11 +2577,11 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
 	inline Status FileWriteAll(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2581,12 +2592,12 @@ namespace MEL {
 	/**
 	 * Write to file from a single process at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write at
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write at
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
     inline Status FileWriteAt(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2597,12 +2608,12 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write at
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write at
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
 	inline Status FileWriteAtAll(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2613,11 +2624,11 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file in sequence
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
     inline Status FileWriteOrdered(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2628,11 +2639,11 @@ namespace MEL {
 	/**
 	 * Write to file from any processes that opened the file in parallel
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A status object
 	 */
     inline Status FileWriteShared(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Status status;
@@ -2643,11 +2654,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from a single processes 
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A request object
 	 */
     inline Request FileIwrite(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
@@ -2658,12 +2669,12 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from a single process at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write to
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write to
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A request object
 	 */
 	inline Request FileIwriteAt(const File &file, const Offset offset, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
@@ -2674,11 +2685,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from any processes that opened the file in parallel
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @param[in] datatype			The derived type representing the elements to be written
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \param[in] datatype			The derived type representing the elements to be written
+	 * \return						A request object
 	 */
     inline Request FileIwriteShared(const File &file, const void *sptr, const int snum, const Datatype &datatype) {
         MPI_Request request;
@@ -2689,11 +2700,11 @@ namespace MEL {
 	/**
 	 * Read from file from a single process
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
     inline Status FileRead(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2704,11 +2715,11 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
     inline Status FileReadAll(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2719,12 +2730,12 @@ namespace MEL {
 	/**
 	 * Read from file from a single process at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
     inline Status FileReadAt(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2735,12 +2746,12 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
     inline Status FileReadAtAll(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2751,11 +2762,11 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file in sequence
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
     inline Status FileReadOrdered(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2766,11 +2777,11 @@ namespace MEL {
 	/**
 	 * Read from file from any processes that opened the file in parallel
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A status object
 	 */
 	inline Status FileReadShared(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Status status;
@@ -2781,11 +2792,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from a single process
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A request object
 	 */
     inline Request FileIread(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
@@ -2796,12 +2807,12 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from a single process at the desired offset
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A request object
 	 */
     inline Request FileIreadAt(const File &file, const Offset offset, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
@@ -2812,11 +2823,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from any process that opened the file in parallel
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @param[in] datatype			The derived type representing the elements to be read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \param[in] datatype			The derived type representing the elements to be read
+	 * \return						A request object
 	 */
     inline Request FileIreadShared(const File &file, void *rptr, const int rnum, const Datatype &datatype) {
         MPI_Request request;
@@ -2824,6 +2835,7 @@ namespace MEL {
         return Request(request);
     };    
 
+	/// \cond HIDE
 #define MEL_FILE(T, D) inline Status FileWrite(const File &file, const T *sptr, const int snum) {                                    \
         MPI_Status status;                                                                                                            \
         MEL_THROW( MPI_File_write(file, sptr, snum,  D, &status), "File::Write(#T, #D)" );                                            \
@@ -2915,13 +2927,39 @@ namespace MEL {
         return Request(request);                                                                                                    \
     };                                                                                                                                
     
+	MEL_FILE(wchar_t, MPI_WCHAR);
+
+	MEL_FILE(float, MPI_FLOAT);
+	MEL_FILE(double, MPI_DOUBLE);
+	MEL_FILE(long double, MPI_LONG_DOUBLE);
+
+	MEL_FILE(int8_t, MPI_INT8_T);
+	MEL_FILE(int16_t, MPI_INT16_T);
+	MEL_FILE(int32_t, MPI_INT32_T);
+	MEL_FILE(int64_t, MPI_INT64_T);
+
+	MEL_FILE(uint8_t, MPI_UINT8_T);
+	MEL_FILE(uint16_t, MPI_UINT16_T);
+	MEL_FILE(uint32_t, MPI_UINT32_T);
+	MEL_FILE(uint64_t, MPI_UINT64_T);
+
+#ifdef MEL_3
+	MEL_FILE(std::complex<float>, MPI_CXX_FLOAT_COMPLEX);
+	MEL_FILE(std::complex<double>, MPI_CXX_DOUBLE_COMPLEX);
+	MEL_FILE(std::complex<long double>, MPI_CXX_LONG_DOUBLE_COMPLEX);
+	MEL_FILE(bool, MPI_CXX_BOOL);
+#endif
+
+#undef MEL_FILE
+	/// \endcond
+
 	/**
 	 * Write to file from a single process. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
     template<typename T>
     inline Status FileWrite(const File &file, const T *sptr, const int snum) {
@@ -2931,11 +2969,11 @@ namespace MEL {
 	/**
 	 * Write to file from a single process at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write to
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write to
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileWriteAt(const File &file, const Offset offset, const T *sptr, const int snum) {
@@ -2945,10 +2983,10 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileWriteAll(const File &file, const T *sptr, const int snum) {
@@ -2958,11 +2996,11 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write to
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write to
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileWriteAtAll(const File &file, const Offset offset, const T *sptr, const int snum) {
@@ -2972,10 +3010,10 @@ namespace MEL {
 	/**
 	 * Write to file from all processes that opened the file in sequence. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileWriteOrdered(const File &file, const T *sptr, const int snum) {
@@ -2985,10 +3023,10 @@ namespace MEL {
 	/**
 	 * Write to file from any processes that opened the file in parallel. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileWriteShared(const File &file, const T *sptr, const int snum) {
@@ -2998,10 +3036,10 @@ namespace MEL {
 	/**
 	 * Read from file from a single process. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
     template<typename T>
     inline Status FileRead(const File &file, T *rptr, const int rnum) {
@@ -3011,11 +3049,11 @@ namespace MEL {
 	/**
 	 * Read from file from a single process at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileReadAt(const File &file, const Offset offset, T *rptr, const int rnum) {
@@ -3025,10 +3063,10 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileReadAll(const File &file, T *rptr, const int rnum) {
@@ -3038,11 +3076,11 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileReadAtAll(const File &file, const Offset offset, T *rptr, const int rnum) {
@@ -3052,10 +3090,10 @@ namespace MEL {
 	/**
 	 * Read from file from all processes that opened the file in sequence. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileReadOrdered(const File &file, T *rptr, const int rnum) {
@@ -3065,10 +3103,10 @@ namespace MEL {
 	/**
 	 * Read from file from any processes that opened the file in parallel. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A status object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A status object
 	 */
 	template<typename T>
 	inline Status FileReadShared(const File &file, T *rptr, const int rnum) {
@@ -3078,10 +3116,10 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from a single process. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIwrite(const File &file, const T *sptr, const int snum) {
@@ -3091,11 +3129,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to write to
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to write to
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIwriteAt(const File &file, const Offset offset, const T *sptr, const int snum) {
@@ -3105,10 +3143,10 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Write to file from any processes that opened the file in parallel. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] sptr				Pointer to the memory to be written
-	 * @param[in] snum				The number of elements to write
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] sptr				Pointer to the memory to be written
+	 * \param[in] snum				The number of elements to write
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIwriteShared(const File &file, const T *sptr, const int snum) {
@@ -3118,10 +3156,10 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from a single process. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIread(const File &file, T *rptr, const int rnum) {
@@ -3131,11 +3169,11 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from a single process at the desired offset. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[in] offset			Byte offset into the file to read from
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[in] offset			Byte offset into the file to read from
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIreadAt(const File &file, const Offset offset, T *rptr, const int rnum) {
@@ -3145,136 +3183,201 @@ namespace MEL {
 	/**
 	 * Non-Blocking. Read from file from any processes that opened the file in parallel. Element size determined by template type
 	 *
-	 * @param[in] file				The file handle
-	 * @param[out] rptr				Pointer to the memory to be read into
-	 * @param[out] rnum				The number of elements to read
-	 * @return						A request object
+	 * \param[in] file				The file handle
+	 * \param[out] rptr				Pointer to the memory to be read into
+	 * \param[in] rnum				The number of elements to read
+	 * \return						A request object
 	 */
 	template<typename T>
 	inline Request FileIreadShared(const File &file, T *rptr, const int rnum) {
 		return FileIreadShared(file, rptr, rnum * sizeof(T), MEL::Datatype::UNSIGNED_CHAR);
 	};
 
-    MEL_FILE(wchar_t,                        MPI_WCHAR);
-
-    MEL_FILE(float,                            MPI_FLOAT);
-    MEL_FILE(double,                        MPI_DOUBLE);
-    MEL_FILE(long double,                    MPI_LONG_DOUBLE);
-
-    MEL_FILE(int8_t,                        MPI_INT8_T);
-    MEL_FILE(int16_t,                        MPI_INT16_T);
-    MEL_FILE(int32_t,                        MPI_INT32_T);
-    MEL_FILE(int64_t,                        MPI_INT64_T);
-
-    MEL_FILE(uint8_t,                        MPI_UINT8_T);
-    MEL_FILE(uint16_t,                        MPI_UINT16_T);
-    MEL_FILE(uint32_t,                        MPI_UINT32_T);
-    MEL_FILE(uint64_t,                        MPI_UINT64_T);
-
-#ifdef MEL_3
-    MEL_FILE(std::complex<float>,            MPI_CXX_FLOAT_COMPLEX);
-    MEL_FILE(std::complex<double>,            MPI_CXX_DOUBLE_COMPLEX);
-    MEL_FILE(std::complex<long double>,        MPI_CXX_LONG_DOUBLE_COMPLEX);
-    MEL_FILE(bool,                            MPI_CXX_BOOL);
-#endif
-
-#undef MEL_FILE
-
+	/**
+	 * Send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
     inline void Send(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                
         MEL_THROW( MPI_Send(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm), "Comm::Send" );                                            
-    }                                                                                                                                
-    inline void Bsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                                
+    };                                                                                                                                
+    
+	/**
+	 * Buffered send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
+	inline void Bsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                                
         MEL_THROW( MPI_Bsend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm), "Comm::Bsend" );                                        
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Synchronous send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */                                                                                                                                
     inline void Ssend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                                
         MEL_THROW( MPI_Ssend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm), "Comm::Ssend" );                                        
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Ready send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */                                                                                                                                  
     inline void Rsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                                
         MEL_THROW( MPI_Rsend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm), "Comm::Rsend" );                                        
-    }                                                                                                                                
+    };  
+	
+	/**
+	 * Non-Blocking. Send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */                                                                                                                               
     inline void Isend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {            
         MEL_THROW( MPI_Isend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Isend" );                                    
-    }                                                                                                                                
-    inline Request Isend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                        
+    };                                                                                                                               
+    
+	/**
+	 * Non-Blocking. Send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */
+	inline Request Isend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                        
         Request rq{};                                                                                                            
         Isend(ptr, num, datatype, dst, tag, comm, rq);                                                                                        
         return rq;                                                                                                                    
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Non-Blocking. Buffered send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */                                                                                                                                  
     inline void Ibsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {            
         MEL_THROW( MPI_Ibsend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ibsend" );                                
-    }                                                                                                                                
+    };  
+	
+	/**
+	 * Non-Blocking. Buffered send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */                                                                                                                              
     inline Request Ibsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                        
         Request rq{};                                                                                                            
         Ibsend(ptr, num, datatype, dst, tag, comm, rq);                                                                                        
         return rq;                                                                                                                    
-    }                                                                                                                                
+    }; 
+	
+	/**
+	 * Non-Blocking. Synchronous send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */                                                                                                                                  
     inline void Issend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {            
         MEL_THROW( MPI_Issend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Issend" );                                
-    }                                                                                                                                
+    }; 
+	
+	/**
+	 * Non-Blocking. Synchronous send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */                                                                                                                                 
     inline Request Issend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                        
         Request rq{};                                                                                                            
         Issend(ptr, num, datatype, dst, tag, comm, rq);                                                                                        
         return rq;                                                                                                                    
-    }                                                                                                                                
+    }; 
+	
+	/**
+	 * Non-Blocking. Ready send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */                                                                                                                               
     inline void Irsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {            
         MEL_THROW( MPI_Irsend(ptr, num, (MPI_Datatype) datatype, dst, tag, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Irsend" );                                
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Non-Blocking. Ready send num elements of a derived type from the given address
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */                                                                                                                                
     inline Request Irsend(const void *ptr, const int num, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {                        
         Request rq{};                                                                                                            
         Irsend(ptr, num, datatype, dst, tag, comm, rq);                                                                                        
         return rq;                                                                                                                    
-    }
+    };
 
-    template<typename T>
-    inline void Send(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        Send(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Bsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        Bsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ssend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        Ssend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Rsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        Rsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-
-    template<typename T>
-    inline void Isend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Isend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Isend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        return Isend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ibsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Ibsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Ibsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        return Ibsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Issend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Issend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Issend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        return Issend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-    template<typename T>
-    inline void Irsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Irsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Irsend(const std::vector<T> &sbuf, const Datatype &datatype, const int dst, const int tag, const Comm &comm) {
-        return Irsend(&sbuf[0], sbuf.size(), datatype, dst, tag, comm);
-    }
-
+	/// \cond HIDE
 #define MEL_SEND(T, D)    inline void Send(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {                \
         MEL_THROW( MPI_Send(ptr, num, D, dst, tag, (MPI_Comm) comm), "Comm::Send( " #T ", " #D " )" );                                \
     }                                                                                                                                \
@@ -3319,7 +3422,7 @@ namespace MEL {
         Irsend(ptr, num, dst, tag, comm, rq);                                                                                        \
         return rq;                                                                                                                    \
     }                                                                                                                                
-    
+
     MEL_SEND(char,                            MPI_CHAR);
     MEL_SEND(wchar_t,                        MPI_WCHAR);
 
@@ -3344,183 +3447,317 @@ namespace MEL {
     MEL_SEND(bool,                            MPI_CXX_BOOL);
 #endif
 
-    template<typename T>
-    inline void Send(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        Send(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Bsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        Bsend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ssend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        Ssend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Rsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        Rsend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-
-    template<typename T>
-    inline void Isend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Isend(&sbuf[0], sbuf.size(), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Isend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        return Isend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ibsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Ibsend(&sbuf[0], sbuf.size(), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Ibsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        return Ibsend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Issend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Issend(&sbuf[0], sbuf.size(), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Issend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        return Issend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Irsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Irsend(&sbuf[0], sbuf.size(), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Irsend(const std::vector<T> &sbuf, const int dst, const int tag, const Comm &comm) {
-        return Irsend(&sbuf[0], sbuf.size(), dst, tag, comm);
-    }
-
-    template<typename T>
-    inline void Send(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        Send((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Bsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        Bsend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ssend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        Ssend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Rsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        Rsend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-
-    template<typename T>
-    inline void Isend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Isend((char*) sbuf, snum * sizeof(T), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Isend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        return Isend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Ibsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Ibsend((char*) sbuf, snum * sizeof(T), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Ibsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        return Ibsend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Issend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Issend((char*) sbuf, snum * sizeof(T), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Issend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        return Issend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-    template<typename T>
-    inline void Irsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm, Request &rq) {
-        Irsend((char*) sbuf, snum * sizeof(T), dst, tag, comm, rq);
-    }
-    template<typename T>
-    inline Request Irsend(const T *sbuf, const int snum, const int dst, const int tag, const Comm &comm) {
-        return Irsend((char*) sbuf, snum * sizeof(T), dst, tag, comm);
-    }
-
 #undef MEL_SEND
+	/// \endcond
 
-    /// Prob incomming message
-    inline Status Probe(const int source, const int tag, const Comm &comm) {
+	/**
+	 * Send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
+    template<typename T>
+    inline void Send(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        Send(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Buffered send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
+    template<typename T>
+    inline void Bsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        Bsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Synchronous send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
+    template<typename T>
+    inline void Ssend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        Ssend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Ready send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 */
+    template<typename T>
+    inline void Rsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        Rsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Non-Blocking. Send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */
+    template<typename T>
+    inline void Isend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm, Request &rq) {
+        Isend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm, rq);
+    };
+    
+	/**
+	 * Non-Blocking. Send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */
+	template<typename T>
+    inline Request Isend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        return Isend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Non-Blocking. Buffered send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */
+    template<typename T>
+    inline void Ibsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm, Request &rq) {
+        Ibsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm, rq);
+    };
+
+	/**
+	 * Non-Blocking. Buffered end num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */
+    template<typename T>
+    inline Request Ibsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        return Ibsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Non-Blocking. Synchronous send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */
+    template<typename T>
+    inline void Issend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm, Request &rq) {
+        Issend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm, rq);
+    };
+
+	/**
+	 * Non-Blocking. Synchronous end num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */
+    template<typename T>
+    inline Request Issend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        return Issend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+	/**
+	 * Non-Blocking. Ready send num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \param[out] rq				A request object
+	 */
+    template<typename T>
+    inline void Irsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm, Request &rq) {
+        Irsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm, rq);
+    };
+
+	/**
+	 * Non-Blocking. Ready end num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \param[in] ptr				Pointer to the memory to be sent
+	 * \param[in] num				The number of elements to send
+	 * \param[in] dst				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a request object
+	 */
+    template<typename T>
+    inline Request Irsend(const T *ptr, const int num, const int dst, const int tag, const Comm &comm) {
+        return Irsend(ptr, num * sizeof(T), MEL::Datatype::CHAR, dst, tag, comm);
+    };
+
+    /**
+	 * Probe an incoming message to predetermine its contents
+	 *
+	 * \param[in] source			The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a status object
+	 */
+	 inline Status Probe(const int source, const int tag, const Comm &comm) {
         MPI_Status status{};
         MEL_THROW( MPI_Probe(source, tag, (MPI_Comm) comm, &status), "Comm::Probe" );
         return status;
     };
+
+	/**
+	 * Non-Blocking. Probe an incoming message to predetermine its contents
+	 *
+	 * \param[in] source			The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns a std::pair of a bool representing if a message was available and status object for that message
+	 */
     inline std::pair<bool, Status> Iprobe(const int source, const int tag, const Comm &comm) {
         MPI_Status status{}; int f;
         MEL_THROW( MPI_Iprobe(source, tag, (MPI_Comm) comm, &f, &status), "Comm::Iprobe" );
         return std::make_pair(f != 0, status);
     };
 
+	/**
+	 * Probe the length of an incoming message. Element type is determined from the template parameter
+	 *
+	 * \param[in] status			A status object containing the rank and tag for the message
+	 * \return						Returns the number of elements in the message
+	 */
     template<typename T>
     inline int ProbeGetCount(const MPI_Status &status) {
         int c;
         MEL_THROW(MPI_Get_count(&status, MPI_CHAR, &c), "Comm::ProbeGetCount");
         return c / sizeof(T);
     };
-    inline int ProbeGetCount(const Datatype &datatype, const Status &status) {
+    
+	/**
+	 * Probe the length of an incoming message 
+	 *
+	 * \param[in] datatype			The derived datatype of the elements 
+	 * \param[in] status			A status object containing the rank and tag for the message
+	 * \return						Returns the number of elements in the message
+	 */
+	inline int ProbeGetCount(const Datatype &datatype, const Status &status) {
         int c;
         MEL_THROW(MPI_Get_count(&status, (MPI_Datatype) datatype, &c), "Comm::ProbeGetCount");
         return c;
     };
+
+	/**
+	 * Probe the length of an incoming message. Element type is determined from the template parameter
+	 *
+	 * \param[in] src				The rank of the process to send to
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to send within
+	 * \return						Returns the number of elements in the message
+	 */
     template<typename T>
     inline int ProbeGetCount(const int src, const int tag, const Comm &comm) {
-        MPI_Status status = Probe(src, tag, comm);
+        Status status = Probe(src, tag, comm);
         return ProbeGetCount<T>(status);
     };
+
+	/**
+	 * Probe the length of an incoming message 
+	 *
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] src				The rank of the process to probe from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \return						Returns the number of elements in the message
+	 */
     inline int ProbeGetCount(const Datatype &datatype, const int src, const int tag, const Comm &comm) {
         Status status = Probe(src, tag, comm);
         return ProbeGetCount(datatype, status);
     };
 
+	/**
+	 * Recieve a message of known length into the given pointer 
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \return						Returns a status object
+	 */
     inline Status Recv(void *ptr, const int num, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
         Status status{};                                                                                                        
         MEL_THROW( MPI_Recv(ptr, num, (MPI_Datatype) datatype, src, tag, (MPI_Comm) comm, &status), "Comm::Recv" );                                
         return status;                                                                                                                
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Non-Blocking. Recieve a message of known length into the given pointer 
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \param[out] rq				A request object
+	 */                                                                                                                                
     inline void Irecv(void *ptr, const int num, const Datatype &datatype, const int src, const int tag, const Comm &comm, Request &rq) {
         MEL_THROW( MPI_Irecv(ptr, num, (MPI_Datatype) datatype, src, tag, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Irecv" );                                    
-    }                                                                                                                                
+    };
+	
+	/**
+	 * Non-Blocking. Recieve a message of known length into the given pointer 
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] datatype			The derived datatype of the elements
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \return						Returns a request object
+	 */                                                                                                                               
     inline Request Irecv(void *ptr, const int num, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
         Request rq{};                                                                                                            
         Irecv(ptr, num, datatype, src, tag, comm, rq);                                                                                        
         return rq;                                                                                                                    
-    }
-
-    /// Recieve to a vector of known type and length where dbuf is already at least the correct size 
-    template<typename T>
-    inline Status Recv(std::vector<T> &dbuf, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
-        return Recv(&dbuf[0], dbuf.size(), datatype, src, tag, comm);
-    };
-    template<typename T>
-    inline Status Recv(std::vector<T> &dbuf, const int dnum, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
-        return Recv(&dbuf[0], dnum, datatype, src, tag, comm);
     };
 
-    /// Non-blocking recieve to a vector of known type where the vector is at least the correct size
-    template<typename T>
-    inline Request Irecv(std::vector<T> &dbuf, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
-        return Irecv(&dbuf[0], dbuf.size(), datatype, src, tag, comm);
-    };
-    template<typename T>
-    inline Request Irecv(std::vector<T> &dbuf, const int dnum, const Datatype &datatype, const int src, const int tag, const Comm &comm) {
-        return Irecv(&dbuf[0], dnum, datatype, src, tag, comm);
-    };
-    template<typename T>
-    inline void Irecv(std::vector<T> &dbuf, const Datatype &datatype, const int src, const int tag, const Comm &comm, Request &rq) {
-        Irecv(&dbuf[0], dbuf.size(), datatype, src, tag, comm, rq);
-    };
-    template<typename T>
-    inline void Irecv(std::vector<T> &dbuf, const int dnum, const Datatype &datatype, const int src, const int tag, const Comm &comm, Request &rq) {
-        Irecv(&dbuf[0], dnum, datatype, src, tag, comm, rq);
-    };
-
+	/// \cond HIDE
 #define MEL_RECV(T, D) inline Status Recv(T *ptr, const int num, const int src, const int tag, const Comm &comm) {                    \
         Status status{};                                                                                                            \
         MEL_THROW( MPI_Recv(ptr, num, D, src, tag, (MPI_Comm) comm, &status), "Comm::Recv( " #T ", " #D " )" );                        \
@@ -3558,238 +3795,669 @@ namespace MEL {
     MEL_RECV(std::complex<long double>,        MPI_CXX_LONG_DOUBLE_COMPLEX);
     MEL_RECV(bool,                            MPI_CXX_BOOL);
 #endif
-    /// Recieve to a vector of known type and length where dbuf is already at least the correct size 
-    template<typename T>
-    inline Status Recv(std::vector<T> &dbuf, const int src, const int tag, const Comm &comm) {
-        return Recv(&dbuf[0], dbuf.size(), src, tag, comm);
-    };
-    template<typename T>
-    inline Status Recv(std::vector<T> &dbuf, const int dnum, const int src, const int tag, const Comm &comm) {
-        dbuf.resize(dnum);
-        return Recv(&dbuf[0], dnum, src, tag, comm);
-    };
-
-    /// Dynamic recieve vector of known type with probe and resize
-    template<typename T>
-    inline Status DynamicRecv(std::vector<T> &dbuf, const int src, const int tag, const Comm &comm) {
-        Status status = Probe(src, tag, comm);
-        const int dnum = ProbeGetCount<T>(status);
-        dbuf.resize(dnum);
-        return Recv(dbuf, dnum, status.MPI_SOURCE, status.MPI_TAG, comm);
-    };
-    template<typename T>
-    inline std::vector<T> DynamicRecv(const int src, const int tag, const Comm &comm, Status &status) {
-        std::vector<T> dbuf;
-        status = DynamicRecv(dbuf, src, tag, comm);
-        return dbuf;
-    };
-    template<typename T>
-    inline std::pair<Status, std::vector<T>> DynamicRecv(const int src, const int tag, const Comm &comm) {
-        std::vector<T> dbuf;
-        Status status = DynamicRecv(dbuf, src, tag, comm);
-        return std::make_pair(status, dbuf);
-    };
-
-    /// Non-blocking recieve to a vector of known type where the vector is at least the correct size
-    template<typename T>
-    inline Request Irecv(std::vector<T> &dbuf, const int src, const int tag, const Comm &comm) {
-        return Irecv(&dbuf[0], dbuf.size(), src, tag, comm);
-    };
-    template<typename T>
-    inline Request Irecv(std::vector<T> &dbuf, const int dnum, const int src, const int tag, const Comm &comm) {
-        dbuf.resize(dnum);
-        return Irecv(&dbuf[0], dnum, src, tag, comm);
-    };
-    template<typename T>
-    inline void Irecv(std::vector<T> &dbuf, const int src, const int tag, const Comm &comm, Request &rq) {
-        Irecv(&dbuf[0], dbuf.size(), src, tag, comm, rq);
-    };
-    template<typename T>
-    inline void Irecv(std::vector<T> &dbuf, const int dnum, const int src, const int tag, const Comm &comm, Request &rq) {
-        dbuf.resize(dnum);
-        Irecv(&dbuf[0], dnum, src, tag, comm, rq);
-    };
-
-    /// Recieve to a vector of known type and length where dbuf is already at least the correct size 
-    template<typename T>
-    inline Status Recv(T *dbuf, const int dnum, const int src, const int tag, const Comm &comm) {
-        return Recv((char*) dbuf, dnum * sizeof(T), src, tag, comm);
-    };
-    /// Non-blocking recieve to a vector of known type where the vector is at least the correct size
-    template<typename T>
-    inline Request Irecv(T *dbuf, const int dnum, const int src, const int tag, const Comm &comm) {
-        return Irecv((char*) dbuf, dnum * sizeof(T), src, tag, comm);
-    };
-    template<typename T>
-    inline void Irecv(T *dbuf, const int dnum, const int src, const int tag, const Comm &comm, Request &rq) {
-        Irecv((char*) dbuf, dnum * sizeof(T), src, tag, comm, rq);
-    };
-
 #undef MEL_RECV
+	/// \endcond
 
-    /* Bcast */                                                                                                                        
+	/**
+	 * Recieve a message of known length into the given pointer. Element size is determined from the template parameter
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \return						Returns a status object
+	 */
+    template<typename T>
+    inline Status Recv(T *ptr, const int num, const int src, const int tag, const Comm &comm) {
+        return Recv(ptr, num * sizeof(T), MEL::Datatype::CHAR, src, tag, comm);
+    };
+
+	/**
+	 * Non-Blocking. Recieve a message of known length into the given pointer. Element size is determined from the template parameter 
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \param[out] rq				A request object
+	 */   
+    template<typename T>
+    inline void Irecv(T *ptr, const int num, const int src, const int tag, const Comm &comm, Request &rq) {
+        Irecv(ptr, num * sizeof(T), MEL::Datatype::CHAR, src, tag, comm, rq);
+    };
+    
+	/**
+	 * Non-Blocking. Recieve a message of known length into the given pointer. Element size is determined from the template parameter 
+	 *
+	 * \param[out] ptr				Pointer to the memory receive into
+	 * \param[in] num				The number of elements to receive
+	 * \param[in] src				The rank of the process to receive from
+	 * \param[in] tag				A tag for the message
+	 * \param[in] comm				The comm world to receive within
+	 * \return						Returns a request object
+	 */
+	template<typename T>
+    inline Request Irecv(T *ptr, const int num, const int src, const int tag, const Comm &comm) {
+        return Irecv(ptr, num * sizeof(T), MEL::Datatype::CHAR, src, tag, comm);
+    };
+
+    /**
+	 * Broadcast an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] datatype			The derived datatype of the elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 */                                                                                                                      
     inline void Bcast(void *ptr, const int num, const Datatype &datatype, const int root, const Comm &comm) {                                                                            
         MEL_THROW( MPI_Bcast(ptr, num, (MPI_Datatype) datatype, root, (MPI_Comm) comm), "Comm::Bcast" );                                                                
-    }
+    };
 
-    /* Scatter / Scatterv */                                                                                                                                
-    inline void Scatter(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
+    /**
+	 * Scatter an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				The number of elements to scatter, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 */
+	inline void Scatter(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         MEL_THROW( MPI_Scatter(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm), "Comm::Scatter" );                                            
-    }        
-                                                                                                                                                
+    };        
+    
+	/**
+	 * Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				Pointer to an array of number of elements to send to each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the element displacements of where each processes data is to be sent, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 */                                                                                                                                            
     inline void Scatterv(void *sptr, const int *snum, const int *displs, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         MEL_THROW( MPI_Scatterv(sptr, snum, displs, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm), "Comm::Scatterv" );                                
-    }    
+    };    
                                                                                                                                                     
-    /* Gather / Gatherv */                                                                                                                                    
+	/**
+	 * Gather an array from all processes in comm 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				The number of elements to receive, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 */                                                                                                                                
     inline void Gather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         MEL_THROW( MPI_Gather(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm), "Comm::Gather" );                                            
-    }    
-                                                                                                                                                            
+    };    
+      
+	/**
+	 * Gather an array from all processes in comm, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the displacements of elements to be received from each process, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 */                                                                                                                                                      
     inline void Gatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displs, const Datatype &rdatatype, const int root, const Comm &comm) {
         MEL_THROW( MPI_Gatherv(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, displs, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm), "Comm::Gatherv" );                                    
-    }
+    };
                                                                                                                                                             
-    /* Allgather / Allgatherv */                                                                                                                            
+    /**
+	 * Gather an array from all processes in comm and distribute it to all processes 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 */                                                                                                                            
     inline void Allgather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm) {
         MEL_THROW( MPI_Allgather(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, (MPI_Comm) comm), "Comm::Allgather" );                                            
-    }    
-                                                                                                                                                            
+    };    
+    
+	/**
+	 * Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] displ				Pointer to an array of the element displacements of where each processes data is to be received
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 */                                                                                                                                                          
     inline void Allgatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displ, const Datatype &rdatatype, const Comm &comm) {
-        MEL_THROW( MPI_Allgatherv(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, displ, (MPI_Datatype) rdatatype, (MPI_Comm) comm), "Comm::Allgather" );                                    
-    }    
+        MEL_THROW( MPI_Allgatherv(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, displ, (MPI_Datatype) rdatatype, (MPI_Comm) comm), "Comm::Allgather" );  
+    };   
                                                                                                                                                 
-    /* Alltoall / Alltoallv / Alltoallw */                                                                                                                                
+    /**
+	 * Broadcast from all processes to all processes
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				The number of elements to send
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to rnum * commsize elements to receive
+	 * \param[in] rnum				The number of elements to receive from each process in comm
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 */                                                                                                                                
     inline void Alltoall(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm) {
         MEL_THROW( MPI_Alltoall(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, (MPI_Comm) comm), "Comm::Alltoall" );                                                
-    }    
-                                                                                                                                            
+    };    
+    
+	/**
+	 * Broadcast from all processes to all processes with independent number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 */                                                                                                                                         
     inline void Alltoallv(void *sptr, const int *snum, const int *sdispl, const Datatype &sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype &rdatatype, const Comm &comm) {
         MEL_THROW( MPI_Alltoallv(sptr, snum, sdispl, (MPI_Datatype) sdatatype, rptr, rnum, rdispl, (MPI_Datatype) rdatatype, (MPI_Comm) comm), "Comm::Alltoallv" );                            
-    }
+    };
 
+	/**
+	 * Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			Pointer to an array of the derived datatypes of the elements to send for each process
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			Pointer to an array of the derived datatypes of the elements to receive for each process
+	 * \param[in] comm				The comm world to broadcast within
+	 */    
     inline void Alltoallw(void *sptr, const int *snum, const int *sdispl, const Datatype *sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype *rdatatype, const Comm &comm) {
         MEL_THROW( MPI_Alltoallw(sptr, snum, sdispl, (MPI_Datatype*) sdatatype, rptr, rnum, rdispl, (MPI_Datatype*) rdatatype, (MPI_Comm) comm), "Comm::Alltoallw" );
-    }
+    };
 
-    /* Reduce / Allreduce */                                                                                                                                
+    /**
+	 * Reduce an array of known length across all processes in comm using the given operation
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer, significant only on root
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] root				The process to receive the result
+	 * \param[in] comm				The comm world to reduce within
+	 */                                                                                                                             
     inline void Reduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const int root, const Comm &comm) {
         MEL_THROW( MPI_Reduce(sptr, rptr, num, (MPI_Datatype) datatype, (MPI_Op) op, root, (MPI_Comm) comm), "Comm::Reduce" );                                                
-    }                                                                                                                                                
-    inline void Allreduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const Comm &comm) {
+    };                                                                                                                                                
+    
+	/**
+	 * Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] comm				The comm world to reduce within
+	 */
+	inline void Allreduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const Comm &comm) {
         MEL_THROW( MPI_Allreduce(sptr, rptr, num, (MPI_Datatype) datatype, (MPI_Op) op, (MPI_Comm) comm), "Comm::Allreduce" );                                            
-    }
+    };
     
 #ifdef MEL_3
+	/**
+	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] datatype			The derived datatype of the elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 * \param[out] rq				A request object
+	 */
     inline void Ibcast(void *ptr, const int num, const Datatype &datatype, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Ibcast(ptr, num, (MPI_Datatype) datatype, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ibcast");
-    }
-    inline Request Ibcast(void *ptr, const int num, const Datatype &datatype, const int root, const Comm &comm) {
+    };
+    
+	/**
+	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] datatype			The derived datatype of the elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 * \return						Returns a request object
+	 */
+	inline Request Ibcast(void *ptr, const int num, const Datatype &datatype, const int root, const Comm &comm) {
         Request rq{};
         Ibcast(ptr, num, datatype, root, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Scatter an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				The number of elements to scatter, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 * \param[out] rq				A request object
+	 */
     inline void Iscatter(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Iscatter(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Iscatter");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Scatter an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				The number of elements to scatter, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 * \return						Returns a request object
+	 */
     inline Request Iscatter(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         Request rq{};
         Iscatter(sptr, snum, sdatatype, rptr, rnum, rdatatype, root, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				Pointer to an array of number of elements to send to each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the element displacements of where each processes data is to be sent, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 * \param[out] rq				A request object
+	 */
     inline void Iscatterv(void *sptr, const int *snum, const int *displs, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Iscatterv(sptr, snum, displs, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Iscatterv");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
+	 *
+	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
+	 * \param[in] snum				Pointer to an array of number of elements to send to each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the element displacements of where each processes data is to be sent, significant only on root
+	 * \param[in] sdatatype			The derived datatype of the elements to send, significant only on root
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to scatter within
+	 * \return						Returns a request object
+	 */
     inline Request Iscatterv(void *sptr, const int *snum, const int *displs, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         Request rq{};
         Iscatterv(sptr, snum, displs, sdatatype, rptr, rnum, rdatatype, root, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				The number of elements to receive, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 * \param[out] rq				A request object
+	 */ 
     inline void Igather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Igather(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Igather");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				The number of elements to receive, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 * \return						Returns a request object
+	 */ 
     inline Request Igather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const int root, const Comm &comm) {
         Request rq{};
         Igather(sptr, snum, sdatatype, rptr, rnum, rdatatype, root, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the displacements of elements to be received from each process, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 * \param[out] rq				A request object
+	 */ 
     inline void Igatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displs, const Datatype &rdatatype, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Igatherv(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, displs, (MPI_Datatype) rdatatype, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Igatherv");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into, significant only on root
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process, significant only on root
+	 * \param[in] displs			Pointer to an array of the displacements of elements to be received from each process, significant only on root
+	 * \param[in] rdatatype			The derived datatype of the elements to receive, significant only on root
+	 * \param[in] root				The rank of the process to send to
+	 * \param[in] comm				The comm world to gather within
+	 * \return						Returns a request object
+	 */ 
     inline Request Igatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displs, const Datatype &rdatatype, const int root, const Comm &comm) {
         Request rq{};
         Igatherv(sptr, snum, sdatatype, rptr, rnum, displs, rdatatype, root, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 * \param[out] rq				A request object
+	 */  
     inline void Iallgather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Iallgather(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Iallgather");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes 
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				The number of elements to receive
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 * \return						Returns a request object
+	 */  
     inline Request Iallgather(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm) {
         Request rq{};
         Iallgather(sptr, snum, sdatatype, rptr, rnum, rdatatype, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] displ				Pointer to an array of the element displacements of where each processes data is to be received
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 * \param[out] rq				A request object
+	 */  
     inline void Iallgatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displ, const Datatype &rdatatype, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Iallgatherv(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, displ, (MPI_Datatype) rdatatype, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Iallgather");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
+	 *
+	 * \param[in] sptr				Pointer to the memory to gather
+	 * \param[in] snum				The number of elements to gather
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the memory to receive into
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] displ				Pointer to an array of the element displacements of where each processes data is to be received
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to gather within
+	 * \return						Returns a request object
+	 */  
     inline Request Iallgatherv(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int *rnum, const int *displ, const Datatype &rdatatype, const Comm &comm) {
         Request rq{};
         Iallgatherv(sptr, snum, sdatatype, rptr, rnum, displ, rdatatype, comm, rq);
         return rq;
-    }
+    };
 
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				The number of elements to send
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to rnum * commsize elements to receive
+	 * \param[in] rnum				The number of elements to receive from each process in comm
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 * \param[out] rq				A request object
+	 */
     inline void Ialltoall(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Ialltoall(sptr, snum, (MPI_Datatype) sdatatype, rptr, rnum, (MPI_Datatype) rdatatype, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ialltoall");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				The number of elements to send
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to rnum * commsize elements to receive
+	 * \param[in] rnum				The number of elements to receive from each process in comm
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 * \return						Returns a request object
+	 */
     inline Request Ialltoall(void *sptr, const int snum, const Datatype &sdatatype, void *rptr, const int rnum, const Datatype &rdatatype, const Comm &comm) {
         Request rq{};
         Ialltoall(sptr, snum, sdatatype, rptr, rnum, rdatatype, comm, rq);
         return rq;
-    }
+    };
     
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes with independent number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 * \param[out] rq				A request object
+	 */
     inline void Ialltoallv(void *sptr, const int *snum, const int *sdispl, const Datatype &sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype &rdatatype, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Ialltoallv(sptr, snum, sdispl, (MPI_Datatype) sdatatype, rptr, rnum, rdispl, (MPI_Datatype) rdatatype, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ialltoallv");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes with independent number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			The derived datatype of the elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			The derived datatype of the elements to receive
+	 * \param[in] comm				The comm world to broadcast within
+	 * \return						Returns a request object
+	 */
     inline Request Ialltoallv(void *sptr, const int *snum, const int *sdispl, const Datatype &sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype &rdatatype, const Comm &comm) {
         Request rq{};
         Ialltoallv(sptr, snum, sdispl, sdatatype, rptr, rnum, rdispl, rdatatype, comm, rq);
         return rq;
-    }
+    };
     
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			Pointer to an array of the derived datatypes of the elements to send for each process
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			Pointer to an array of the derived datatypes of the elements to receive for each process
+	 * \param[in] comm				The comm world to broadcast within
+	 * \param[out] rq				A request object
+	 */   
     inline void Ialltoallw(void *sptr, const int *snum, const int *sdispl, const Datatype *sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype *rdatatype, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Ialltoallw(sptr, snum, sdispl, (MPI_Datatype*) sdatatype, rptr, rnum, rdispl, (MPI_Datatype*) rdatatype, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ialltoallw");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
+	 *
+	 * \param[in] sptr				Pointer to snum elements to send
+	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
+	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
+	 * \param[in] sdatatype			Pointer to an array of the derived datatypes of the elements to send for each process
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] rnum				Pointer to an array of the number of elements to receive from each process
+	 * \param[in] rdispl			Pointer to an array of element displacements of where each processes data is to be recieved to
+	 * \param[in] rdatatype			Pointer to an array of the derived datatypes of the elements to receive for each process
+	 * \param[in] comm				The comm world to broadcast within
+	 * \return						Returns a request object
+	 */   
     inline Request Ialltoallw(void *sptr, const int *snum, const int *sdispl, const Datatype *sdatatype, void *rptr, const int *rnum, const int *rdispl, const Datatype *rdatatype, const Comm &comm) {
         Request rq{};
         Ialltoallw(sptr, snum, sdispl, sdatatype, rptr, rnum, rdispl, rdatatype, comm, rq);
         return rq;
-    }
+    };
     
+	/**
+	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer, significant only on root
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] root				The process to receive the result
+	 * \param[in] comm				The comm world to reduce within
+	 * \param[out] rq				A request object
+	 */     
     inline void Ireduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const int root, const Comm &comm, Request &rq) {
         MEL_THROW(MPI_Ireduce(sptr, rptr, num, (MPI_Datatype) datatype, (MPI_Op) op, root, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Ireduce");
-    }
+    };
+
+	/**
+	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer, significant only on root
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] root				The process to receive the result
+	 * \param[in] comm				The comm world to reduce within
+	 * \return						Returns a request object
+	 */     
     inline Request Ireduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const int root, const Comm &comm) {
         Request rq{};
         Ireduce(sptr, rptr, num, datatype, op, root, comm, rq);
         return rq;
-    }    
+    };    
     
+	/**
+	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] comm				The comm world to reduce within
+	 * \param[out] rq				A request object
+	 */
     inline void Iallreduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const Comm &comm, Request &rq) {
         MEL_THROW( MPI_Iallreduce(sptr, rptr, num, (MPI_Datatype) datatype, (MPI_Op) op, (MPI_Comm) comm, (MPI_Request*) &rq), "Comm::Iallreduce" );                            
-    }                                                                                                                                                        
+    }; 
+	
+	/**
+	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
+	 *
+	 * \param[in] sptr				Pointer to num elements to send
+	 * \param[out] rptr				Pointer to the receive buffer
+	 * \param[in] num				The number of elements in the array
+	 * \param[in] datatype			The derived datatype of the elements to reduce
+	 * \param[in] op				The operation to perform for the reduction
+	 * \param[in] comm				The comm world to reduce within
+	 * \return						Returns a request object
+	 */                                                                                                                                                       
     inline Request Iallreduce(void *sptr, void *rptr, const int num, const Datatype &datatype, const Op &op, const Comm &comm) {
         Request rq{};                                                                                                                                        
         Iallreduce(sptr, rptr, num, datatype, op, comm, rq);                                                                                                    
         return rq;                                                                                                                                            
-    }
+    };
 #endif
 
+	/// \cond HIDE
 #define MEL_COLLECTIVE(T, D) inline void Bcast(T *ptr, const int num, const int root, const Comm &comm) {                                                    \
         MEL_THROW( MPI_Bcast(ptr, num, D, root, (MPI_Comm) comm), "Comm::Bcast( " #T ", " #D " )" );                                                        \
     }                                                                                                                                                        \
@@ -3969,101 +4637,54 @@ namespace MEL {
     MEL_3_COLLECTIVE(bool,                        MPI_CXX_BOOL);
 #endif
 
-    /// Bcast
-    template<typename T>
-    inline void Bcast(T *dbuf, const int dnum, const int root, const Comm &comm) {
-        Bcast((char*) dbuf, dnum * sizeof(T), root, comm);
-    };
-
-    /// Reduce a single value
-    template<typename T>
-    inline void Reduce(T &val, T &vout, const Op &op, const int root, const Comm &comm) {
-        Reduce(&val, &vout, 1, op, root, comm);
-    };
-    template<typename T>
-    inline T Reduce(T &val, const Op &op, const int root, const Comm &comm) {
-        T vout;
-        Reduce(&val, &vout, 1, op, root, comm);
-        return vout;
-    };
-    template<typename T>
-    inline void Allreduce(T &val, T &vout, const Op &op, const Comm &comm) {
-        Allreduce(&val, &vout, 1, op, comm);
-    };
-    template<typename T>
-    inline T Allreduce(T &val, const Op &op, const Comm &comm) {
-        T vout;
-        Allreduce(&val, &vout, 1, op, comm);
-        return vout;
-    };
-
-    /// Reduce a single value with datatype
-    template<typename T>
-    inline void Reduce(T &val, T &vout, const Datatype &datatype, const Op &op, const int root, const Comm &comm) {
-        Reduce(&val, &vout, 1, datatype, op, root, comm);
-    };
-    template<typename T>
-    inline T Reduce(T &val, const Datatype &datatype, const Op &op, const int root, const Comm &comm) {
-        T vout;
-        Reduce(&val, &vout, 1, datatype, op, root, comm);
-        return vout;
-    };
-    template<typename T>
-    inline void Allreduce(T &val, T &vout, const Datatype &datatype, const Op &op, const Comm &comm) {
-        Allreduce(&val, &vout, 1, datatype, op, comm);
-    };
-    template<typename T>
-    inline T Allreduce(T &val, const Datatype &datatype, const Op &op, const Comm &comm) {
-        T vout;
-        Allreduce(&val, &vout, 1, datatype, op, comm);
-        return vout;
-    };
-
-#ifdef MEL_3
-    template<typename T>
-    inline Request Ibcast(T *dbuf, const int dnum, const int root, const Comm &comm) {
-        return Ibcast((char*) dbuf, dnum * sizeof(T), root, comm);
-    };
-    template<typename T>
-    inline void Ibcast(T *dbuf, const int dnum, const int root, const Comm &comm, Request &rq) {
-        Ibcast((char*) dbuf, dnum * sizeof(T), root, comm, rq);
-    };
-    template<typename T>
-    inline Request Ireduce(T &val, T &vout, const Op &op, const int root, const Comm &comm) {
-        return Ireduce(&val, &vout, 1, op, root, comm);
-    };
-    template<typename T>
-    inline void Ireduce(T &val, T &vout, const Op &op, const int root, const Comm &comm, Request &rq) {
-        Ireduce(&val, &vout, 1, op, root, comm, rq);
-    };
-    template<typename T>
-    inline Request Iallreduce(T &val, T &vout, const Op &op, const Comm &comm) {
-        return Iallreduce(&val, &vout, 1, op, comm);
-    };
-    template<typename T>
-    inline void Iallreduce(T &val, T &vout, const Op &op, const Comm &comm, Request &rq) {
-        Iallreduce(&val, &vout, 1, op, comm, rq);
-    };
-    template<typename T>
-    inline Request Ireduce(T &val, T &vout, const Datatype &datatype, const Op &op, const int root, const Comm &comm) {
-        return Ireduce(&val, &vout, 1, datatype, op, root, comm);
-    };
-    template<typename T>
-    inline void Ireduce(T &val, T &vout, const Datatype &datatype, const Op &op, const int root, const Comm &comm, Request &rq) {
-        Ireduce(&val, &vout, 1, datatype, op, root, comm, rq);
-    };
-    template<typename T>
-    inline Request Iallreduce(T &val, T &vout, const Datatype &datatype, const Op &op, const Comm &comm) {
-        return Iallreduce(&val, &vout, 1, datatype, op, comm);
-    };
-    template<typename T>
-    inline void Iallreduce(T &val, T &vout, const Datatype &datatype, const Op &op, const Comm &comm, Request &rq) {
-        Iallreduce(&val, &vout, 1, datatype, op, comm, rq);
-    };
-#endif
-
 #undef MEL_COLLECTIVE
 #undef MEL_3_COLLECTIVE
+	/// \endcond
+
+	/**
+	* Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	*
+	* \param[in,out] ptr			Pointer to the memory receive into
+	* \param[in] num				The number of elements to broadcast
+	* \param[in] root				The rank of the process to send from
+	* \param[in] comm				The comm world to broadcast within
+	*/
+	template<typename T>
+	inline void Bcast(T *ptr, const int num, const int root, const Comm &comm) {
+		Bcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm);
+	};
+
+#ifdef MEL_3
+
+	/**
+	* Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	*
+	* \param[in,out] ptr			Pointer to the memory receive into
+	* \param[in] num				The number of elements to broadcast
+	* \param[in] root				The rank of the process to send from
+	* \param[in] comm				The comm world to broadcast within
+	* \param[out] rq				A request object
+	*/
+	template<typename T>
+	inline void Ibcast(T *ptr, const int num, const int root, const Comm &comm, Request &rq) {
+		Ibcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm, rq);
+	}; 
+
+	/**
+	* Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	*
+	* \param[in,out] ptr			Pointer to the memory receive into
+	* \param[in] num				The number of elements to broadcast
+	* \param[in] root				The rank of the process to send from
+	* \param[in] comm				The comm world to broadcast within
+	* \return						Returns a request object
+	*/
+	template<typename T>
+	inline Request Ibcast(T *ptr, const int num, const int root, const Comm &comm) {
+		return Ibcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm);
+	};
+
+#endif
 
     enum class LockType {
         EXCLUSIVE = MPI_LOCK_EXCLUSIVE,
@@ -4076,9 +4697,9 @@ namespace MEL {
         MPI_Win win;
 
         Win() : win(MPI_WIN_NULL) {};
-        explicit Win(const MPI_Win &_e) : win(_e) {};
-        inline Win& operator=(const MPI_Win &_e) {
-            win = _e;
+        explicit Win(const MPI_Win &_w) : win(_w) {};
+        inline Win& operator=(const MPI_Win &_w) {
+            win = _w;
             return *this;
         };
         explicit operator MPI_Win() const {
@@ -4097,153 +4718,389 @@ namespace MEL {
     const Win Win::WIN_NULL = Win(MPI_WIN_NULL);
 #endif
 
-    /// Error handling
-    inline ErrorHandler WinCreateErrorHandler(ErrorHandlerFunc func) {
+    /**
+	 * Create a window error handler
+	 *
+	 * \param[in] func	The function to use
+	 * \return			Returns a handle to an error handler
+	 */
+	inline ErrorHandler WinCreateErrorHandler(ErrorHandlerFunc func) {
         MPI_Errhandler errHndl;
         MEL_THROW( MPI_Win_create_errhandler((MPI_Win_errhandler_function*) func, &errHndl), "RMA::WinCreateErrorHandler" );
         return ErrorHandler(errHndl);
     };
+
+	/**
+	 * Set the error handler for a window
+	 *
+	 * \param[in] win		The file to attach to
+	 * \param[in] errHndl	The handler to use
+	 */
     inline void WinSetErrorHandler(const Win &win, const ErrorHandler &errHndl) {
         MEL_THROW( MPI_Win_set_errhandler((MPI_Win) win, (MPI_Errhandler) errHndl), "RMA::WinSetErrorHandler" );
     };
+
+	/**
+	 * Set the error handler for a window
+	 *
+	 * \param[in] win	The file to attach to
+	 * \param[in] func	The function to use
+	 */
     inline void WinSetErrorHandler(const Win &win, ErrorHandlerFunc func) {
         WinSetErrorHandler(win, WinCreateErrorHandler(func));
     };
+
+	/**
+	 * Get the error handler for a window
+	 *
+	 * \param[in] win	The file to attach to
+	 * \return			Returns a handle to the error handler
+	 */
     inline ErrorHandler WinGetErrorHandler(const Win &win) {
         MPI_Errhandler errHndl;
         MEL_THROW( MPI_Win_get_errhandler((MPI_Win) win, &errHndl), "RMA::WinGetErrorHandler");
         return ErrorHandler(errHndl);
     };
 
-    /// Creation
+    /**
+	 * Create a window on memory allocated with MPI/MEL alloc functions
+	 *
+	 * \param[in] ptr			Pointer to the memory to be mapped
+	 * \param[in] size			The number of elements to be mapped
+	 * \param[in] disp_unit		The size of each element in bytes
+	 * \param[in] comm			The comm world to map the window within
+	 * \return					Returns a handle to the window
+	 */
     inline Win WinCreate(void *ptr, const Aint size, const int disp_unit, const Comm &comm) {
         MPI_Win win;                                                                        
-        MEL_THROW( MPI_Win_create(ptr, size, disp_unit, MPI_INFO_NULL, (MPI_Comm) comm, (MPI_Win*) &win), "RMA::WinCreate" );
+        MEL_THROW( MPI_Win_create(ptr, size * disp_unit, disp_unit, MPI_INFO_NULL, (MPI_Comm) comm, (MPI_Win*) &win), "RMA::WinCreate" );
         MEL_THROW( MPI_Win_set_errhandler(win, MPI_ERRORS_RETURN), "RMA::WinCreate(SetErrorHandler)" );                                                                
         return Win(win);
     };
-    template<typename T> 
+    
+	/**
+	 * Create a window on memory allocated with MPI/MEL alloc functions. Element size determined from template parameter
+	 *
+	 * \param[in] ptr			Pointer to the memory to be mapped
+	 * \param[in] size			The number of elements to be mapped
+	 * \param[in] comm			The comm world to map the window within
+	 * \return					Returns a handle to the window
+	 */
+	template<typename T> 
     inline Win WinCreate(T *ptr, const Aint size, const Comm &comm) {
         return WinCreate(ptr, size, sizeof(T), comm);
     };
 
-    /// Synchronization
+    /**
+	 * Synchronize the RMA access epoch for win across all processes attached to it
+	 *
+	 * \param[in] win			The window to synchronize
+	 * \param[in] assert_tag	Program assertion
+	 */
     inline void WinFence(const Win &win, const int assert_tag) {
         MEL_THROW( MPI_Win_fence(assert_tag, (MPI_Win) win), "RMA::WinFence" );
     };
-    inline void WinFence(const Win &win) {
+    
+	/**
+	 * Synchronize the RMA access epoch for win across all processes attached to it
+	 *
+	 * \param[in] win			The window to synchronize
+	 */
+	inline void WinFence(const Win &win) {
         WinFence(win, 0);
     };
+
+	/**
+	 * Get the lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 * \param[in] assert_tag	Program assertion
+	 * \param[in] lock_type		The mode to get the lock in
+	 */
     inline void WinLock(const Win &win, const int rank, const int assert_tag, const LockType lock_type) {
         MEL_THROW( MPI_Win_lock((int) lock_type, rank, assert_tag, (MPI_Win) win), "RMA::WinLock" );
     };
-    inline void WinLock(const Win &win, const int rank, const LockType lock_type) {
+    
+	/**
+	 * Get the lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 * \param[in] lock_type		The mode to get the lock in
+	 */
+	inline void WinLock(const Win &win, const int rank, const LockType lock_type) {
         WinLock(win, rank, 0, lock_type);
     };
+
+	/**
+	 * Get an exclusive lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 * \param[in] assert_tag	Program assertion
+	 */
     inline void WinLockExclusive(const Win &win, const int rank, const int assert_tag) {
         WinLock(win, rank, assert_tag, LockType::EXCLUSIVE);
     };
-    inline void WinLockExclusive(const Win &win, const int rank) {
+    
+	/**
+	 * Get an exclusive lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 */
+	inline void WinLockExclusive(const Win &win, const int rank) {
         WinLockExclusive(win, rank, 0);
     };
+
+	/**
+	 * Get a shared lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 * \param[in] assert_tag	Program assertion
+	 */
     inline void WinLockShared(const Win &win, const int rank, const int assert_tag) {
         WinLock(win, rank, assert_tag, LockType::SHARED);
     };
+
+	/**
+	 * Get a shared lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 */
     inline void WinLockShared(const Win &win, const int rank) {
         WinLockShared(win, rank, 0);
     };
+
+	/**
+	 * Release the lock on an RMA access epoch for a window
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] rank			The process rank to get the lock from
+	 */
     inline void WinUnlock(const Win &win, const int rank) {
         MEL_THROW( MPI_Win_unlock(rank, (MPI_Win) win), "RMA::WinUnlock" );
     };
 
-    /// Put
+    /**
+	 * Put data into the mapped window of another process
+	 *
+	 * \param[in] origin_ptr		Pointer to the array to put
+	 * \param[in] origin_num		The number of elements to put from the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be put
+	 * \param[in] target_disp		Element displacement into the window to put data into
+	 * \param[in] target_num		The number of elements to put into the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be put into the window
+	 * \param[in] target_rank		Rank of the process to put into
+	 * \param[in] win				The window to put into
+	 */
     inline void Put(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win) {
         MEL_THROW( MPI_Put(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Win) win), "RMA::Put" );
     };
-    inline void Put(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win) {
-        Put(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win);
-    };
 
-    /// Get
+    /**
+	 * Get data from the mapped window of another process
+	 *
+	 * \param[out] origin_ptr		Pointer to the array to get
+	 * \param[in] origin_num		The number of elements to get into the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be gotten
+	 * \param[in] target_disp		Element displacement into the window to get data from
+	 * \param[in] target_num		The number of elements to get from the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be gotten from the window
+	 * \param[in] target_rank		Rank of the process to get from
+	 * \param[in] win				The window to get from
+	 */
     inline void Get(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win) {
         MEL_THROW( MPI_Get(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Win) win), "RMA::Get" );
     };
-    inline void Get(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win) {
-        Get(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win);
-    };
 
 #ifdef MEL_3
+	
+	/**
+	 * Get the lock on an RMA access epoch for a window on all attached processes
+	 *
+	 * \param[in] win			The window to lock
+	 * \param[in] assert_tag	Program assertion
+	 */
     inline void WinLockAll(const Win &win, const int assert_tag) {
         MEL_THROW(MPI_Win_lock_all(assert_tag, (MPI_Win) win), "RMA::WinLockAll");
     };
+
+	/**
+	 * Get the lock on an RMA access epoch for a window on all attached processes
+	 *
+	 * \param[in] win			The window to lock
+	 */
     inline void WinLockAll(const Win &win) {
         WinLockAll(win, 0);
     };
+
+	/**
+	 * Release the lock on an RMA access epoch for a window on all attached processes
+	 *
+	 * \param[in] win			The window to unlock
+	 */
     inline void WinUnlockAll(const Win &win) {
         MEL_THROW(MPI_Win_unlock_all((MPI_Win) win), "RMA::WinUnlockAll");
     };
+
+	/**
+	 * Force all operations within an RMA access epoch for a window to finish
+	 *
+	 * \param[in] win			The window to flush
+	 * \param[in] rank			Rank to force synchronization with
+	 */
     inline void WinFlush(const Win &win, const int rank) {
         MEL_THROW(MPI_Win_flush(rank, (MPI_Win) win), "RMA::WinFlush");
     };
-    inline void WinFlushAll(const Win &win) {
+    
+	/**
+	 * Force all operations within an RMA access epoch for a window to finish for all attached processes
+	 *
+	 * \param[in] win			The window to flush
+	 */
+	inline void WinFlushAll(const Win &win) {
         MEL_THROW(MPI_Win_flush_all((MPI_Win) win), "RMA::WinFlushAll");
     };
+
+	/**
+	 * Force all local operations within an RMA access epoch for a window to finish
+	 *
+	 * \param[in] win			The window to flush
+	 * \param[in] rank			Rank to force synchronization with
+	 */
     inline void WinFlushLocal(const Win &win, const int rank) {
         MEL_THROW(MPI_Win_flush_local(rank, (MPI_Win) win), "RMA::WinFlushLocal");
     };
+
+	/**
+	 * Force all local operations within an RMA access epoch for a window to finish for all attached processes
+	 *
+	 * \param[in] win			The window to flush
+	 */
     inline void WinFlushLocalAll(const Win &win) {
         MEL_THROW(MPI_Win_flush_local_all((MPI_Win) win), "RMA::WinFlushLocalAll");
     };
+
+	/**
+	 * Synchronize the public and private copies of the window
+	 *
+	 * \param[in] win			The window to synchronize
+	 */
     inline void WinSync(const Win &win) {
         MEL_THROW(MPI_Win_sync((MPI_Win) win), "RMA::WinSync");
     };
 
+	/**
+	 * Put data into the mapped window of another process
+	 *
+	 * \param[in] origin_ptr		Pointer to the array to put
+	 * \param[in] origin_num		The number of elements to put from the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be put
+	 * \param[in] target_disp		Element displacement into the window to put data into
+	 * \param[in] target_num		The number of elements to put into the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be put into the window
+	 * \param[in] target_rank		Rank of the process to put into
+	 * \param[in] win				The window to put into
+	 * \param[out] rq				A request object
+	 */
     inline void Rput(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win, Request &rq) {
         MEL_THROW(MPI_Rput(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Win) win, (MPI_Request*) &rq), "RMA::Rput");
     };
-    inline void Rput(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win, Request &rq) {
-        Rput(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win, rq);
-    };
+
+	/**
+	 * Put data into the mapped window of another process
+	 *
+	 * \param[in] origin_ptr		Pointer to the array to put
+	 * \param[in] origin_num		The number of elements to put from the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be put
+	 * \param[in] target_disp		Element displacement into the window to put data into
+	 * \param[in] target_num		The number of elements to put into the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be put into the window
+	 * \param[in] target_rank		Rank of the process to put into
+	 * \param[in] win				The window to put into
+	 * \return						Returns a request object
+	 */
     inline Request Rput(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win) {
         Request rq;
         Rput(origin_ptr, origin_num, origin_datatype, target_disp, target_num, target_datatype, target_rank, win, rq);
         return rq;
     };
-    inline Request Rput(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win) {
-        return Rput(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win);
-    };
 
+	/**
+	 * Get data from the mapped window of another process
+	 *
+	 * \param[out] origin_ptr		Pointer to the array to get
+	 * \param[in] origin_num		The number of elements to get into the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be gotten
+	 * \param[in] target_disp		Element displacement into the window to get data from
+	 * \param[in] target_num		The number of elements to get from the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be gotten from the window
+	 * \param[in] target_rank		Rank of the process to get from
+	 * \param[in] win				The window to get from
+	 * \param[out] rq				A request object
+	 */
     inline void Rget(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win, Request &rq) {
         MEL_THROW(MPI_Rget(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Win) win, (MPI_Request*) &rq), "RMA::Rget");
     };
-    inline void Rget(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win, Request &rq) {
-        Rget(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win, rq);
-    };
+    
+	/**
+	 * Get data from the mapped window of another process
+	 *
+	 * \param[out] origin_ptr		Pointer to the array to get
+	 * \param[in] origin_num		The number of elements to get into the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be gotten
+	 * \param[in] target_disp		Element displacement into the window to get data from
+	 * \param[in] target_num		The number of elements to get from the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be gotten from the window
+	 * \param[in] target_rank		Rank of the process to get from
+	 * \param[in] win				The window to get from
+	 * \return						Returns a request object
+	 */
     inline Request Rget(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win) {
         Request rq;
         Rget(origin_ptr, origin_num, origin_datatype, target_disp, target_num, target_datatype, target_rank, win, rq);
         return rq;
     };
-    inline Request Rget(void *origin_ptr, const Datatype &origin_datatype, const Aint target_disp, const Datatype &target_datatype, const int target_rank, const Win &win) {
-        return Rget(origin_ptr, 1, origin_datatype, target_disp, 1, target_datatype, target_rank, win);
-    };
+    
 #endif
-
+	
+	/**
+	 * Free an RMA window
+	 *
+	 * \param[in] win			The window to free
+	 */
     inline void WinFree(Win &win) {
         if (win != MEL::Win::WIN_NULL)
             MEL_THROW( MPI_Win_free((MPI_Win*) &win), "RMA::FreeWin" );                                                                
     };    
 
+	/**
+	 * Free a std::vector of RMA window handles
+	 *
+	 * \param[in] wins			A std::vector of windows to free
+	 */
     inline void WinFree(std::vector<Win> &wins) {
         for (auto &w : wins) WinFree(w);
     };
 
+	/**
+	 * Free a varadic set of RMA windows
+	 *
+	 * \param[in] d0			The first window to free
+	 * \param[in] d1			The second window to free
+	 * \param[in] args			The remaining windows to free
+	 */
     template<typename T0, typename T1, typename ...Args>
     inline void WinFree(T0 &d0, T1 &d1, Args &&...args) {
         WinFree(d0);
         WinFree(d1, args...);
     };
 
+	/// \cond HIDE
     struct Mutex {
         /// Members
         unsigned char *val; 
@@ -4255,7 +5112,16 @@ namespace MEL {
         Mutex() : val(nullptr), locked(false), rank(0), size(0), root(0),
                       comm(MEL::Comm::COMM_NULL), win(MEL::Win::WIN_NULL) {};
     };
+	/// \endcond
 
+	/**
+	 * Create a MEL::Mutex across a comm world
+	 *
+	 * \param[in] rank		The rank of the calling process
+	 * \param[in] size		The size of the comm world
+	 * \param[in] root		The rank of the process who will own the mutex
+	 * \param[in] comm		The comm world to share the mutex across
+	 */
     inline Mutex MutexCreate(const int rank, const int size, const int root, const Comm &comm) {
         MEL::Barrier(comm);
         Mutex mutex;
@@ -4280,13 +5146,32 @@ namespace MEL {
         return mutex;
     };
 
+	/**
+	 * Create a MEL::Mutex across a comm world
+	 *
+	 * \param[in] root		The rank of the process who will own the mutex
+	 * \param[in] comm		The comm world to share the mutex across
+	 */
+	inline Mutex MutexCreate(const int root, const Comm &comm) {
+		return MutexCreate(CommRank(comm), CommSize(comm), root, comm);
+	};
+
+	/**
+	 * Free a MEL::Mutex
+	 *
+	 * \param[in] mutex		The mutex to free
+	 */
     inline void MutexFree(Mutex &mutex) {
         MEL::Barrier(mutex.comm);
         MEL::WinFree(mutex.win);
         MEL::MemFree(mutex.val);
     };
 
-    
+    /**
+	 * Get the exclusive lock on a MEL::Mutex
+	 *
+	 * \param[in] mutex		The mutex to lock
+	 */
     inline void MutexLock(Mutex &mutex) {
         if (mutex.locked) return;
 
@@ -4315,10 +5200,20 @@ namespace MEL {
         mutex.locked = true;
     };
 
-    inline bool MutexTest(const Mutex &mutex) {
+    /**
+	 * Test if the mutex is currently locked
+	 *
+	 * \param[in] mutex		The mutex to lock
+	 */
+	inline bool MutexTest(const Mutex &mutex) {
         return mutex.locked;
     };
 
+	/**
+	 * Release the exclusive lock on a MEL::Mutex
+	 *
+	 * \param[in] mutex		The mutex to lock
+	 */
     inline void MutexUnlock(Mutex &mutex) {
         if (!mutex.locked) return;
 
@@ -4347,6 +5242,7 @@ namespace MEL {
         MEL::MemFree(waitlist);
     };
 
+	/// \cond HIDE
     template<typename T>
     struct Shared {
         /// Members
@@ -4382,12 +5278,17 @@ namespace MEL {
             return *ptr;
         };
     };
+	/// \endcond
 
-    template<typename T>
-    inline Shared<T> SharedCreate(const int len, const int root, const Comm &comm) {
-        return SharedCreate<T>(len, CommRank(comm), CommSize(comm), root, comm);
-    };
-
+	/**
+	 * Create a MEL::Shared array across a comm world
+	 *
+	 * \param[in] len		The number of elements to allocate
+	 * \param[in] rank		The rank of the calling process
+	 * \param[in] size		The size of the comm world
+	 * \param[in] root		The rank of the process who will own the shared array
+	 * \param[in] comm		The comm world to share the array across
+	 */
     template<typename T>
     inline Shared<T> SharedCreate(const int len, const int rank, const int size, const int root, const Comm &comm) {
         MEL::Barrier(comm);
@@ -4409,6 +5310,23 @@ namespace MEL {
         return shared;
     };
 
+	/**
+	 * Create a MEL::Shared array across a comm world
+	 *
+	 * \param[in] len		The number of elements to allocate
+	 * \param[in] root		The rank of the process who will own the shared array
+	 * \param[in] comm		The comm world to share the array across
+	 */
+    template<typename T>
+    inline Shared<T> SharedCreate(const int len, const int root, const Comm &comm) {
+        return SharedCreate<T>(len, CommRank(comm), CommSize(comm), root, comm);
+    };
+
+	/**
+	 * Free a MEL::Shared array
+	 *
+	 * \param[in] shared	The shared array to free
+	 */
     template<typename T>
     inline void SharedFree(Shared<T> &shared) {
         MEL::Barrier(shared.mutex.comm);
@@ -4418,24 +5336,55 @@ namespace MEL {
         MEL::TypeFree(shared.typeData);
     };
 
+	/**
+	 * Test if the shared array is currently locked
+	 *
+	 * \param[in] shared	The shared array to test
+	 */
     template<typename T>
     inline bool SharedTest(const Shared<T> &shared) {
         return shared.is_locked();
     };
 
+	/**
+	 * Get the lock on the shared array without synchronizing the data. Useful for if you only intend to write to the array
+	 *
+	 * \param[in] shared	The shared array to lock
+	 */
     template<typename T>
     inline void SharedLock_noget(Shared<T> &shared) {
         SharedLock_noget(shared, 0, shared.len - 1);
     };
-    template<typename T>
+    
+	/**
+	 * Get the lock on the shared array without synchronizing the data. Useful for if you only intend to write to the array
+	 *
+	 * \param[in] shared	The shared array to lock
+	 * \param[in] start		The start index to lock
+	 * \param[in] end		The end index to lock
+	 */
+	template<typename T>
     inline void SharedLock_noget(Shared<T> &shared, const int start, const int end) {
         MEL::MutexLock(shared.mutex); // , start, end
     };
 
+	/**
+	 * Get the lock on the shared array and synchronize the data
+	 *
+	 * \param[in] shared	The shared array to lock
+	 */
     template<typename T>
     inline void SharedLock(Shared<T> &shared) {
         SharedLock(shared, 0, shared.len - 1);
     };
+
+	/**
+	 * Get the lock on the shared array and synchronize the data
+	 *
+	 * \param[in] shared	The shared array to lock
+	 * \param[in] start		The start index to lock
+	 * \param[in] end		The end index to lock
+	 */
     template<typename T>
     inline void SharedLock(Shared<T> &shared, const int start, const int end) {
         SharedLock_noget(shared, start, end);
@@ -4448,19 +5397,45 @@ namespace MEL {
         }
     };
 
+	/**
+	 * Release the lock on the shared array without synchronizing the data. Useful for if you only read from the array
+	 * 
+	 * \param[in] shared	The shared array to unlock
+	 */
     template<typename T>
     inline void SharedUnlock_noput(Shared<T> &shared) {
         SharedUnlock_noput(shared, 0, shared.len - 1);
     };
-    template<typename T>
+    
+	/**
+	 * Release the lock on the shared array without synchronizing the data. Useful for if you only read from the array
+	 * 
+	 * \param[in] shared	The shared array to unlock
+	 * \param[in] start		The start index to lock
+	 * \param[in] end		The end index to lock
+	 */
+	template<typename T>
     inline void SharedUnlock_noput(Shared<T> &shared, const int start, const int end) {
         MEL::MutexUnlock(shared.mutex); // , start, end
     };
 
+	/**
+	 * Release the lock on the shared array and synchronize the data
+	 * 
+	 * \param[in] shared	The shared array to unlock
+	 */
     template<typename T>
     inline void SharedUnlock(Shared<T> &shared) {
         SharedUnlock(shared, 0, shared.len - 1);
     };
+
+	/**
+	 * Release the lock on the shared array and synchronize the data
+	 * 
+	 * \param[in] shared	The shared array to unlock
+	 * \param[in] start		The start index to lock
+	 * \param[in] end		The end index to lock
+	 */
     template<typename T>
     inline void SharedUnlock(Shared<T> &shared, const int start, const int end) {
         if (shared.mutex.rank != shared.mutex.root) {

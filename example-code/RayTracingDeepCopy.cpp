@@ -970,7 +970,7 @@ int main(int argc, char *argv[]) {
 
         /// Write local block to global image on root process
         MEL::WinLockShared(filmWin, 0);
-        MEL::Put(blockPtr, typeLocalBlock, 0, typeGlobalBlock, 0, filmWin);
+        MEL::Put(blockPtr, 1, typeLocalBlock, 0, 1, typeGlobalBlock, 0, filmWin);
         MEL::WinUnlock(filmWin, 0);
 
         /// Clean up
