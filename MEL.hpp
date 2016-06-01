@@ -1,3 +1,26 @@
+/*
+The MIT License(MIT)
+
+Copyright(c) 2016 Joss Whittle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 #pragma once
 
 #include <mpi.h>
@@ -19,9 +42,9 @@ namespace MEL {
 #define MEL_3
 #endif
     
-    /// Helper types to keep things in MEL namespace
     typedef MPI_Aint   Aint;
     typedef MPI_Offset Offset;
+
 #ifdef MEL_3
     typedef MPI_Count  Count;
 #endif
@@ -35,6 +58,72 @@ namespace MEL {
     
 	/**
  	 * \defgroup Errors Error Handling
+	 * Error Handler Creation / Deletion
+	 */
+
+	/**
+ 	 * \defgroup Utils Utilities
+	 * Utility Functions for Cleaner Coding
+	 */
+
+	/**
+ 	 * \defgroup Mem Memory Allocation
+	 * Dynamic Memory Allocation using the underlying MPI_Alloc allocator
+	 */
+
+	/**
+ 	 * \defgroup Comm Communicators & Groups
+	 * Communicator & Group Creation / Deletion
+	 */
+
+	/**
+ 	 * \defgroup Sync Synchronization
+	 * Synchronization on Request objects
+	 */
+
+	/**
+ 	 * \defgroup Datatype Derived Datatypes
+	 * Derived Datatype Creation and Deletion
+	 */
+
+	/**
+ 	 * \defgroup Topo Topology
+	 * Cartesian & Distributed Graph Topologies
+	 */
+
+	/**
+ 	 * \defgroup Ops Operations
+	 * Builtin Functors and User Defined Operations
+	 */
+
+	/**
+ 	 * \defgroup File File-IO
+	 * File Creation / Deletion / Read / Write
+	 */
+
+	/**
+ 	 * \defgroup P2P Point-2-Point Communication
+	 * Send / Receive
+	 */
+
+	/**
+ 	 * \defgroup COL Collective Communication
+	 * Broadcast / Scatter / Gather / Alltoall / Reduce
+	 */
+
+	/**
+ 	 * \defgroup Win RMA One-Sided Communication
+	 * RMA Window Creation / Deletion / Get / Put / Accumulate
+	 */
+
+	/**
+ 	 * \defgroup Mutex Mutex
+	 * An implementation of Mutex Semantics between MPI processes. Based loosely off of Andreas Prell's mpi_mutex.c (https://gist.github.com/aprell/1486197) and R. Thakur, R. Ross, and R. Latham, "Implementing Byte-Range Locks Using MPI One-Sided Communication," in Proc. of the 12th European PVM/MPI Users' Group Meeting (Euro PVM/MPI 2005), Recent Advances in Parallel Virtual Machine and Message Passing Interface, Lecture Notes in Computer Science, LNCS 3666, Springer, September 2005, pp. 119-128.
+	 */
+
+	/**
+ 	 * \defgroup Shared Shared Arrays
+	 * A simple shared array implementation using Mutex locks and RMA one-sided communication
 	 */
 
     /**
@@ -65,6 +154,7 @@ namespace MEL {
     /// Setup and teardown
 
     /**
+	 * \ingroup Utils 
      * Tests if MPI_Init has been successfully called
      * 
      * \return Returns whether MPI is initialized as a bool
@@ -76,7 +166,8 @@ namespace MEL {
     };
 
     /**
-     * Tests if MPI_Finalize has been successfully called
+	 * \ingroup Utils 
+	 * Tests if MPI_Finalize has been successfully called
      * 
      * \return Returns whether MPI is finalized as a bool
      */
@@ -87,6 +178,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Utils 
      * Call MPI_Init and setup default error handling
      *
      * \param[in] argc		Forwarded from program main
@@ -101,6 +193,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Utils 
      * Call MPI_Finalize
      */
     inline void Finalize() {
@@ -132,6 +225,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Utils 
      * Gets the current wall time since epoch in seconds
      * 
      * \return Returns the current wall time as a double
@@ -141,6 +235,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Utils 
      * Gets the current system tick
      * 
      * \return Returns the current system tick as a double
@@ -232,6 +327,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * Add an error string to an existing error code for MPI to reference
      * 
      * \param[in] err		The error code to bind the string to
@@ -242,6 +338,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Errors
      * Add an error string to a new existing error code for MPI to reference
      * 
      * \param[in] str		The error string
@@ -254,6 +351,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * Get the error class code of the given error code
      * 
      * \param[in] errCode	The error code
@@ -266,6 +364,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Errors
      * Get the error class code of the given error code
      * 
      * \param[in] errCode	The error code
@@ -279,6 +378,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup  Errors
      * Free an error handler that was previously added
      * 
      * \param[in] errHndl	The error handler object that references the bound function
@@ -289,15 +389,17 @@ namespace MEL {
     };
 
     /**
-    * Free a vector Error Handlers
-    *
-    * \param[in] errHndls	A std::vector of Error Handlers
-    */
+     * \ingroup  Errors
+     * Free a vector Error Handlers
+     *
+     * \param[in] errHndls	A std::vector of Error Handlers
+     */
     inline void ErrorHandlerFree(std::vector<ErrorHandler> &errHndls) {
         for (auto &d : errHndls) ErrorHandlerFree(d);
     };
 
     /**
+     * \ingroup  Errors
      * Free the varadic set of error handlers provided
      * 
      * \param[in] d0		The first error handler to free
@@ -311,7 +413,8 @@ namespace MEL {
     };
 
     /**
-     * Allocate a block of memory for 'size' number of type T
+     * \ingroup  Mem
+	 * Allocate a block of memory for 'size' number of type T
      * 
      * \param[in] size		The number of elements of type T to allocate
      * \return			Returns the pointer to the allocated memory
@@ -324,7 +427,8 @@ namespace MEL {
     };
 
     /**
-     * Allocate a block of memory for 'size' number of type T and assign a default value
+     * \ingroup  Mem
+	 * Allocate a block of memory for 'size' number of type T and assign a default value
      * 
      * \param[in] size		The number of elements of type T to allocate
      * \param[in] val		The value to set each element equal to
@@ -338,7 +442,8 @@ namespace MEL {
     };
 
     /**
-     * Allocate a single object of type T and construct it with the set of varadic arguments
+     * \ingroup  Mem
+	 * Allocate a single object of type T and construct it with the set of varadic arguments
      * 
      * \param[in] args		The set of varadic arguments to construct the object with
      * \return			Returns the pointer to the allocated memory
@@ -351,7 +456,8 @@ namespace MEL {
     };
 
     /**
-     * Free a pointer allocated with MPI_Alloc or the MEL equivilant functions
+     * \ingroup  Mem
+	 * Free a pointer allocated with MPI_Alloc or the MEL equivilant functions
      * 
      * \param[in] ptr		The pointer to free
      */
@@ -364,7 +470,8 @@ namespace MEL {
     };
 
     /**
-     * Free the varadic set of pointers provided
+     * \ingroup  Mem
+	 * Free the varadic set of pointers provided
      * 
      * \param[in] d0		The first pointer to free
      * \param[in] d1		The second pointer to free
@@ -377,7 +484,8 @@ namespace MEL {
     };
 
     /**
-     * Call the destructor for each element of the given array and then free the memory
+     * \ingroup  Mem
+	 * Call the destructor for each element of the given array and then free the memory
      * 
      * \param[in] ptr		The pointer to the memory to be destructed
      * \param[in] len		The length of the array
@@ -460,6 +568,7 @@ namespace MEL {
     typedef MPI_Info    Info;
 
     /**
+     * \ingroup  Comm
      * Create a Comm error handler by directly passing the function to use
      * 
      * \param[in] func		The function to use as an error handler
@@ -472,6 +581,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Comm
      * Set a Comm error handler by passing the a error handler reference
      *
      * \param[in] comm		The comm world to attach the error handler to
@@ -482,6 +592,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Comm
      * Set a Comm error handler by directly passing the function to use
      *
      * \param[in] comm		The comm world to attach the error handler to
@@ -492,6 +603,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup  Comm
      * Get the Comm error handler attached to a comm world
      *
      * \param[in] comm		The comm world to get the error handler of
@@ -504,6 +616,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Get the Comm rank of the process
      *
      * \param[in] comm		The comm world to get the rank in
@@ -516,6 +629,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Get the Comm world size
      *
      * \param[in] comm		The comm world to get the size of
@@ -528,6 +642,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Get the Comm world remote size
      *
      * \param[in] comm		The comm world to get the remote size of
@@ -540,6 +655,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Split a comm world into seperate comms. Processes with the same colour will end up in the same comm world
      *
      * \param[in] comm		The comm world to split
@@ -553,6 +669,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Duplicate a comm world so that it can be handled independently.
      *
      * \param[in] comm		The comm world to duplicate
@@ -567,7 +684,8 @@ namespace MEL {
 #ifdef MEL_3
 
     /**
-     * Non-Blocking Duplicate a comm world so that it can be handled independently.
+     * \ingroup Comm 
+     * Non-Blocking. Duplicate a comm world so that it can be handled independently.
      *
      * \param[in] comm		The comm world to duplicate
      * \param[out] rq		A request object that will signify when the comm world has been fully duplicated
@@ -580,7 +698,8 @@ namespace MEL {
     };
 
     /**
-     * Non-Blocking Duplicate a comm world so that it can be handled independently.
+     * \ingroup Comm 
+     * Non-Blocking. Duplicate a comm world so that it can be handled independently.
      *
      * \param[in] comm		The comm world to duplicate
      * \return			Returns a std::pair of the new comm world and a request object
@@ -593,6 +712,7 @@ namespace MEL {
 #endif
     
     /**
+     * \ingroup Comm 
      * Get the group of a comm world
      *
      * \param[in] comm		The comm world to get the group of
@@ -605,6 +725,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Create a comm object from an existing comm object and a group object
      *
      * \param[in] comm		The comm world to build off of
@@ -620,6 +741,7 @@ namespace MEL {
 #ifdef MEL_3
     
     /**
+     * \ingroup Comm 
      * Create a comm object from an existing comm object and a group object. This is a non-collective version
      *
      * \param[in] comm		The comm world to build off of
@@ -635,6 +757,7 @@ namespace MEL {
 #endif
 
     /**
+     * \ingroup Comm 
      * Free a comm world
      *
      * \param[in] comm		The comm world to free
@@ -645,6 +768,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Free a vector comm world
      *
      * \param[in] comms	A std::vector of comm world
@@ -654,6 +778,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Free the varadic set of comm worlds provided
      * 
      * \param[in] d0		The first comm world to free
@@ -667,6 +792,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Test if a comm world is the null comm world
      *
      * \param[in] comm		The comm world to test
@@ -676,9 +802,8 @@ namespace MEL {
         return (MPI_Comm) comm == MPI_COMM_NULL;
     };
 
-    /// Synchronization
-
     /**
+     * \ingroup Sync 
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
      * \param[in] comm		The comm world to synchronize
@@ -690,6 +815,7 @@ namespace MEL {
 #ifdef MEL_3
     
     /**
+     * \ingroup Sync 
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
      * \param[in] comm		The comm world to synchronize
@@ -700,10 +826,11 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Collective operation that forces all processes to wait until they are all at the barrier
      *
      * \param[in] comm		The comm world to synchronize
-     * \return			Returns a request object used to determine when the barrier has been reached by all processes in comm
+     * \return				Returns a request object used to determine when the barrier has been reached by all processes in comm
      */
     inline Request Ibarrier(const Comm &comm) {
         Request rq{};
@@ -713,6 +840,7 @@ namespace MEL {
 #endif
     
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until a request object has completed
      *
      * \param[in] rq		The request object to wait for
@@ -722,6 +850,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if a request object has completed
      *
      * \param[in] rq		The request object to test
@@ -733,6 +862,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until all request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -743,6 +873,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until all request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -752,6 +883,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if all request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -764,6 +896,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if all request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -773,6 +906,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until any of the request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -786,6 +920,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until any of the request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -798,6 +933,7 @@ namespace MEL {
     /// Any test
 
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if any of the request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -811,6 +947,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if any of the request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -821,6 +958,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until some of the request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -835,6 +973,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Sync 
      * Blocking operation to wait until some of the request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -845,6 +984,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if some of the request objects in an array have completed
      *
      * \param[in] ptr		Pointer to the array of request objects
@@ -859,6 +999,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Sync 
      * Non-Blocking operation to test if some of the request objects in an array have completed
      *
      * \param[in] rqs		A std::vector of request objects to wait for
@@ -869,6 +1010,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Perform a set union of two comm groups
      *
      * \param[in] lhs		The first operand of the union
@@ -882,6 +1024,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Perform a set difference of two comm groups
      *
      * \param[in] lhs		The first operand of the difference
@@ -895,6 +1038,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Perform a set intersection of two comm groups
      *
      * \param[in] lhs		The first operand of the intersection
@@ -908,6 +1052,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Create a comm group including just the ranks from an exisitng group given in an array
      *
      * \param[in] group		The original group to build off of
@@ -922,6 +1067,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Create a comm group including just the ranks from an exisitng group given in an array
      *
      * \param[in] group		The original group to build off of
@@ -933,6 +1079,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Create a comm group excluding just the ranks from an exisitng group given in an array
      *
      * \param[in] group		The original group to build off of
@@ -947,6 +1094,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Create a comm group excluding just the ranks from an exisitng group given in an array
      *
      * \param[in] group		The original group to build off of
@@ -958,6 +1106,7 @@ namespace MEL {
     };
         
     /**
+     * \ingroup Comm 
      * Compare two comm groups
      *
      * \param[in] lhs		The first operand of the compare
@@ -971,6 +1120,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Compare if two comm groups are similar
      *
      * \param[in] lhs		The first operand of the compare
@@ -982,6 +1132,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Compare if two comm groups are identical
      *
      * \param[in] lhs		The first operand of the compare
@@ -993,6 +1144,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Compare if two comm groups are congruent
      *
      * \param[in] lhs		The first operand of the compare
@@ -1004,6 +1156,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Compare if two comm groups are unequal
      *
      * \param[in] lhs		The first operand of the compare
@@ -1015,6 +1168,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Compare if a comm group is the null comm group
      *
      * \param[in] group		The group to test
@@ -1025,6 +1179,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Gets the rank of the process within the given comm group
      *
      * \param[in] group		The group to use
@@ -1037,6 +1192,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Comm 
      * Gets the size of the given comm group
      *
      * \param[in] group		The group to use
@@ -1049,6 +1205,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Frees a comm group
      *
      * \param[in] group		The group to free
@@ -1059,6 +1216,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Comm 
      * Free a vector comm group
      *
      * \param[in] groups	A std::vector of comm group
@@ -1068,6 +1226,7 @@ namespace MEL {
     };
  
     /**
+     * \ingroup Comm 
      * Free the varadic set of comm groups provided
      * 
      * \param[in] d0		The first comm groups to free
@@ -1191,6 +1350,7 @@ namespace MEL {
 #endif
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a contiguous block of an elementary type
      *
      * \param[in] datatype	The base type to use
@@ -1205,6 +1365,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a struct
      *
      * \param[in] num			The number of members within the struct
@@ -1231,6 +1392,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a struct
      *
      * \param[in] blocks		A std::vector of triples representing the size of the current member block
@@ -1251,6 +1413,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1275,6 +1438,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1296,6 +1460,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a 1D sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1312,6 +1477,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a 2D sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1337,6 +1503,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a 3D sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1365,6 +1532,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a 4D sub array
      *
      * \param[in] datatype		The datatype of the parent array
@@ -1397,6 +1565,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1420,6 +1589,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1439,6 +1609,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1463,6 +1634,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1482,6 +1654,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1498,6 +1671,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1512,6 +1686,7 @@ namespace MEL {
 #ifdef MEL_3
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1528,6 +1703,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1541,6 +1717,7 @@ namespace MEL {
 #endif
     
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a strided sub array of a parent array
      *
      * \param[in] datatype		The datatype of the elements
@@ -1557,6 +1734,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Create a derived type representing a strided sub array of a parent array, using byte offsets
      *
      * \param[in] datatype		The datatype of the elements
@@ -1573,6 +1751,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Duplicate a derived type so it can be managed independently
      *
      * \param[in] datatype		The datatype to duplicate
@@ -1585,6 +1764,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Compute the contiguous packed size of a datatype
      *
      * \param[in] datatype		The datatype to size
@@ -1597,6 +1777,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Compute the extent of a datatype
      *
      * \param[in] datatype		The datatype to get the extent of 
@@ -1609,6 +1790,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Compute the extent of a datatype and discard the lower bound
      *
      * \param[in] datatype		The datatype to get the extent of 
@@ -1621,6 +1803,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Free a derived datatype
      *
      * \param[in] datatype		The datatype to free
@@ -1633,6 +1816,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Datatype 
      * Free a vector datatypes
      * 
      * \param[in] datatypes	A std::vector of derived datatypes
@@ -1642,6 +1826,7 @@ namespace MEL {
     };
     
     /**
+     * \ingroup Datatype 
      * Free the varadic set of datatypes provided
      * 
      * \param[in] d0		The first datatype to free
@@ -1655,6 +1840,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Topo 
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
      * \param[in] numProcs	The number of processes in the topology
@@ -1666,6 +1852,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Topo 
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
      * \param[in] comm		The comm object the topology should represent
@@ -1677,6 +1864,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Topo 
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
      * \param[in] numProcs	The number of processes in the topology
@@ -1690,6 +1878,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Topo 
      * Compute the 'ideal' dimensions for a topolgy over n-processes
      * 
      * \param[in] comm		The comm object the topology should represent
@@ -1701,6 +1890,7 @@ namespace MEL {
     };
 
     /**
+     * \ingroup Topo 
      * Create a cartesian topology over a comm world
      * 
      * \param[in] comm		The comm object the topology should represent
@@ -1724,7 +1914,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a cartesian topology over a comm world
+	 * \ingroup Topo 
+     * Create a cartesian topology over a comm world
 	 *
 	 * \param[in] comm		The comm object the topology should represent
 	 * \param[in] dims		A std::vector of pairs representing dimension sizes and whether dimensions are periodic
@@ -1743,7 +1934,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the number of dimensions in an attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the number of dimensions in an attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns the number of dimensions in the attached cartesian topology
@@ -1755,7 +1947,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the rank within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the rank within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] coords	Pointer to an array representing the n-dim coordinates in the topology
@@ -1768,7 +1961,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the rank within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the rank within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] coords	A std::vector representing the n-dim coordinates in the topology
@@ -1779,7 +1973,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] rank		The rank within comm
@@ -1791,7 +1986,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] rank		The rank within comm
@@ -1805,7 +2001,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] rank		The rank within comm
@@ -1816,7 +2013,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the n-dim coordinates within the attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the n-dim coordinates within the attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns a std::vector representing the n-dim coordinates
@@ -1826,7 +2024,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the properties of an attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the properties of an attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] numdims	The number of dimensions in the topology
@@ -1839,7 +2038,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the properties of an attached cartesian topology of a comm world
+	 * \ingroup Topo 
+     * Get the properties of an attached cartesian topology of a comm world
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns a std::pair of a std::vector representing the process coordinates, and a std::vector of pairs representing the dimension sizes and periods
@@ -1858,7 +2058,8 @@ namespace MEL {
     };
 
 	/**
-	 * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
+	 * \ingroup Topo 
+     * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] direction	The dimension to shift in
@@ -1871,7 +2072,8 @@ namespace MEL {
     };
 
 	/**
-	 * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
+	 * \ingroup Topo 
+     * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] direction	The dimension to shift in
@@ -1901,7 +2103,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a 2D 5-point stencil of ranks representing the neighbouring processes
+	 * \ingroup Topo 
+     * Create a 2D 5-point stencil of ranks representing the neighbouring processes
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns a 2D 5-point stencil of comm ranks
@@ -1935,7 +2138,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a 2D 9-point stencil of ranks representing the neighbouring processes
+	 * \ingroup Topo 
+     * Create a 2D 9-point stencil of ranks representing the neighbouring processes
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns a 2D 9-point stencil of comm ranks
@@ -2032,74 +2236,197 @@ namespace MEL {
 #endif
 
     namespace Functor {
+		/**
+		 * \ingroup  Ops
+		 * Binary Max Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the max of the two inputs
+		 */
         template<typename T>
         T MAX(T &a, T &b) {
             return (a > b) ? a : b;
         };
-        template<typename T>
+        
+		/**
+		 * \ingroup  Ops
+		 * Binary Min Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the min of the two inputs
+		 */
+		template<typename T>
         T MIN(T &a, T &b) {
             return (a < b) ? a : b;
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary Sum Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the sum of the two inputs
+		 */
         template<typename T>
         T SUM(T &a, T &b) {
             return (a + b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary Product Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the product of the two inputs
+		 */
         template<typename T>
         T PROD(T &a, T &b) {
             return (a * b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary Logical And Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the logical and of the two inputs
+		 */
         template<typename T>
         T LAND(T &a, T &b) {
             return (a && b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary bitwise and Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the bitwise and of the two inputs
+		 */
         template<typename T>
         T BAND(T &a, T &b) {
             return (a & b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary logical or Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the logical or of the two inputs
+		 */
         template<typename T>
         T LOR(T &a, T &b) {
             return (a || b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary bitwise or Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the bitwise or of the two inputs
+		 */
         template<typename T>
         T BOR(T &a, T &b) {
             return (a | b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary logical exclusive or Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the logical exclusive or of the two inputs
+		 */
         template<typename T>
         T LXOR(T &a, T &b) {
             return (!a != !b);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Binary bitwise exclusive or Functor
+		 *
+		 * \param[in] a			The left argument
+		 * \param[in] b			The right argument
+		 * \return				Returns the bitwise exclusive or of the two inputs
+		 */
         template<typename T>
         T BXOR(T &a, T &b) {
             return (a ^ b);
         };
 
-        /// MEL-style mapped functor
+		/**
+		 * \ingroup  Ops
+		 * Maps the given binary functor to the local array of a reduction / accumulate operation
+		 *
+		 * \param[in] in		The left hand array for the reduction
+		 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+		 * \param[in] len		Pointer to a single int representing the number of elements to be processed
+		 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+		 */
         template<typename T, T(*F)(T&, T&)>
         void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
             for (int i = 0; i < *len; ++i) inout[i] = F(in[i], inout[i]);
         };
+
+		/**
+		 * \ingroup  Ops
+		 * Maps the given binary functor to the local array of a reduction / accumulate operation
+		 *
+		 * \param[in] in		The left hand array for the reduction
+		 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+		 * \param[in] len		Pointer to a single int representing the number of elements to be processed
+		 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+		 */
         template<typename T, T(*F)(T&, T&, Datatype)>
         void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
             Datatype dt((Datatype)*dptr);
             for (int i = 0; i < *len; ++i) inout[i] = F(in[i], inout[i], dt);
         };
 
-        /// MEL-style buffers & length
+		/**
+		 * \ingroup  Ops
+		 * Maps the given binary functor to the local array of a reduction / accumulate operation
+		 *
+		 * \param[in] in		The left hand array for the reduction
+		 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+		 * \param[in] len		Pointer to a single int representing the number of elements to be processed
+		 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+		 */
         template<typename T, void(*F)(T*, T*, int)>
         void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
             F(in, inout, *len);
         };
 
+		/**
+		 * \ingroup  Ops
+		 * Maps the given binary functor to the local array of a reduction / accumulate operation
+		 *
+		 * \param[in] in		The left hand array for the reduction
+		 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+		 * \param[in] len		Pointer to a single int representing the number of elements to be processed
+		 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+		 */
         template<typename T, void(*F)(T*, T*, int, Datatype)>
         void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
             F(in, inout, *len, (Datatype) *dptr);
         };
     };
 
-    /// MEL-style mapped functor
-
 	/**
-	 * Create a derived operation for reduction type functions
+	 * \ingroup Ops 
+     * Create a derived operation for reduction type functions
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2112,7 +2439,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a derived operation for reduction type functions
+	 * \ingroup Ops 
+     * Create a derived operation for reduction type functions
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2124,10 +2452,9 @@ namespace MEL {
         return Op(op);
     };
 
-    /// MEL-style buffers & length
-
-	/**
-	 * Create a derived operation for reduction type functions
+    /**
+	 * \ingroup Ops 
+     * Create a derived operation for reduction type functions
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2140,7 +2467,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a derived operation for reduction type functions
+	 * \ingroup Ops 
+     * Create a derived operation for reduction type functions
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2152,10 +2480,9 @@ namespace MEL {
         return Op(op);
     };
 
-    /// C-style MPI everything is a pointer
-
-	/**
-	 * Create a derived operation for reduction type functions
+    /**
+	 * \ingroup Ops 
+     * Create a derived operation for reduction type functions
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2168,7 +2495,8 @@ namespace MEL {
     };
 
 	/**
-	 * Free a derived operation
+	 * \ingroup Ops 
+     * Free a derived operation
 	 *
 	 * \param[in] op		The op to free
 	 */
@@ -2177,7 +2505,8 @@ namespace MEL {
     };
 
 	/**
-	 * Free a std::vector of derived operations
+	 * \ingroup Ops 
+     * Free a std::vector of derived operations
 	 *
 	 * \param[in] ops		A std::vector of ops to be freed
 	 */
@@ -2186,7 +2515,8 @@ namespace MEL {
     };
 
 	/**
-	 * Free a varadic set of derived operations
+	 * \ingroup Ops 
+     * Free a varadic set of derived operations
 	 *
 	 * \param[in] d0		The first op to free
 	 * \param[in] d1		The second op to free
@@ -2233,7 +2563,8 @@ namespace MEL {
     };
 
 	/**
-	 * Create a file error handler
+	 * \ingroup  File
+     * Create a file error handler
 	 *
 	 * \param[in] func	The function to use
 	 * \return		Returns a handle to an error handler
@@ -2245,7 +2576,8 @@ namespace MEL {
     };
 
 	/**
-	 * Set the error handler for a file
+	 * \ingroup  File
+     * Set the error handler for a file
 	 *
 	 * \param[in] file		The file to attach to
 	 * \param[in] errHndl	The handler to use
@@ -2255,7 +2587,8 @@ namespace MEL {
     };
     
 	/**
-	 * Set the error handler for a file
+	 * \ingroup  File
+     * Set the error handler for a file
 	 *
 	 * \param[in] file	The file to attach to
 	 * \param[in] func	The function to use
@@ -2265,7 +2598,8 @@ namespace MEL {
     };
     
 	/**
-	 * Get the error handler for a file
+	 * \ingroup  File
+     * Get the error handler for a file
 	 *
 	 * \param[in] file	The file to attach to
 	 * \return		Returns a handle to the error handler
@@ -2277,6 +2611,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the mode a file was opened with
 	 *
 	 * \param[in] file	The file to attach to
@@ -2289,6 +2624,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Is the file opened in an atomic mode?
 	 *
 	 * \param[in] file	The file to attach to
@@ -2301,6 +2637,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Set the atomicity of the file handle
 	 *
 	 * \param[in] file	The file to attach to
@@ -2311,6 +2648,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the byte position of the file cursor relative to a given location
 	 *
 	 * \param[in] file		The file to attach to
@@ -2324,6 +2662,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the comm group a file was opened as a part of
 	 *
 	 * \param[in] file		The file to attach to
@@ -2336,6 +2675,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the MPI_Info object attached to a file handle
 	 *
 	 * \param[in] file		The file to attach to
@@ -2348,6 +2688,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Set the MPI_Info object attached to a file handle
 	 *
 	 * \param[in] file		The file to attach to
@@ -2358,6 +2699,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the position of the file cursor
 	 *
 	 * \param[in] file		The file to attach to
@@ -2370,6 +2712,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Get the position of the shared file cursor
 	 *
 	 * \param[in] file		The file to attach to
@@ -2382,6 +2725,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the size of the file in bytes
 	 *
 	 * \param[in] file		The file to attach to
@@ -2394,6 +2738,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Set the size of the file in bytes
 	 *
 	 * \param[in] file	The file to attach to
@@ -2404,6 +2749,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Get the extent of the derived type set to the file handle
 	 *
 	 * \param[in] file			The file to attach to
@@ -2417,6 +2763,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Open a file and return a handle to it
 	 *
 	 * \param[in] comm			The comm world to open the file with
@@ -2432,6 +2779,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Open a file on an individual process and return a handle to it
 	 *
 	 * \param[in] path			The path to the desired file
@@ -2443,6 +2791,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Delete a file by its path
 	 *
 	 * \param[in] path			The path to the file to be deleted
@@ -2452,6 +2801,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Close the file attached to the given file handle
 	 *
 	 * \param[in] file			The file handle to be closed
@@ -2461,6 +2811,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Preallocate the opened file to the given size on the file system
 	 *
 	 * \param[in] file			The file to be preallocated
@@ -2471,6 +2822,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Move the file cursor to a specific position
 	 *
 	 * \param[in] file			The file
@@ -2482,6 +2834,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Move the shared file cursor to a specific position. The same values must be provided by all processes
 	 *
 	 * \param[in] file			The shared file
@@ -2493,6 +2846,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Force all queued and pending disk operations on a file to be completed
 	 *
 	 * \param[in] file			The file to be synchronized
@@ -2511,6 +2865,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Set the view of a file handle for subsequent read/writes
 	 *
 	 * \param[in] file				The file handle
@@ -2524,6 +2879,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Set the view of a file handle for subsequent read/writes
 	 *
 	 * \param[in] file				The file handle
@@ -2534,6 +2890,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the view attached to a file handle
 	 *
 	 * \param[in] file				The file handle
@@ -2548,6 +2905,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Get the view attached to a file handle
 	 *
 	 * \param[in] file				The file handle
@@ -2560,6 +2918,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Write to file from a single process
 	 *
 	 * \param[in] file				The file handle
@@ -2575,6 +2934,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file
 	 *
 	 * \param[in] file				The file handle
@@ -2590,6 +2950,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Write to file from a single process at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2606,6 +2967,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2622,6 +2984,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file in sequence
 	 *
 	 * \param[in] file				The file handle
@@ -2637,6 +3000,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Write to file from any processes that opened the file in parallel
 	 *
 	 * \param[in] file				The file handle
@@ -2652,6 +3016,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from a single processes 
 	 *
 	 * \param[in] file				The file handle
@@ -2667,6 +3032,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from a single process at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2683,6 +3049,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from any processes that opened the file in parallel
 	 *
 	 * \param[in] file				The file handle
@@ -2698,6 +3065,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from a single process
 	 *
 	 * \param[in] file				The file handle
@@ -2713,6 +3081,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file
 	 *
 	 * \param[in] file				The file handle
@@ -2728,6 +3097,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from a single process at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2744,6 +3114,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2760,6 +3131,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file in sequence
 	 *
 	 * \param[in] file				The file handle
@@ -2775,6 +3147,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup File
 	 * Read from file from any processes that opened the file in parallel
 	 *
 	 * \param[in] file				The file handle
@@ -2790,6 +3163,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process
 	 *
 	 * \param[in] file				The file handle
@@ -2805,6 +3179,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process at the desired offset
 	 *
 	 * \param[in] file				The file handle
@@ -2821,6 +3196,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from any process that opened the file in parallel
 	 *
 	 * \param[in] file				The file handle
@@ -2954,6 +3330,7 @@ namespace MEL {
 	/// \endcond
 
 	/**
+	 * \ingroup File
 	 * Write to file from a single process. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -2967,6 +3344,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Write to file from a single process at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -2981,6 +3359,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -2994,6 +3373,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3008,6 +3388,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Write to file from all processes that opened the file in sequence. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3021,6 +3402,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Write to file from any processes that opened the file in parallel. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3034,6 +3416,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Read from file from a single process. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3047,6 +3430,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup File
 	 * Read from file from a single process at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3061,6 +3445,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3074,6 +3459,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3088,6 +3474,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Read from file from all processes that opened the file in sequence. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3101,6 +3488,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Read from file from any processes that opened the file in parallel. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3114,6 +3502,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from a single process. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3127,6 +3516,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from all processes that opened the file at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3141,6 +3531,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Write to file from any processes that opened the file in parallel. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3154,6 +3545,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3167,6 +3559,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process at the desired offset. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3181,6 +3574,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup File
 	 * Non-Blocking. Read from file from any processes that opened the file in parallel. Element size determined by template type
 	 *
 	 * \param[in] file				The file handle
@@ -3194,6 +3588,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup P2P
 	 * Send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3208,6 +3603,7 @@ namespace MEL {
     };                                                                                                                                
     
 	/**
+	 * \ingroup P2P
 	 * Buffered send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3222,6 +3618,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Synchronous send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3236,6 +3633,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Ready send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3250,6 +3648,7 @@ namespace MEL {
     };  
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3265,6 +3664,7 @@ namespace MEL {
     };                                                                                                                               
     
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3282,6 +3682,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Buffered send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3297,6 +3698,7 @@ namespace MEL {
     };  
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Buffered send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3314,6 +3716,7 @@ namespace MEL {
     }; 
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Synchronous send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3329,6 +3732,7 @@ namespace MEL {
     }; 
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Synchronous send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3346,6 +3750,7 @@ namespace MEL {
     }; 
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Ready send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3361,6 +3766,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Ready send num elements of a derived type from the given address
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3451,6 +3857,7 @@ namespace MEL {
 	/// \endcond
 
 	/**
+	 * \ingroup P2P
 	 * Send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3465,6 +3872,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Buffered send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3479,6 +3887,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Synchronous send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3493,6 +3902,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Ready send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3507,6 +3917,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3522,6 +3933,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3537,6 +3949,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Buffered send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3552,6 +3965,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Buffered end num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3567,6 +3981,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Synchronous send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3582,6 +3997,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Synchronous end num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3597,6 +4013,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Ready send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3612,6 +4029,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Ready end num elements of a derived type from the given address. Element size determined by template parameter
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
@@ -3627,6 +4045,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup P2P
 	 * Probe an incoming message to predetermine its contents
 	 *
 	 * \param[in] source			The rank of the process to send to
@@ -3641,6 +4060,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Probe an incoming message to predetermine its contents
 	 *
 	 * \param[in] source			The rank of the process to send to
@@ -3655,6 +4075,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Probe the length of an incoming message. Element type is determined from the template parameter
 	 *
 	 * \param[in] status			A status object containing the rank and tag for the message
@@ -3668,6 +4089,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup P2P
 	 * Probe the length of an incoming message 
 	 *
 	 * \param[in] datatype			The derived datatype of the elements 
@@ -3681,6 +4103,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Probe the length of an incoming message. Element type is determined from the template parameter
 	 *
 	 * \param[in] src				The rank of the process to send to
@@ -3695,6 +4118,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Probe the length of an incoming message 
 	 *
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3709,6 +4133,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Recieve a message of known length into the given pointer 
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3726,6 +4151,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Recieve a message of known length into the given pointer 
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3741,6 +4167,7 @@ namespace MEL {
     };
 	
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Recieve a message of known length into the given pointer 
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3799,6 +4226,7 @@ namespace MEL {
 	/// \endcond
 
 	/**
+	 * \ingroup P2P
 	 * Recieve a message of known length into the given pointer. Element size is determined from the template parameter
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3814,6 +4242,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Recieve a message of known length into the given pointer. Element size is determined from the template parameter 
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3829,6 +4258,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup P2P
 	 * Non-Blocking. Recieve a message of known length into the given pointer. Element size is determined from the template parameter 
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
@@ -3844,6 +4274,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup COL
 	 * Broadcast an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in,out] ptr			Pointer to the memory receive into
@@ -3857,6 +4288,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup COL
 	 * Scatter an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -3873,6 +4305,7 @@ namespace MEL {
     };        
     
 	/**
+	 * \ingroup COL
 	 * Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -3890,6 +4323,7 @@ namespace MEL {
     };    
                                                                                                                                                     
 	/**
+	 * \ingroup COL
 	 * Gather an array from all processes in comm 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -3906,6 +4340,7 @@ namespace MEL {
     };    
       
 	/**
+	 * \ingroup COL
 	 * Gather an array from all processes in comm, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -3923,6 +4358,7 @@ namespace MEL {
     };
                                                                                                                                                             
     /**
+	 * \ingroup COL
 	 * Gather an array from all processes in comm and distribute it to all processes 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -3938,6 +4374,7 @@ namespace MEL {
     };    
     
 	/**
+	 * \ingroup COL
 	 * Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -3954,6 +4391,7 @@ namespace MEL {
     };   
                                                                                                                                                 
     /**
+	 * \ingroup COL
 	 * Broadcast from all processes to all processes
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -3969,6 +4407,7 @@ namespace MEL {
     };    
     
 	/**
+	 * \ingroup COL
 	 * Broadcast from all processes to all processes with independent number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -3986,6 +4425,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4003,6 +4443,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup COL
 	 * Reduce an array of known length across all processes in comm using the given operation
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4018,6 +4459,7 @@ namespace MEL {
     };                                                                                                                                                
     
 	/**
+	 * \ingroup COL
 	 * Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4033,6 +4475,7 @@ namespace MEL {
     
 #ifdef MEL_3
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in,out] ptr			Pointer to the memory receive into
@@ -4047,6 +4490,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in,out] ptr			Pointer to the memory receive into
@@ -4063,6 +4507,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Scatter an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -4080,6 +4525,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Scatter an array to all processes in comm, where all processes know how many elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -4099,6 +4545,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -4117,6 +4564,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
@@ -4137,6 +4585,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4154,6 +4603,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4173,6 +4623,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4191,6 +4642,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4211,6 +4663,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4227,6 +4680,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes 
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4245,6 +4699,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4262,6 +4717,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
@@ -4281,6 +4737,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4297,6 +4754,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4315,6 +4773,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4333,6 +4792,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4353,6 +4813,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4371,6 +4832,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
@@ -4391,6 +4853,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4407,6 +4870,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4425,6 +4889,7 @@ namespace MEL {
     };    
     
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4440,6 +4905,7 @@ namespace MEL {
     }; 
 	
 	/**
+	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
@@ -4642,13 +5108,14 @@ namespace MEL {
 	/// \endcond
 
 	/**
-	* Broadcast an array to all processes in comm, where all processes know how many elements to expect
-	*
-	* \param[in,out] ptr			Pointer to the memory receive into
-	* \param[in] num				The number of elements to broadcast
-	* \param[in] root				The rank of the process to send from
-	* \param[in] comm				The comm world to broadcast within
-	*/
+	 * \ingroup COL
+	 * Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 */
 	template<typename T>
 	inline void Bcast(T *ptr, const int num, const int root, const Comm &comm) {
 		Bcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm);
@@ -4657,28 +5124,30 @@ namespace MEL {
 #ifdef MEL_3
 
 	/**
-	* Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
-	*
-	* \param[in,out] ptr			Pointer to the memory receive into
-	* \param[in] num				The number of elements to broadcast
-	* \param[in] root				The rank of the process to send from
-	* \param[in] comm				The comm world to broadcast within
-	* \param[out] rq				A request object
-	*/
+	 * \ingroup COL
+	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 * \param[out] rq				A request object
+	 */
 	template<typename T>
 	inline void Ibcast(T *ptr, const int num, const int root, const Comm &comm, Request &rq) {
 		Ibcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm, rq);
 	}; 
 
 	/**
-	* Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
-	*
-	* \param[in,out] ptr			Pointer to the memory receive into
-	* \param[in] num				The number of elements to broadcast
-	* \param[in] root				The rank of the process to send from
-	* \param[in] comm				The comm world to broadcast within
-	* \return						Returns a request object
-	*/
+	 * \ingroup COL
+	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect
+	 *
+	 * \param[in,out] ptr			Pointer to the memory receive into
+	 * \param[in] num				The number of elements to broadcast
+	 * \param[in] root				The rank of the process to send from
+	 * \param[in] comm				The comm world to broadcast within
+	 * \return						Returns a request object
+	 */
 	template<typename T>
 	inline Request Ibcast(T *ptr, const int num, const int root, const Comm &comm) {
 		return Ibcast(ptr, num * sizeof(T), MEL::Datatype::CHAR, root, comm);
@@ -4719,7 +5188,8 @@ namespace MEL {
 #endif
 
     /**
-	 * Create a window error handler
+	 * \ingroup  Win
+     * Create a window error handler
 	 *
 	 * \param[in] func	The function to use
 	 * \return			Returns a handle to an error handler
@@ -4731,7 +5201,8 @@ namespace MEL {
     };
 
 	/**
-	 * Set the error handler for a window
+	 * \ingroup  Win
+     * Set the error handler for a window
 	 *
 	 * \param[in] win		The file to attach to
 	 * \param[in] errHndl	The handler to use
@@ -4741,7 +5212,8 @@ namespace MEL {
     };
 
 	/**
-	 * Set the error handler for a window
+	 * \ingroup  Win
+     * Set the error handler for a window
 	 *
 	 * \param[in] win	The file to attach to
 	 * \param[in] func	The function to use
@@ -4751,7 +5223,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the error handler for a window
+	 * \ingroup  Win
+     * Get the error handler for a window
 	 *
 	 * \param[in] win	The file to attach to
 	 * \return			Returns a handle to the error handler
@@ -4763,7 +5236,8 @@ namespace MEL {
     };
 
     /**
-	 * Create a window on memory allocated with MPI/MEL alloc functions
+	 * \ingroup  Win
+     * Create a window on memory allocated with MPI/MEL alloc functions
 	 *
 	 * \param[in] ptr			Pointer to the memory to be mapped
 	 * \param[in] size			The number of elements to be mapped
@@ -4779,7 +5253,8 @@ namespace MEL {
     };
     
 	/**
-	 * Create a window on memory allocated with MPI/MEL alloc functions. Element size determined from template parameter
+	 * \ingroup  Win
+     * Create a window on memory allocated with MPI/MEL alloc functions. Element size determined from template parameter
 	 *
 	 * \param[in] ptr			Pointer to the memory to be mapped
 	 * \param[in] size			The number of elements to be mapped
@@ -4792,7 +5267,8 @@ namespace MEL {
     };
 
     /**
-	 * Synchronize the RMA access epoch for win across all processes attached to it
+	 * \ingroup  Win
+     * Synchronize the RMA access epoch for win across all processes attached to it
 	 *
 	 * \param[in] win			The window to synchronize
 	 * \param[in] assert_tag	Program assertion
@@ -4802,7 +5278,8 @@ namespace MEL {
     };
     
 	/**
-	 * Synchronize the RMA access epoch for win across all processes attached to it
+	 * \ingroup  Win
+     * Synchronize the RMA access epoch for win across all processes attached to it
 	 *
 	 * \param[in] win			The window to synchronize
 	 */
@@ -4811,7 +5288,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get the lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4823,7 +5301,8 @@ namespace MEL {
     };
     
 	/**
-	 * Get the lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get the lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4834,7 +5313,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get an exclusive lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get an exclusive lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4845,7 +5325,8 @@ namespace MEL {
     };
     
 	/**
-	 * Get an exclusive lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get an exclusive lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4855,7 +5336,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get a shared lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get a shared lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4866,7 +5348,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get a shared lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Get a shared lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4876,7 +5359,8 @@ namespace MEL {
     };
 
 	/**
-	 * Release the lock on an RMA access epoch for a window
+	 * \ingroup  Win
+     * Release the lock on an RMA access epoch for a window
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -4886,7 +5370,8 @@ namespace MEL {
     };
 
     /**
-	 * Put data into the mapped window of another process
+	 * \ingroup  Win
+     * Put data into the mapped window of another process
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -4902,7 +5387,8 @@ namespace MEL {
     };
 
     /**
-	 * Get data from the mapped window of another process
+	 * \ingroup  Win
+     * Get data from the mapped window of another process
 	 *
 	 * \param[out] origin_ptr		Pointer to the array to get
 	 * \param[in] origin_num		The number of elements to get into the local array
@@ -4920,7 +5406,8 @@ namespace MEL {
 #ifdef MEL_3
 	
 	/**
-	 * Get the lock on an RMA access epoch for a window on all attached processes
+	 * \ingroup  Win
+     * Get the lock on an RMA access epoch for a window on all attached processes
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] assert_tag	Program assertion
@@ -4930,7 +5417,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get the lock on an RMA access epoch for a window on all attached processes
+	 * \ingroup  Win
+     * Get the lock on an RMA access epoch for a window on all attached processes
 	 *
 	 * \param[in] win			The window to lock
 	 */
@@ -4939,7 +5427,8 @@ namespace MEL {
     };
 
 	/**
-	 * Release the lock on an RMA access epoch for a window on all attached processes
+	 * \ingroup  Win
+     * Release the lock on an RMA access epoch for a window on all attached processes
 	 *
 	 * \param[in] win			The window to unlock
 	 */
@@ -4948,7 +5437,8 @@ namespace MEL {
     };
 
 	/**
-	 * Force all operations within an RMA access epoch for a window to finish
+	 * \ingroup  Win
+     * Force all operations within an RMA access epoch for a window to finish
 	 *
 	 * \param[in] win			The window to flush
 	 * \param[in] rank			Rank to force synchronization with
@@ -4958,7 +5448,8 @@ namespace MEL {
     };
     
 	/**
-	 * Force all operations within an RMA access epoch for a window to finish for all attached processes
+	 * \ingroup  Win
+     * Force all operations within an RMA access epoch for a window to finish for all attached processes
 	 *
 	 * \param[in] win			The window to flush
 	 */
@@ -4967,7 +5458,8 @@ namespace MEL {
     };
 
 	/**
-	 * Force all local operations within an RMA access epoch for a window to finish
+	 * \ingroup  Win
+     * Force all local operations within an RMA access epoch for a window to finish
 	 *
 	 * \param[in] win			The window to flush
 	 * \param[in] rank			Rank to force synchronization with
@@ -4977,7 +5469,8 @@ namespace MEL {
     };
 
 	/**
-	 * Force all local operations within an RMA access epoch for a window to finish for all attached processes
+	 * \ingroup  Win
+     * Force all local operations within an RMA access epoch for a window to finish for all attached processes
 	 *
 	 * \param[in] win			The window to flush
 	 */
@@ -4986,7 +5479,8 @@ namespace MEL {
     };
 
 	/**
-	 * Synchronize the public and private copies of the window
+	 * \ingroup  Win
+     * Synchronize the public and private copies of the window
 	 *
 	 * \param[in] win			The window to synchronize
 	 */
@@ -4995,7 +5489,8 @@ namespace MEL {
     };
 
 	/**
-	 * Put data into the mapped window of another process
+	 * \ingroup  Win
+     * Put data into the mapped window of another process
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -5012,7 +5507,8 @@ namespace MEL {
     };
 
 	/**
-	 * Put data into the mapped window of another process
+	 * \ingroup  Win
+     * Put data into the mapped window of another process
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -5031,7 +5527,8 @@ namespace MEL {
     };
 
 	/**
-	 * Get data from the mapped window of another process
+	 * \ingroup  Win
+     * Get data from the mapped window of another process
 	 *
 	 * \param[out] origin_ptr		Pointer to the array to get
 	 * \param[in] origin_num		The number of elements to get into the local array
@@ -5048,7 +5545,8 @@ namespace MEL {
     };
     
 	/**
-	 * Get data from the mapped window of another process
+	 * \ingroup  Win
+     * Get data from the mapped window of another process
 	 *
 	 * \param[out] origin_ptr		Pointer to the array to get
 	 * \param[in] origin_num		The number of elements to get into the local array
@@ -5069,7 +5567,8 @@ namespace MEL {
 #endif
 	
 	/**
-	 * Free an RMA window
+	 * \ingroup  Win
+     * Free an RMA window
 	 *
 	 * \param[in] win			The window to free
 	 */
@@ -5079,7 +5578,8 @@ namespace MEL {
     };    
 
 	/**
-	 * Free a std::vector of RMA window handles
+	 * \ingroup  Win
+     * Free a std::vector of RMA window handles
 	 *
 	 * \param[in] wins			A std::vector of windows to free
 	 */
@@ -5088,7 +5588,8 @@ namespace MEL {
     };
 
 	/**
-	 * Free a varadic set of RMA windows
+	 * \ingroup  Win
+     * Free a varadic set of RMA windows
 	 *
 	 * \param[in] d0			The first window to free
 	 * \param[in] d1			The second window to free
@@ -5115,6 +5616,7 @@ namespace MEL {
 	/// \endcond
 
 	/**
+	 * \ingroup Mutex
 	 * Create a MEL::Mutex across a comm world
 	 *
 	 * \param[in] rank		The rank of the calling process
@@ -5147,6 +5649,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Mutex
 	 * Create a MEL::Mutex across a comm world
 	 *
 	 * \param[in] root		The rank of the process who will own the mutex
@@ -5157,6 +5660,7 @@ namespace MEL {
 	};
 
 	/**
+	 * \ingroup Mutex
 	 * Free a MEL::Mutex
 	 *
 	 * \param[in] mutex		The mutex to free
@@ -5168,6 +5672,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup Mutex
 	 * Get the exclusive lock on a MEL::Mutex
 	 *
 	 * \param[in] mutex		The mutex to lock
@@ -5201,6 +5706,7 @@ namespace MEL {
     };
 
     /**
+	 * \ingroup Mutex
 	 * Test if the mutex is currently locked
 	 *
 	 * \param[in] mutex		The mutex to lock
@@ -5210,6 +5716,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Mutex
 	 * Release the exclusive lock on a MEL::Mutex
 	 *
 	 * \param[in] mutex		The mutex to lock
@@ -5281,6 +5788,7 @@ namespace MEL {
 	/// \endcond
 
 	/**
+	 * \ingroup Shared
 	 * Create a MEL::Shared array across a comm world
 	 *
 	 * \param[in] len		The number of elements to allocate
@@ -5311,6 +5819,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Create a MEL::Shared array across a comm world
 	 *
 	 * \param[in] len		The number of elements to allocate
@@ -5323,6 +5832,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Free a MEL::Shared array
 	 *
 	 * \param[in] shared	The shared array to free
@@ -5337,6 +5847,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Test if the shared array is currently locked
 	 *
 	 * \param[in] shared	The shared array to test
@@ -5347,6 +5858,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Get the lock on the shared array without synchronizing the data. Useful for if you only intend to write to the array
 	 *
 	 * \param[in] shared	The shared array to lock
@@ -5357,6 +5869,7 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup Shared
 	 * Get the lock on the shared array without synchronizing the data. Useful for if you only intend to write to the array
 	 *
 	 * \param[in] shared	The shared array to lock
@@ -5369,6 +5882,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Get the lock on the shared array and synchronize the data
 	 *
 	 * \param[in] shared	The shared array to lock
@@ -5379,6 +5893,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Get the lock on the shared array and synchronize the data
 	 *
 	 * \param[in] shared	The shared array to lock
@@ -5398,6 +5913,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Release the lock on the shared array without synchronizing the data. Useful for if you only read from the array
 	 * 
 	 * \param[in] shared	The shared array to unlock
@@ -5408,11 +5924,12 @@ namespace MEL {
     };
     
 	/**
+	 * \ingroup Shared
 	 * Release the lock on the shared array without synchronizing the data. Useful for if you only read from the array
 	 * 
 	 * \param[in] shared	The shared array to unlock
-	 * \param[in] start		The start index to lock
-	 * \param[in] end		The end index to lock
+	 * \param[in] start		The start index to unlock
+	 * \param[in] end		The end index to unlock
 	 */
 	template<typename T>
     inline void SharedUnlock_noput(Shared<T> &shared, const int start, const int end) {
@@ -5420,6 +5937,7 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Release the lock on the shared array and synchronize the data
 	 * 
 	 * \param[in] shared	The shared array to unlock
@@ -5430,11 +5948,12 @@ namespace MEL {
     };
 
 	/**
+	 * \ingroup Shared
 	 * Release the lock on the shared array and synchronize the data
 	 * 
 	 * \param[in] shared	The shared array to unlock
-	 * \param[in] start		The start index to lock
-	 * \param[in] end		The end index to lock
+	 * \param[in] start		The start index to unlock
+	 * \param[in] end		The end index to unlock
 	 */
     template<typename T>
     inline void SharedUnlock(Shared<T> &shared, const int start, const int end) {
