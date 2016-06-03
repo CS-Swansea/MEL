@@ -1,0 +1,8 @@
+<map id="MEL::Exit" name="MEL::Exit">
+<area shape="rect" id="node2" href="$group___deep.html#gae97df15f2f6288f91ce475214882035b" title="Receive a pointer to an array of deep/non&#45;deep objects. " alt="" coords="169,5,291,32"/>
+<area shape="rect" id="node3" href="$group___deep.html#gaef45113101d476911d05949bd11dafee" title="Receive a pointer to an array of deep/non&#45;deep objects using a buffered receive. " alt="" coords="145,56,315,83"/>
+<area shape="rect" id="node4" href="$group___deep.html#ga1daeaf9843b3f9e423c5e0c34b4188d6" title="Broadcast a pointer to an array of deep/non&#45;deep objects. " alt="" coords="165,107,295,133"/>
+<area shape="rect" id="node5" href="$group___deep.html#ga019e666dead71bc0b0a26167343f0b83" title="Broadcast a pointer to a deep/non&#45;deep object using a buffered broadcast. " alt="" coords="142,157,318,184"/>
+<area shape="rect" id="node6" href="$group___deep.html#gae8bd526dc559bbe3076d3022546ba403" title="Read a pointer to an array of deep/non&#45;deep objects from file. " alt="" coords="157,208,303,235"/>
+<area shape="rect" id="node7" href="$group___deep.html#gaa4bdd3f753ae8cdd084943f12a7e88d3" title="Read a pointer to an array of deep/non&#45;deep objects to file using a buffered read. " alt="" coords="133,259,327,285"/>
+</map>

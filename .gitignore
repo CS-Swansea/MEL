@@ -1,0 +1,7 @@
+bin/*
+example-code/*
+MEL/*
+*.sdf
+*.sln
+*.suo
+*.json

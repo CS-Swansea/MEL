@@ -1,0 +1,13 @@
+<map id="MEL::WinLock" name="MEL::WinLock">
+<area shape="rect" id="node2" href="$group___win.html#ga537130f088c3aeb2bab99035efaee894" title="Get the lock on an RMA access epoch for a window. " alt="" coords="189,81,297,108"/>
+<area shape="rect" id="node3" href="$group___win.html#ga1469598ee3d7b48cb3806b83e6efba76" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="161,132,324,159"/>
+<area shape="rect" id="node11" href="$group___win.html#ga102c3f26fdfd082f72114916ddc5750d" title="Get a shared lock on an RMA access epoch for a window. " alt="" coords="168,208,317,235"/>
+<area shape="rect" id="node4" href="$group___win.html#gaea064cb7ec4662653d94b0abc1fad8cc" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="372,5,535,32"/>
+<area shape="rect" id="node5" href="$group___mutex.html#gad1313781c5e45edfb85ea9ed33eacf8f" title="Get the exclusive lock on a MEL::Mutex. " alt="" coords="393,56,514,83"/>
+<area shape="rect" id="node7" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="387,107,520,133"/>
+<area shape="rect" id="node9" href="$group___shared.html#ga67fb7e99a0d4341c9b3020cb37c59aec" title="Get the lock on the shared array and synchronize the data. " alt="" coords="390,157,517,184"/>
+<area shape="rect" id="node10" href="$group___shared.html#ga2781092e095750197aa62029972fedec" title="Release the lock on the shared array and synchronize the data. " alt="" coords="384,208,523,235"/>
+<area shape="rect" id="node6" href="$group___shared.html#gadf6f8b7df385f41166ad132315d89466" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="589,56,754,83"/>
+<area shape="rect" id="node8" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="583,107,760,133"/>
+<area shape="rect" id="node12" href="$group___win.html#gac4bfe2197772107b16b9bd86c8774800" title="Get a shared lock on an RMA access epoch for a window. " alt="" coords="379,259,528,285"/>
+</map>

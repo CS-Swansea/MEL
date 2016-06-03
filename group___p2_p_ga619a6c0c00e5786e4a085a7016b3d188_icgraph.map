@@ -1,0 +1,6 @@
+<map id="MEL::Send" name="MEL::Send">
+<area shape="rect" id="node2" href="$group___p2_p.html#ga5564c48889e6b417ce12bde1ce828505" title="Send num elements of a derived type from the given address. " alt="" coords="171,5,257,32"/>
+<area shape="rect" id="node3" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="147,56,281,83"/>
+<area shape="rect" id="node5" href="$group___deep.html#gac8f77475e988b2c52cb0d4e59bfa10d3" title="Abstract the transportation of a non&#45;deep object array by whatever means the message is using..." alt="" coords="140,107,288,149"/>
+<area shape="rect" id="node4" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="336,56,513,83"/>
+</map>

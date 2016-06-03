@@ -1,0 +1,11 @@
+<map id="MEL::MemFree" name="MEL::MemFree">
+<area shape="rect" id="node2" href="$group___mem.html#ga354a4e4f9eed31143cde68e259d2dd3c" title="Free the varadic set of pointers provided. " alt="" coords="183,5,295,32"/>
+<area shape="rect" id="node3" href="$group___mem.html#gaa277d7a55e197004d2086406f3930ee9" title="Call the destructor for each element of the given array and then free the memory. ..." alt="" coords="172,56,307,83"/>
+<area shape="rect" id="node4" href="$group___mutex.html#gab4b3614039ef59fff964e286e26c1dc5" title="Free a MEL::Mutex. " alt="" coords="180,107,299,133"/>
+<area shape="rect" id="node5" href="$group___shared.html#gadf353c84b42d0aa8bfa11b3fb635d172" title="Free a MEL::Shared array. " alt="" coords="388,132,512,159"/>
+<area shape="rect" id="node6" href="$group___mutex.html#gad1313781c5e45edfb85ea9ed33eacf8f" title="Get the exclusive lock on a MEL::Mutex. " alt="" coords="179,208,300,235"/>
+<area shape="rect" id="node8" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="173,259,306,285"/>
+<area shape="rect" id="node10" href="$group___deep.html#gac8f77475e988b2c52cb0d4e59bfa10d3" title="Abstract the transportation of a non&#45;deep object array by whatever means the message is using..." alt="" coords="165,310,313,351"/>
+<area shape="rect" id="node7" href="$group___shared.html#gadf6f8b7df385f41166ad132315d89466" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="367,208,533,235"/>
+<area shape="rect" id="node9" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="361,259,539,285"/>
+</map>
