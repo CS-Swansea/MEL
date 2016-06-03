@@ -1,0 +1,7 @@
+<map id="MEL::Barrier" name="MEL::Barrier">
+<area shape="rect" id="node2" href="$group___mutex.html#gaf3c9149feb5bd068e65cdfe33820fb20" title="Create a MEL::Mutex across a comm world. " alt="" coords="148,5,279,32"/>
+<area shape="rect" id="node4" href="$group___shared.html#gae80643ead5c80fbec45cf9319bd2107e" title="Create a MEL::Shared array across a comm world. " alt="" coords="327,56,463,83"/>
+<area shape="rect" id="node5" href="$group___mutex.html#gab4b3614039ef59fff964e286e26c1dc5" title="Free a MEL::Mutex. " alt="" coords="154,107,273,133"/>
+<area shape="rect" id="node6" href="$group___shared.html#gadf353c84b42d0aa8bfa11b3fb635d172" title="Free a MEL::Shared array. " alt="" coords="333,132,457,159"/>
+<area shape="rect" id="node3" href="$group___mutex.html#ga1260ec908e5d6903872bb86f117bd57f" title="Create a MEL::Mutex across a comm world. " alt="" coords="329,5,460,32"/>
+</map>

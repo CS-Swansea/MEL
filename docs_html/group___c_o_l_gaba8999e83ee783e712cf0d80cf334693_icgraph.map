@@ -1,0 +1,5 @@
+<map id="MEL::Bcast" name="MEL::Bcast">
+<area shape="rect" id="node2" href="$group___c_o_l.html#ga9b487417ba422de8df0e7b2a3bc48569" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="187,5,277,32"/>
+<area shape="rect" id="node3" href="$group___deep.html#gac8f77475e988b2c52cb0d4e59bfa10d3" title="Abstract the transportation of a non&#45;deep object array by whatever means the message is using..." alt="" coords="158,57,306,98"/>
+<area shape="rect" id="node4" href="$group___deep.html#gac4d081a54f9186f0088c08d650b61d54" title="Broadcast a deep object reference using a buffered broadcast. " alt="" coords="144,123,320,149"/>
+</map>

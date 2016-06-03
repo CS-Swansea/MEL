@@ -1,0 +1,7 @@
+<map id="MEL::MutexCreate" name="MEL::MutexCreate">
+<area shape="rect" id="node2" href="$group___mutex.html#gaf3c9149feb5bd068e65cdfe33820fb20" title="Create a MEL::Mutex across a comm world. " alt="" coords="184,31,315,57"/>
+<area shape="rect" id="node5" href="$group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="187,81,312,108"/>
+<area shape="rect" id="node6" href="$group___comm.html#ga8421cb6792fd71164bf0db4619da5074" title="Get the Comm world size. " alt="" coords="189,132,310,159"/>
+<area shape="rect" id="node3" href="$group___sync.html#ga0d85e07e4b0a7d6bc552c80f1d50de65" title="Collective operation that forces all processes to wait until they are all at the barrier. " alt="" coords="375,5,469,32"/>
+<area shape="rect" id="node4" href="$group___win.html#ga0cff7ae47bb71026a2ad98fff836f94c" title="Create a window on memory allocated with MPI/MEL alloc functions. " alt="" coords="363,56,481,83"/>
+</map>

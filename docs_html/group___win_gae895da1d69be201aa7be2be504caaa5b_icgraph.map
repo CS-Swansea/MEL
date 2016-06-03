@@ -1,0 +1,7 @@
+<map id="MEL::Get" name="MEL::Get">
+<area shape="rect" id="node2" href="$group___mutex.html#gad1313781c5e45edfb85ea9ed33eacf8f" title="Get the exclusive lock on a MEL::Mutex. " alt="" coords="138,5,259,32"/>
+<area shape="rect" id="node4" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="132,56,265,83"/>
+<area shape="rect" id="node6" href="$group___shared.html#ga67fb7e99a0d4341c9b3020cb37c59aec" title="Get the lock on the shared array and synchronize the data. " alt="" coords="135,107,262,133"/>
+<area shape="rect" id="node3" href="$group___shared.html#gadf6f8b7df385f41166ad132315d89466" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="319,5,485,32"/>
+<area shape="rect" id="node5" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="313,56,491,83"/>
+</map>

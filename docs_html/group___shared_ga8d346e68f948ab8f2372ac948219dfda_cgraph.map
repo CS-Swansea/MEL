@@ -1,0 +1,4 @@
+<map id="MEL::SharedCreate" name="MEL::SharedCreate">
+<area shape="rect" id="node2" href="$group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="189,5,315,32"/>
+<area shape="rect" id="node3" href="$group___comm.html#ga8421cb6792fd71164bf0db4619da5074" title="Get the Comm world size. " alt="" coords="191,56,313,83"/>
+</map>
