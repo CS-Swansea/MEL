@@ -1,9 +1,0 @@
-<map id="MEL::MutexLock" name="MEL::MutexLock">
-<area shape="rect" id="node2" href="$group___win.html#ga1469598ee3d7b48cb3806b83e6efba76" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="175,5,337,32"/>
-<area shape="rect" id="node4" href="$group___win.html#gad6b1670d20f97c613b495dc6c53115da" title="Put data into the mapped window of another process. " alt="" coords="217,56,295,83"/>
-<area shape="rect" id="node5" href="$group___win.html#gae895da1d69be201aa7be2be504caaa5b" title="Get data from the mapped window of another process. " alt="" coords="217,107,295,133"/>
-<area shape="rect" id="node6" href="$group___win.html#ga02f061ea3ad7c20b431be47cc0741ff8" title="Release the lock on an RMA access epoch for a window. " alt="" coords="196,157,316,184"/>
-<area shape="rect" id="node7" href="$group___p2_p.html#gab7fefc0cf529addd07980fdf9737aa8f" title="Recieve a message of known length into the given pointer. " alt="" coords="213,208,299,235"/>
-<area shape="rect" id="node8" href="$group___mem.html#ga2205316be910a71432809624f5670408" title="Free a pointer allocated with MPI_Alloc or the MEL equivilant functions. " alt="" coords="200,259,312,285"/>
-<area shape="rect" id="node3" href="$group___win.html#ga7a716050cc6b63ca8ba1460abd8e5fdd" title="Get the lock on an RMA access epoch for a window. " alt="" coords="385,5,493,32"/>
-</map>

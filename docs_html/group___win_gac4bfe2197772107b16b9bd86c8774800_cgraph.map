@@ -1,4 +1,0 @@
-<map id="MEL::WinLockShared" name="MEL::WinLockShared">
-<area shape="rect" id="node2" href="$group___win.html#ga102c3f26fdfd082f72114916ddc5750d" title="Get a shared lock on an RMA access epoch for a window. " alt="" coords="203,5,352,32"/>
-<area shape="rect" id="node3" href="$group___win.html#ga7a716050cc6b63ca8ba1460abd8e5fdd" title="Get the lock on an RMA access epoch for a window. " alt="" coords="400,5,508,32"/>
-</map>

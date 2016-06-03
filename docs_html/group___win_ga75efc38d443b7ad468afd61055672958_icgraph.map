@@ -1,5 +1,0 @@
-<map id="MEL::WinFree" name="MEL::WinFree">
-<area shape="rect" id="node2" href="$group___win.html#gae65865141ae7cfae974f3afbf063a17d" title="Free a std::vector of RMA window handles. " alt="" coords="166,5,273,32"/>
-<area shape="rect" id="node3" href="$group___mutex.html#gab4b3614039ef59fff964e286e26c1dc5" title="Free a MEL::Mutex. " alt="" coords="160,56,279,83"/>
-<area shape="rect" id="node4" href="$group___shared.html#gadf353c84b42d0aa8bfa11b3fb635d172" title="Free a MEL::Shared array. " alt="" coords="327,81,451,108"/>
-</map>

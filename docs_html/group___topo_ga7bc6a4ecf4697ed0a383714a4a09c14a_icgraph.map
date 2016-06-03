@@ -1,4 +1,0 @@
-<map id="MEL::TopoCartesianRank" name="MEL::TopoCartesianRank">
-<area shape="rect" id="node2" href="$group___topo.html#ga1371b3bd7b125f3e039c8de04444b038" title="Get the rank within the attached cartesian topology of a comm world. " alt="" coords="245,5,415,32"/>
-<area shape="rect" id="node3" href="$group___topo.html#ga78b354c1ae9f6971995bff64a02cf620" title="Create a 2D 9&#45;point stencil of ranks representing the neighbouring processes. " alt="" coords="224,56,436,83"/>
-</map>
