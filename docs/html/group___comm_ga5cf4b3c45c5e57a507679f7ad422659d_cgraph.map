@@ -1,0 +1,5 @@
+<map id="MEL::CommSetErrorHandler" name="MEL::CommSetErrorHandler">
+<area shape="rect" id="node2" href="$group___comm.html#ga30ecdc11add4c556da8d5d8bd4a19f87" title="Set a Comm error handler by passing the a error handler reference. " alt="" coords="249,5,436,32"/>
+<area shape="rect" id="node3" href="$group___comm.html#ga76cc4c64fd3d35d5862bda52f1e7fdb8" title="Create a Comm error handler by directly passing the function to use. " alt="" coords="240,56,445,83"/>
+<area shape="rect" id="node4" href="$struct_m_e_l_1_1_error_handler.html#ac85f48f1ab9d30e87fa55ddfc085a845" title="MEL::ErrorHandler::\lErrorHandler" alt="" coords="493,49,631,90"/>
+</map>

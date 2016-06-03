@@ -1,0 +1,7 @@
+<map id="MEL::SharedLock" name="MEL::SharedLock">
+<area shape="rect" id="node2" href="$group___shared.html#gaaa420eca9c2f52c036ca64804127d5c4" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="180,5,345,32"/>
+<area shape="rect" id="node3" href="$group___win.html#ga1469598ee3d7b48cb3806b83e6efba76" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="181,56,344,83"/>
+<area shape="rect" id="node5" href="$group___win.html#gae895da1d69be201aa7be2be504caaa5b" title="Get data from the mapped window of another process. " alt="" coords="223,107,302,133"/>
+<area shape="rect" id="node6" href="$group___win.html#ga02f061ea3ad7c20b431be47cc0741ff8" title="Release the lock on an RMA access epoch for a window. " alt="" coords="203,157,323,184"/>
+<area shape="rect" id="node4" href="$group___win.html#ga7a716050cc6b63ca8ba1460abd8e5fdd" title="Get the lock on an RMA access epoch for a window. " alt="" coords="393,56,501,83"/>
+</map>
