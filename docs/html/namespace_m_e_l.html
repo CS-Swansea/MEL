@@ -53,7 +53,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -164,33 +163,50 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ab63f767418c81a3c1b37878811367be4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a02c19819e4f1783b0c9effb8ef0a3b0a">PROC_NULL</a> = MPI_PROC_NULL, 
-<a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a5bdde68f112008f452837d82cb863e63">ANY_SOURCE</a> = MPI_ANY_SOURCE, 
-<a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a93c936869ee2110c02d1534035c5587a">ANY_TAG</a> = MPI_ANY_TAG
+<tr class="memitem:ab63f767418c81a3c1b37878811367be4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a02c19819e4f1783b0c9effb8ef0a3b0a">PROC_NULL</a> = MPI_PROC_NULL, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a5bdde68f112008f452837d82cb863e63">ANY_SOURCE</a> = MPI_ANY_SOURCE, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#ab63f767418c81a3c1b37878811367be4a93c936869ee2110c02d1534035c5587a">ANY_TAG</a> = MPI_ANY_TAG
+<br />
  }</td></tr>
 <tr class="separator:ab63f767418c81a3c1b37878811367be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cc6a0400e02efe51a35ea8f41c52852"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852">FileMode</a> : int { <br />
 &#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a294ce20cdefa29be3be0735cb62e715d">FileMode::CREATE</a> = MPI_MODE_CREATE, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a375ffb668aa90f1c7fcae55e9734a752">FileMode::APPEND</a> = MPI_MODE_APPEND, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852af3ff5294782ff6a18cb2b05509d3da71">FileMode::DELETE_ON_CLOSE</a> = MPI_MODE_DELETE_ON_CLOSE, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a636a15127109948106ce0c4b8f53e4b8">FileMode::EXCL</a> = MPI_MODE_EXCL, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a375ffb668aa90f1c7fcae55e9734a752">FileMode::APPEND</a> = MPI_MODE_APPEND, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852af3ff5294782ff6a18cb2b05509d3da71">FileMode::DELETE_ON_CLOSE</a> = MPI_MODE_DELETE_ON_CLOSE, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a636a15127109948106ce0c4b8f53e4b8">FileMode::EXCL</a> = MPI_MODE_EXCL, 
 <br />
 &#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a9c2c7b2605838b062b8f3508f03e0b29">FileMode::RDONLY</a> = MPI_MODE_RDONLY, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a457cdac5f0d6776d0a7c8d9eca5f6406">FileMode::RDWR</a> = MPI_MODE_RDWR, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852acf83b42acb37144547a9b4ac606d17a6">FileMode::WRONLY</a> = MPI_MODE_WRONLY, 
-<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a39403cd282d944abcd4f14996cb71bcb">FileMode::SEQUENTIAL</a> = MPI_MODE_SEQUENTIAL, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a457cdac5f0d6776d0a7c8d9eca5f6406">FileMode::RDWR</a> = MPI_MODE_RDWR, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852acf83b42acb37144547a9b4ac606d17a6">FileMode::WRONLY</a> = MPI_MODE_WRONLY, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a39403cd282d944abcd4f14996cb71bcb">FileMode::SEQUENTIAL</a> = MPI_MODE_SEQUENTIAL, 
 <br />
 &#160;&#160;<a class="el" href="namespace_m_e_l.html#a0cc6a0400e02efe51a35ea8f41c52852a211707437c8d72a5bee259d94dcdeeec">FileMode::UNIQUE_OPEN</a> = MPI_MODE_UNIQUE_OPEN
 <br />
  }</td></tr>
 <tr class="separator:a0cc6a0400e02efe51a35ea8f41c52852"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93d83501f4de013bd2526f827da6682e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682e">SeekMode</a> : int { <a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682ea8c52684db8f49511e9b44471716bf164">SeekMode::SET</a> = MPI_SEEK_SET, 
-<a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682eaf32924c53f864144ab34d1f7c12a0d4a">SeekMode::CUR</a> = MPI_SEEK_CUR, 
-<a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682eab1a326c06d88bf042f73d70f50197905">SeekMode::END</a> = MPI_SEEK_END
+<tr class="memitem:a93d83501f4de013bd2526f827da6682e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682e">SeekMode</a> : int { <br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682ea8c52684db8f49511e9b44471716bf164">SeekMode::SET</a> = MPI_SEEK_SET, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682eaf32924c53f864144ab34d1f7c12a0d4a">SeekMode::CUR</a> = MPI_SEEK_CUR, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a93d83501f4de013bd2526f827da6682eab1a326c06d88bf042f73d70f50197905">SeekMode::END</a> = MPI_SEEK_END
+<br />
  }</td></tr>
 <tr class="separator:a93d83501f4de013bd2526f827da6682e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24306105b4f5cef864ccdbe84062dfe9"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9">LockType</a> { <a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9af45c3a0bb3687ed8e221253b3fd4a2ce">LockType::EXCLUSIVE</a> = MPI_LOCK_EXCLUSIVE, 
-<a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9a049518eb4dc1859c7cebbe15876cfd63">LockType::SHARED</a> = MPI_LOCK_SHARED
+<tr class="memitem:a24306105b4f5cef864ccdbe84062dfe9"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9">LockType</a> { <br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9af45c3a0bb3687ed8e221253b3fd4a2ce">LockType::EXCLUSIVE</a> = MPI_LOCK_EXCLUSIVE, 
+<br />
+&#160;&#160;<a class="el" href="namespace_m_e_l.html#a24306105b4f5cef864ccdbe84062dfe9a049518eb4dc1859c7cebbe15876cfd63">LockType::SHARED</a> = MPI_LOCK_SHARED
+<br />
  }</td></tr>
 <tr class="separator:a24306105b4f5cef864ccdbe84062dfe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

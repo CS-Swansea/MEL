@@ -37,94 +37,94 @@ SOFTWARE.
 #include <thread>
 
 namespace MEL {
+    
+	/**
+	 * \mainpage 
+	 * ### Version 0.01 Beta
+	 * MEL is a C++11, header-only library, being developed with the goal of creating a light weight and robust framework for building parallel applications on top of MPI. 
+	 *  MEL is designed to introduce no (or minimal) overheads while drastically reducing code complexity. It allows for a greater range of common MPI errors to be caught at 
+	 * compile-time rather than during program execution where it can be far more difficult to debug what is going wrong. 
+	 *
+	 * A good example of this is type safety in the MPI standard. The standard does not dictate how many of the object types should be implemented leaving these details to 
+	 * the implementation vendor. For instance, in Intel MPI 5.1 `MPI_Comm` objects and many other simple types are implemented as indexes, `typedef int MPI_Comm`
+	 * , leaving the implementation to use these indexes to manage the real objects internally. A drawback with this approach is it causes compile time type-checking of 
+	 * function parameters to not flag erroneous combinations of variables. The common signature `MPI_Send(void*, int, MPI_Datatype, int, int, MPI_Comm)` is actually seen 
+	 * by the compiler as `MPI_Send(void*, int, int, int, int, int)`, allowing any ordering of the last five variables to be compiled as valid MPI code, while causing 
+	 * catastrophic failure at run-time. In contrast, OpenMPI 1.10.2 implements these types as structs which are inherently type-safe. 
+	 *
+	 * With MEL we aim to provide a consistent and unified function syntax that allows all MPI distributions to behave in a common and predictable way; while also providing
+	 * some higher-level functionality that is not available from the MPI standard such as deep-copy, mutexes, RMA shared memory synchronization, and more. 
+	 *
+	 * We plan to keep MEL in active development and hope that the research community will join us as we continue to grow the features and capabilities encompassed within the project. 
+	 * MEL is Open-Source and available on Github under the MIT license at: https://github.com/CS-Swansea/MEL .
+	 *
+	 * ## Todo
+	 * 
+	 * - Add Distributed Graph Topology functions.
+	 * - Add overloads for p2p/collective communications for transmitting std::array/std::vector by start/end iterators.
+	 * - Improve error handler implementation. A rough version is currently in place.
+	 * - Implement ranged-mutexes. 
+	 *
+ 	 * \defgroup Errors Error Handling
+	 * Error Handler Creation / Deletion
+	 *
+	 * \defgroup Utils Utilities
+	 * Utility Functions for Cleaner Coding
+	 *
+	 * \defgroup Mem Memory Allocation
+	 * Dynamic Memory Allocation using the underlying MPI_Alloc allocator
+	 *
+	 * \defgroup Comm Communicators & Groups
+	 * Communicator & Group Creation / Deletion
+	 *
+ 	 * \defgroup Sync Synchronization
+	 * Synchronization on Request objects
+	 *
+	 * \defgroup Datatype Derived Datatypes
+	 * Derived Datatype Creation and Deletion
+	 *
+	 * \defgroup Topo Topology
+	 * Cartesian & Distributed Graph Topologies
+	 *
+	 * \defgroup Ops Operations
+	 * Builtin Functors and User Defined Operations
+	 *
+	 * \defgroup File File-IO
+	 * File Creation / Deletion / Read / Write
+	 *
+	 * \defgroup P2P Point-2-Point Communication
+	 * Send / Receive
+	 *
+	 * \defgroup COL Collective Communication
+	 * Broadcast / Scatter / Gather / Alltoall / Reduce
+	 *
+	 * \defgroup Win RMA One-Sided Communication
+	 * RMA Window Creation / Deletion / Get / Put / Accumulate
+	 *
+	 * \defgroup Mutex Mutex
+	 * An implementation of Mutex Semantics between MPI processes. Based loosely off of Andreas Prell's mpi_mutex.c (https://gist.github.com/aprell/1486197) and R. Thakur, R. Ross, and R. Latham, "Implementing Byte-Range Locks Using MPI One-Sided Communication," in Proc. of the 12th European PVM/MPI Users' Group Meeting (Euro PVM/MPI 2005), Recent Advances in Parallel Virtual Machine and Message Passing Interface, Lecture Notes in Computer Science, LNCS 3666, Springer, September 2005, pp. 119-128.
+	 *
+	 * \defgroup Shared Shared Arrays
+	 * A simple shared array implementation using Mutex locks and RMA one-sided communication
+	 */
 
 #if (MPI_VERSION == 3)
 #define MEL_3
 #endif
-    
-    typedef MPI_Aint   Aint;
-    typedef MPI_Offset Offset;
+
+	typedef MPI_Aint   Aint;
+	typedef MPI_Offset Offset;
 
 #ifdef MEL_3
-    typedef MPI_Count  Count;
+	typedef MPI_Count  Count;
 #endif
 
-    /// Macro to help with return error codes
+	/// Macro to help with return error codes
 #ifndef MEL_NO_CHECK_ERROR_CODES
 #define MEL_THROW(v, message) { int ierr = (v); if ((ierr) != MPI_SUCCESS) MEL::Abort((ierr), std::string(message)); }
 #else
 #define MEL_THROW(v, message) { (v); }
 #endif
-    
-	/**
- 	 * \defgroup Errors Error Handling
-	 * Error Handler Creation / Deletion
-	 */
-
-	/**
- 	 * \defgroup Utils Utilities
-	 * Utility Functions for Cleaner Coding
-	 */
-
-	/**
- 	 * \defgroup Mem Memory Allocation
-	 * Dynamic Memory Allocation using the underlying MPI_Alloc allocator
-	 */
-
-	/**
- 	 * \defgroup Comm Communicators & Groups
-	 * Communicator & Group Creation / Deletion
-	 */
-
-	/**
- 	 * \defgroup Sync Synchronization
-	 * Synchronization on Request objects
-	 */
-
-	/**
- 	 * \defgroup Datatype Derived Datatypes
-	 * Derived Datatype Creation and Deletion
-	 */
-
-	/**
- 	 * \defgroup Topo Topology
-	 * Cartesian & Distributed Graph Topologies
-	 */
-
-	/**
- 	 * \defgroup Ops Operations
-	 * Builtin Functors and User Defined Operations
-	 */
-
-	/**
- 	 * \defgroup File File-IO
-	 * File Creation / Deletion / Read / Write
-	 */
-
-	/**
- 	 * \defgroup P2P Point-2-Point Communication
-	 * Send / Receive
-	 */
-
-	/**
- 	 * \defgroup COL Collective Communication
-	 * Broadcast / Scatter / Gather / Alltoall / Reduce
-	 */
-
-	/**
- 	 * \defgroup Win RMA One-Sided Communication
-	 * RMA Window Creation / Deletion / Get / Put / Accumulate
-	 */
-
-	/**
- 	 * \defgroup Mutex Mutex
-	 * An implementation of Mutex Semantics between MPI processes. Based loosely off of Andreas Prell's mpi_mutex.c (https://gist.github.com/aprell/1486197) and R. Thakur, R. Ross, and R. Latham, "Implementing Byte-Range Locks Using MPI One-Sided Communication," in Proc. of the 12th European PVM/MPI Users' Group Meeting (Euro PVM/MPI 2005), Recent Advances in Parallel Virtual Machine and Message Passing Interface, Lecture Notes in Computer Science, LNCS 3666, Springer, September 2005, pp. 119-128.
-	 */
-
-	/**
- 	 * \defgroup Shared Shared Arrays
-	 * A simple shared array implementation using Mutex locks and RMA one-sided communication
-	 */
 
     /**
 	 * \ingroup  Errors
