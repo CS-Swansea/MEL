@@ -1,0 +1,6 @@
+<map id="MEL::WinCreate" name="MEL::WinCreate">
+<area shape="rect" id="node2" href="$group___win.html#ga70949592262881649575e1626e7561a5" title="Create a window on memory allocated with MPI/MEL alloc functions. " alt="" coords="178,5,297,32"/>
+<area shape="rect" id="node3" href="$group___mutex.html#gaf3c9149feb5bd068e65cdfe33820fb20" title="Create a MEL::Mutex across a comm world. " alt="" coords="172,56,303,83"/>
+<area shape="rect" id="node5" href="$group___shared.html#gae80643ead5c80fbec45cf9319bd2107e" title="Create a MEL::Shared array across a comm world. " alt="" coords="351,107,487,133"/>
+<area shape="rect" id="node4" href="$group___mutex.html#ga1260ec908e5d6903872bb86f117bd57f" title="Create a MEL::Mutex across a comm world. " alt="" coords="353,56,484,83"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="MEL::SharedCreate" name="MEL::SharedCreate">
+<area shape="rect" id="node2" href="$group___sync.html#ga0d85e07e4b0a7d6bc552c80f1d50de65" title="Collective operation that forces all processes to wait until they are all at the barrier. " alt="" coords="437,5,532,32"/>
+<area shape="rect" id="node3" href="$group___mutex.html#gaf3c9149feb5bd068e65cdfe33820fb20" title="Create a MEL::Mutex across a comm world. " alt="" coords="218,31,349,57"/>
+<area shape="rect" id="node4" href="$group___win.html#ga0cff7ae47bb71026a2ad98fff836f94c" title="Create a window on memory allocated with MPI/MEL alloc functions. " alt="" coords="425,68,544,95"/>
+<area shape="rect" id="node5" href="$group___datatype.html#ga6855969d0e0d2f09fcaaeb2eb1e28691" title="Create a derived type representing a contiguous block of an elementary type. " alt="" coords="189,132,377,159"/>
+</map>

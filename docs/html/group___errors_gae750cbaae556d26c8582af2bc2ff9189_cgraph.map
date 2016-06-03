@@ -1,0 +1,4 @@
+<map id="MEL::AddErrorString" name="MEL::AddErrorString">
+<area shape="rect" id="node2" href="$group___errors.html#ga9b2d3e4ff588ebc4f7877a9cf34ae348" title="Add an error code to an exisiting error class for MPI to reference. " alt="" coords="198,5,337,32"/>
+<area shape="rect" id="node3" href="$group___errors.html#ga65e0872e1e22a1bd28905643dfef9c2e" title="Add an error string to an existing error code for MPI to reference. " alt="" coords="196,56,339,83"/>
+</map>

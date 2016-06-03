@@ -1,0 +1,4 @@
+<map id="MEL::MutexCreate" name="MEL::MutexCreate">
+<area shape="rect" id="node2" href="$group___sync.html#ga0d85e07e4b0a7d6bc552c80f1d50de65" title="Collective operation that forces all processes to wait until they are all at the barrier. " alt="" coords="196,5,291,32"/>
+<area shape="rect" id="node3" href="$group___win.html#ga0cff7ae47bb71026a2ad98fff836f94c" title="Create a window on memory allocated with MPI/MEL alloc functions. " alt="" coords="184,56,303,83"/>
+</map>
