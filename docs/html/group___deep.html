@@ -139,6 +139,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga381cf531ca694fabc4e1f2386bf5c68d">MEL::Deep::Message::BufferPtr</a> (T *&amp;ptr, int len)</td></tr>
 <tr class="memdesc:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a non-deep array to the the messages buffer.  <a href="#ga381cf531ca694fabc4e1f2386bf5c68d">More...</a><br /></td></tr>
 <tr class="separator:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga59d25bb41529ab84af3bb96d80c40dd2">MEL::Deep::Message::CheckPointerCache</a> (T *&amp;ptr)</td></tr>
+<tr class="memdesc:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a pointer is currently in the map of shared pointer.  <a href="#ga59d25bb41529ab84af3bb96d80c40dd2">More...</a><br /></td></tr>
+<tr class="separator:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab17f2cfa66ad2a083279741dff710e44"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gab17f2cfa66ad2a083279741dff710e44"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#gab17f2cfa66ad2a083279741dff710e44">MEL::Deep::Message::CachePointer</a> (T *oldPtr, T *ptr)</td></tr>
+<tr class="memdesc:gab17f2cfa66ad2a083279741dff710e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a pointer into map of shared pointers.  <a href="#gab17f2cfa66ad2a083279741dff710e44">More...</a><br /></td></tr>
+<tr class="separator:gab17f2cfa66ad2a083279741dff710e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#gadc8f7e012e60014f2b24ac2908c5d3c8">MEL::Deep::Message::GetCachedPointer</a> (T *&amp;ptr)</td></tr>
+<tr class="memdesc:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the value of the given pointer with the value mapped to it in the shared pointer map.  <a href="#gadc8f7e012e60014f2b24ac2908c5d3c8">More...</a><br /></td></tr>
+<tr class="separator:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4572c4589fd5243127236459cc4c1885"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga4572c4589fd5243127236459cc4c1885"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga4572c4589fd5243127236459cc4c1885">MEL::Deep::Message::SendAlloc</a> (T *&amp;src, int len)</td></tr>
 <tr class="memdesc:ga4572c4589fd5243127236459cc4c1885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an array to the receiving process where it will need to be allocated, or if the message is buffered pack the array into the buffer.  <a href="#ga4572c4589fd5243127236459cc4c1885">More...</a><br /></td></tr>
@@ -179,6 +191,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="memTemplItemLeft" align="right" valign="top">enable_if_not_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95">MEL::Deep::Message::packPtr</a> (T *&amp;ptr, int len=1)</td></tr>
 <tr class="memdesc:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport an array by its contiguous footprint in memory.  <a href="#ga2bad3257cf8a16936b4bf342ab15ec95">More...</a><br /></td></tr>
 <tr class="separator:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplItemLeft" align="right" valign="top">enable_if_not_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga4cb3ae640bb25837562aba89280929d4">MEL::Deep::Message::packSharedPtr</a> (T *&amp;ptr, int len=1)</td></tr>
+<tr class="memdesc:ga4cb3ae640bb25837562aba89280929d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a (potentially shared) array by its contiguous footprint in memory.  <a href="#ga4cb3ae640bb25837562aba89280929d4">More...</a><br /></td></tr>
+<tr class="separator:ga4cb3ae640bb25837562aba89280929d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaae2eafb93bda638a375935a84388ec62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___deep.html#gaae2eafb93bda638a375935a84388ec62">MEL::Deep::Message::packSTL</a> (std::string &amp;obj)</td></tr>
 <tr class="memdesc:gaae2eafb93bda638a375935a84388ec62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a std::string.  <a href="#gaae2eafb93bda638a375935a84388ec62">More...</a><br /></td></tr>
 <tr class="separator:gaae2eafb93bda638a375935a84388ec62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,10 +217,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8686e42b6a393d9672d1d569516d7eea"><td class="memTemplItemLeft" align="right" valign="top">Message &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga8686e42b6a393d9672d1d569516d7eea">MEL::Deep::Message::operator&amp;</a> (std::list&lt; T &gt; &amp;obj)</td></tr>
 <tr class="memdesc:ga8686e42b6a393d9672d1d569516d7eea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep/non-deep std::list.  <a href="#ga8686e42b6a393d9672d1d569516d7eea">More...</a><br /></td></tr>
 <tr class="separator:ga8686e42b6a393d9672d1d569516d7eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep&lt; T, Message &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga09ac3f847bb7a272ed7312d35edda71b">MEL::Deep::Message::operator&amp;</a> (T &amp;obj)</td></tr>
-<tr class="memdesc:ga09ac3f847bb7a272ed7312d35edda71b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deepobject reference.  <a href="#ga09ac3f847bb7a272ed7312d35edda71b">More...</a><br /></td></tr>
-<tr class="separator:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memTemplItemLeft" align="right" valign="top">Message &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga9ba8b77e0f51c8b0c5d4513747615243">MEL::Deep::Message::operator&amp;</a> (T &amp;obj)</td></tr>
+<tr class="memdesc:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep/non-deep object reference.  <a href="#ga9ba8b77e0f51c8b0c5d4513747615243">More...</a><br /></td></tr>
+<tr class="separator:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf7800362aed9b60a9505fccd7165edb8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gaf7800362aed9b60a9505fccd7165edb8"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep_not_pointer&lt; T, int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#gaf7800362aed9b60a9505fccd7165edb8">MEL::Deep::BufferSize</a> (T &amp;obj)</td></tr>
 <tr class="memdesc:gaf7800362aed9b60a9505fccd7165edb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the buffer size needed to transport a deep object reference.  <a href="group___deep.html#gaf7800362aed9b60a9505fccd7165edb8">More...</a><br /></td></tr>
@@ -622,6 +638,120 @@ template&lt;typename T &gt; </div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">ptr</td><td>The pointer to the array to put/get from the buffer </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The number of elements to put/get </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga59d25bb41529ab84af3bb96d80c40dd2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MEL::Deep::Message::CheckPointerCache </td>
+          <td>(</td>
+          <td class="paramtype">T *&amp;&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if a pointer is currently in the map of shared pointer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ptr</td><td>The pointer to the array to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if the pointer is already in the map </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gab17f2cfa66ad2a083279741dff710e44"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MEL::Deep::Message::CachePointer </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>oldPtr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Insert a pointer into map of shared pointers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">oldPtr</td><td>The old "dangling" pointer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ptr</td><td>The newly allocated pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gadc8f7e012e60014f2b24ac2908c5d3c8"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MEL::Deep::Message::GetCachedPointer </td>
+          <td>(</td>
+          <td class="paramtype">T *&amp;&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Replace the value of the given pointer with the value mapped to it in the shared pointer map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ptr</td><td>The old "dangling" pointer to be modified </td></tr>
   </table>
   </dd>
 </dl>
@@ -1095,6 +1225,51 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="ga4cb3ae640bb25837562aba89280929d4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enable_if_not_deep&lt;T&gt; MEL::Deep::Message::packSharedPtr </td>
+          <td>(</td>
+          <td class="paramtype">T *&amp;&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Transport a (potentially shared) array by its contiguous footprint in memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ptr</td><td>Pointer to the array to be transported </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The number of elements to transport </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="gaae2eafb93bda638a375935a84388ec62"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1295,7 +1470,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga09ac3f847bb7a272ed7312d35edda71b"></a>
+<a class="anchor" id="ga9ba8b77e0f51c8b0c5d4513747615243"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1305,7 +1480,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enable_if_deep&lt;T, Message&amp;&gt; MEL::Deep::Message::operator&amp; </td>
+          <td class="memname">Message&amp; MEL::Deep::Message::operator&amp; </td>
           <td>(</td>
           <td class="paramtype">T &amp;&#160;</td>
           <td class="paramname"><em>obj</em></td><td>)</td>
@@ -1319,10 +1494,10 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Transport a deepobject reference. </p>
+<p>Transport a deep/non-deep object reference. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">obj</td><td>The deep object to transport </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">obj</td><td>The object to transport </td></tr>
   </table>
   </dd>
 </dl>
@@ -1411,7 +1586,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga57ceb28360bb25390874677c23ca6b35_cgraph.png" border="0" usemap="#group___deep_ga57ceb28360bb25390874677c23ca6b35_cgraph" alt=""/></div>
 <map name="group___deep_ga57ceb28360bb25390874677c23ca6b35_cgraph" id="group___deep_ga57ceb28360bb25390874677c23ca6b35_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="208,5,356,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="208,5,356,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="208,71,356,112"/>
 </map>
 </div>
 </p>
@@ -1546,7 +1722,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga7539f4ce90edff49eefe134bd765f8ea_cgraph.png" border="0" usemap="#group___deep_ga7539f4ce90edff49eefe134bd765f8ea_cgraph" alt=""/></div>
 <map name="group___deep_ga7539f4ce90edff49eefe134bd765f8ea_cgraph" id="group___deep_ga7539f4ce90edff49eefe134bd765f8ea_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="179,5,327,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="179,5,327,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="179,71,327,112"/>
 </map>
 </div>
 </p>
@@ -1777,7 +1954,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gade02f7388b28fdd7a0a27f9d799f2172_cgraph.png" border="0" usemap="#group___deep_gade02f7388b28fdd7a0a27f9d799f2172_cgraph" alt=""/></div>
 <map name="group___deep_gade02f7388b28fdd7a0a27f9d799f2172_cgraph" id="group___deep_gade02f7388b28fdd7a0a27f9d799f2172_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="225,5,373,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="225,5,373,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="225,71,373,112"/>
 </map>
 </div>
 </p>
@@ -1854,8 +2032,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gab88eb6e2ac94404e7b588e647080c851_cgraph.png" border="0" usemap="#group___deep_gab88eb6e2ac94404e7b588e647080c851_cgraph" alt=""/></div>
 <map name="group___deep_gab88eb6e2ac94404e7b588e647080c851_cgraph" id="group___deep_gab88eb6e2ac94404e7b588e647080c851_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="237,5,385,47"/>
-<area shape="rect" id="node3" href="group___deep.html#ga6209aca2684d0b36d16fe70b3279adba" title="Send a deep object reference using a buffered send. " alt="" coords="225,71,397,98"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="237,5,385,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="237,71,385,112"/>
+<area shape="rect" id="node4" href="group___deep.html#ga6209aca2684d0b36d16fe70b3279adba" title="Send a deep object reference using a buffered send. " alt="" coords="225,137,397,163"/>
 </map>
 </div>
 </p>
@@ -1990,7 +2169,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga3eac666185ced6f13e6ec5b0d991c38c_cgraph.png" border="0" usemap="#group___deep_ga3eac666185ced6f13e6ec5b0d991c38c_cgraph" alt=""/></div>
 <map name="group___deep_ga3eac666185ced6f13e6ec5b0d991c38c_cgraph" id="group___deep_ga3eac666185ced6f13e6ec5b0d991c38c_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="176,5,324,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="176,5,324,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="176,71,324,112"/>
 </map>
 </div>
 </p>
@@ -2066,9 +2246,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gae97df15f2f6288f91ce475214882035b_cgraph.png" border="0" usemap="#group___deep_gae97df15f2f6288f91ce475214882035b_cgraph" alt=""/></div>
 <map name="group___deep_gae97df15f2f6288f91ce475214882035b_cgraph" id="group___deep_gae97df15f2f6288f91ce475214882035b_cgraph">
-<area shape="rect" id="node2" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="210,5,290,32"/>
-<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="176,57,324,98"/>
-<area shape="rect" id="node3" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="372,5,460,32"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="176,5,324,47"/>
+<area shape="rect" id="node3" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="210,71,290,98"/>
+<area shape="rect" id="node5" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="176,123,324,164"/>
+<area shape="rect" id="node4" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="372,71,460,98"/>
 </map>
 </div>
 </p>
@@ -2205,7 +2386,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga77789b6b25cd0409373fc22a0ad810d4_cgraph.png" border="0" usemap="#group___deep_ga77789b6b25cd0409373fc22a0ad810d4_cgraph" alt=""/></div>
 <map name="group___deep_ga77789b6b25cd0409373fc22a0ad810d4_cgraph" id="group___deep_ga77789b6b25cd0409373fc22a0ad810d4_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="224,5,372,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="224,5,372,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="224,71,372,112"/>
 </map>
 </div>
 </p>
@@ -2282,9 +2464,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gaef45113101d476911d05949bd11dafee_cgraph.png" border="0" usemap="#group___deep_gaef45113101d476911d05949bd11dafee_cgraph" alt=""/></div>
 <map name="group___deep_gaef45113101d476911d05949bd11dafee_cgraph" id="group___deep_gaef45113101d476911d05949bd11dafee_cgraph">
-<area shape="rect" id="node2" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="258,5,338,32"/>
-<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="224,57,372,98"/>
-<area shape="rect" id="node3" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="420,5,508,32"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="224,5,372,47"/>
+<area shape="rect" id="node3" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="258,71,338,98"/>
+<area shape="rect" id="node5" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="224,123,372,164"/>
+<area shape="rect" id="node4" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="420,71,508,98"/>
 </map>
 </div>
 </p>
@@ -2416,9 +2599,10 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group___deep_ga1daeaf9843b3f9e423c5e0c34b4188d6_cgraph.png" border="0" usemap="#group___deep_ga1daeaf9843b3f9e423c5e0c34b4188d6_cgraph" alt=""/></div>
 <map name="group___deep_ga1daeaf9843b3f9e423c5e0c34b4188d6_cgraph" id="group___deep_ga1daeaf9843b3f9e423c5e0c34b4188d6_cgraph">
 <area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="194,5,319,32"/>
-<area shape="rect" id="node3" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="217,56,297,83"/>
-<area shape="rect" id="node5" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,107,331,149"/>
-<area shape="rect" id="node4" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="379,56,467,83"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="183,57,331,98"/>
+<area shape="rect" id="node4" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="217,123,297,149"/>
+<area shape="rect" id="node6" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,174,331,215"/>
+<area shape="rect" id="node5" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="379,123,467,149"/>
 </map>
 </div>
 </p>
@@ -2488,7 +2672,8 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group___deep_gae83ee15e35b3f8e0e1e4d069c87b17ee_cgraph.png" border="0" usemap="#group___deep_gae83ee15e35b3f8e0e1e4d069c87b17ee_cgraph" alt=""/></div>
 <map name="group___deep_gae83ee15e35b3f8e0e1e4d069c87b17ee_cgraph" id="group___deep_gae83ee15e35b3f8e0e1e4d069c87b17ee_cgraph">
 <area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="194,5,319,32"/>
-<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,57,331,98"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="183,57,331,98"/>
+<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,122,331,163"/>
 </map>
 </div>
 </p>
@@ -2711,7 +2896,8 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group___deep_ga6e1cf45753e06123311efb8c3d5e6f5b_cgraph.png" border="0" usemap="#group___deep_ga6e1cf45753e06123311efb8c3d5e6f5b_cgraph" alt=""/></div>
 <map name="group___deep_ga6e1cf45753e06123311efb8c3d5e6f5b_cgraph" id="group___deep_ga6e1cf45753e06123311efb8c3d5e6f5b_cgraph">
 <area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="241,5,366,32"/>
-<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,57,377,98"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="229,57,377,98"/>
+<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,122,377,163"/>
 </map>
 </div>
 </p>
@@ -2781,10 +2967,11 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga4f837b28d56467487a2143982a665d6a_cgraph.png" border="0" usemap="#group___deep_ga4f837b28d56467487a2143982a665d6a_cgraph" alt=""/></div>
 <map name="group___deep_ga4f837b28d56467487a2143982a665d6a_cgraph" id="group___deep_ga4f837b28d56467487a2143982a665d6a_cgraph">
-<area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="453,64,579,91"/>
-<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="243,32,391,73"/>
-<area shape="rect" id="node4" href="group___c_o_l.html#gaba8999e83ee783e712cf0d80cf334693" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="272,98,363,124"/>
-<area shape="rect" id="node5" href="group___deep.html#gad92aba1f64152bbb8857988a9cd5a2df" title="Broadcast a deep object reference using a buffered broadcast. " alt="" coords="229,148,405,175"/>
+<area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="453,103,579,130"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="243,37,391,79"/>
+<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="243,103,391,144"/>
+<area shape="rect" id="node5" href="group___c_o_l.html#gaba8999e83ee783e712cf0d80cf334693" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="272,169,363,195"/>
+<area shape="rect" id="node6" href="group___deep.html#gad92aba1f64152bbb8857988a9cd5a2df" title="Broadcast a deep object reference using a buffered broadcast. " alt="" coords="229,219,405,246"/>
 </map>
 </div>
 </p>
@@ -2862,9 +3049,10 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group___deep_ga019e666dead71bc0b0a26167343f0b83_cgraph.png" border="0" usemap="#group___deep_ga019e666dead71bc0b0a26167343f0b83_cgraph" alt=""/></div>
 <map name="group___deep_ga019e666dead71bc0b0a26167343f0b83_cgraph" id="group___deep_ga019e666dead71bc0b0a26167343f0b83_cgraph">
 <area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="241,5,366,32"/>
-<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,57,377,98"/>
-<area shape="rect" id="node4" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="263,123,343,149"/>
-<area shape="rect" id="node5" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="425,123,513,149"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="229,57,377,98"/>
+<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,122,377,163"/>
+<area shape="rect" id="node5" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="263,188,343,215"/>
+<area shape="rect" id="node6" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="425,188,513,215"/>
 </map>
 </div>
 </p>
@@ -2934,10 +3122,11 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gab543462e791b988b0d840b6ade5521d1_cgraph.png" border="0" usemap="#group___deep_gab543462e791b988b0d840b6ade5521d1_cgraph" alt=""/></div>
 <map name="group___deep_gab543462e791b988b0d840b6ade5521d1_cgraph" id="group___deep_gab543462e791b988b0d840b6ade5521d1_cgraph">
-<area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="453,64,579,91"/>
-<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="243,32,391,73"/>
-<area shape="rect" id="node4" href="group___c_o_l.html#gaba8999e83ee783e712cf0d80cf334693" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="272,98,363,124"/>
-<area shape="rect" id="node5" href="group___deep.html#gad92aba1f64152bbb8857988a9cd5a2df" title="Broadcast a deep object reference using a buffered broadcast. " alt="" coords="229,148,405,175"/>
+<area shape="rect" id="node2" href="group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="453,103,579,130"/>
+<area shape="rect" id="node3" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="243,37,391,79"/>
+<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="243,103,391,144"/>
+<area shape="rect" id="node5" href="group___c_o_l.html#gaba8999e83ee783e712cf0d80cf334693" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="272,169,363,195"/>
+<area shape="rect" id="node6" href="group___deep.html#gad92aba1f64152bbb8857988a9cd5a2df" title="Broadcast a deep object reference using a buffered broadcast. " alt="" coords="229,219,405,246"/>
 </map>
 </div>
 </p>
@@ -3044,7 +3233,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga740975ac00e62d6fcac24b586898595b_cgraph.png" border="0" usemap="#group___deep_ga740975ac00e62d6fcac24b586898595b_cgraph" alt=""/></div>
 <map name="group___deep_ga740975ac00e62d6fcac24b586898595b_cgraph" id="group___deep_ga740975ac00e62d6fcac24b586898595b_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,5,348,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="200,5,348,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,71,348,112"/>
 </map>
 </div>
 </p>
@@ -3233,7 +3423,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gacdee6a8b6aa47e1bab894e3bd234dc44_cgraph.png" border="0" usemap="#group___deep_gacdee6a8b6aa47e1bab894e3bd234dc44_cgraph" alt=""/></div>
 <map name="group___deep_gacdee6a8b6aa47e1bab894e3bd234dc44_cgraph" id="group___deep_gacdee6a8b6aa47e1bab894e3bd234dc44_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="248,5,396,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="248,5,396,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="248,71,396,112"/>
 </map>
 </div>
 </p>
@@ -3296,8 +3487,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga7ee1293caf951d90360a2584d6b4a435_cgraph.png" border="0" usemap="#group___deep_ga7ee1293caf951d90360a2584d6b4a435_cgraph" alt=""/></div>
 <map name="group___deep_ga7ee1293caf951d90360a2584d6b4a435_cgraph" id="group___deep_ga7ee1293caf951d90360a2584d6b4a435_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="271,5,419,47"/>
-<area shape="rect" id="node3" href="group___deep.html#gabf19d3f96e888ba1444411ebaae621ce" title="Write a deep object reference to file using a buffered write. " alt="" coords="248,71,443,98"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="271,5,419,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="271,71,419,112"/>
+<area shape="rect" id="node4" href="group___deep.html#gabf19d3f96e888ba1444411ebaae621ce" title="Write a deep object reference to file using a buffered write. " alt="" coords="248,137,443,163"/>
 </map>
 </div>
 </p>
@@ -3404,9 +3596,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gae8bd526dc559bbe3076d3022546ba403_cgraph.png" border="0" usemap="#group___deep_gae8bd526dc559bbe3076d3022546ba403_cgraph" alt=""/></div>
 <map name="group___deep_gae8bd526dc559bbe3076d3022546ba403_cgraph" id="group___deep_gae8bd526dc559bbe3076d3022546ba403_cgraph">
-<area shape="rect" id="node2" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="234,5,314,32"/>
-<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,57,348,98"/>
-<area shape="rect" id="node3" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="396,5,484,32"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="200,5,348,47"/>
+<area shape="rect" id="node3" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="234,71,314,98"/>
+<area shape="rect" id="node5" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,123,348,164"/>
+<area shape="rect" id="node4" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="396,71,484,98"/>
 </map>
 </div>
 </p>
@@ -3468,7 +3661,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_ga28c1d0691200e95731f46cbedee4d4b6_cgraph.png" border="0" usemap="#group___deep_ga28c1d0691200e95731f46cbedee4d4b6_cgraph" alt=""/></div>
 <map name="group___deep_ga28c1d0691200e95731f46cbedee4d4b6_cgraph" id="group___deep_ga28c1d0691200e95731f46cbedee4d4b6_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,5,348,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="200,5,348,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="200,71,348,112"/>
 </map>
 </div>
 </p>
@@ -3658,9 +3852,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gaa4bdd3f753ae8cdd084943f12a7e88d3_cgraph.png" border="0" usemap="#group___deep_gaa4bdd3f753ae8cdd084943f12a7e88d3_cgraph" alt=""/></div>
 <map name="group___deep_gaa4bdd3f753ae8cdd084943f12a7e88d3_cgraph" id="group___deep_gaa4bdd3f753ae8cdd084943f12a7e88d3_cgraph">
-<area shape="rect" id="node2" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="281,5,361,32"/>
-<area shape="rect" id="node4" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="247,57,395,98"/>
-<area shape="rect" id="node3" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="443,5,531,32"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="247,5,395,47"/>
+<area shape="rect" id="node3" href="group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="281,71,361,98"/>
+<area shape="rect" id="node5" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="247,123,395,164"/>
+<area shape="rect" id="node4" href="group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="443,71,531,98"/>
 </map>
 </div>
 </p>
@@ -3794,7 +3989,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group___deep_gab6a61e9f36dd65f72028a539cf8ae150_cgraph.png" border="0" usemap="#group___deep_gab6a61e9f36dd65f72028a539cf8ae150_cgraph" alt=""/></div>
 <map name="group___deep_gab6a61e9f36dd65f72028a539cf8ae150_cgraph" id="group___deep_gab6a61e9f36dd65f72028a539cf8ae150_cgraph">
-<area shape="rect" id="node2" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="247,5,395,47"/>
+<area shape="rect" id="node2" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="247,5,395,47"/>
+<area shape="rect" id="node3" href="group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="247,71,395,112"/>
 </map>
 </div>
 </p>

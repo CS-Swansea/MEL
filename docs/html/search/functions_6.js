@@ -3,6 +3,7 @@ var searchData=
   ['gather',['Gather',['../group___c_o_l.html#gae9a12a6c74552d0c73aca7924bad327c',1,'MEL']]],
   ['gatherv',['Gatherv',['../group___c_o_l.html#gad1309da94cc6c01595143746fee2c191',1,'MEL']]],
   ['get',['Get',['../group___win.html#gae895da1d69be201aa7be2be504caaa5b',1,'MEL']]],
+  ['getcachedpointer',['GetCachedPointer',['../group___deep.html#gadc8f7e012e60014f2b24ac2908c5d3c8',1,'MEL::Deep::Message']]],
   ['geterrorclass',['GetErrorClass',['../group___errors.html#gaaa8d5296ddff2b01e3e260865bce5023',1,'MEL']]],
   ['geterrorstring',['GetErrorString',['../group___errors.html#ga3b15bea75f0de1e69a2d986ef4d588d3',1,'MEL']]],
   ['group',['Group',['../struct_m_e_l_1_1_group.html#a348ae2f1327f829e6d5fb9699cd63de1',1,'MEL::Group::Group()'],['../struct_m_e_l_1_1_group.html#a10f9dfd3fff4b209601c4c89f54af9d2',1,'MEL::Group::Group(const MPI_Group &amp;_e)']]],

@@ -1,6 +1,7 @@
 var searchData=
 [
   ['abort',['Abort',['../group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd',1,'MEL']]],
+  ['accumulate',['Accumulate',['../group___win.html#ga1488bca53447d46b760df1bc0c664c9d',1,'MEL']]],
   ['adderrorclass',['AddErrorClass',['../group___errors.html#ga93ec67be63498dc8df64ee5b81fe6242',1,'MEL']]],
   ['adderrorcode',['AddErrorCode',['../group___errors.html#ga9b2d3e4ff588ebc4f7877a9cf34ae348',1,'MEL::AddErrorCode(const int errClass)'],['../group___errors.html#gac65498b88b360b41dccc77ae8c988169',1,'MEL::AddErrorCode()']]],
   ['adderrorstring',['AddErrorString',['../group___errors.html#ga65e0872e1e22a1bd28905643dfef9c2e',1,'MEL::AddErrorString(const int err, const std::string &amp;str)'],['../group___errors.html#gae750cbaae556d26c8582af2bc2ff9189',1,'MEL::AddErrorString(const std::string &amp;str)']]],

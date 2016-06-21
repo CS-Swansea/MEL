@@ -1,6 +1,7 @@
 <map id="MEL::Deep::Bcast" name="MEL::Deep::Bcast">
 <area shape="rect" id="node2" href="$group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="194,5,319,32"/>
-<area shape="rect" id="node3" href="$group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="217,56,297,83"/>
-<area shape="rect" id="node5" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,107,331,149"/>
-<area shape="rect" id="node4" href="$group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="379,56,467,83"/>
+<area shape="rect" id="node3" href="$class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="183,57,331,98"/>
+<area shape="rect" id="node4" href="$group___errors.html#ga546de890b76df9a2fdaf96b49d7f2fa2" title="MEL alternative to std::exit. " alt="" coords="217,123,297,149"/>
+<area shape="rect" id="node6" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="183,174,331,215"/>
+<area shape="rect" id="node5" href="$group___errors.html#ga1c81a97e52645dadae2d21a4985e49bd" title="Calls MPI_Abort with the given error code and prints a string message to stderr. " alt="" coords="379,123,467,149"/>
 </map>
