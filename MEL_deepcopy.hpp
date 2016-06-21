@@ -29,6 +29,7 @@ SOFTWARE.
 #include <vector>
 #include <list>
 #include <iostream>
+#include <unordered_map>
 
 namespace MEL {
     namespace Deep {
@@ -85,6 +86,7 @@ namespace MEL {
             char *buffer;
             int offset, bufferSize;
             MEL::File *filePtr;
+			std::unordered_map<void*, void*> pointerMap;
 
 			/**
 			 * \ingroup  Deep
@@ -189,6 +191,44 @@ namespace MEL {
 
 			/**
 			 * \ingroup  Deep
+			 * Check if a pointer is currently in the map of shared pointer
+			 *
+			 * \param[in] ptr	The pointer to the array to check
+			 * \return				Returns true if the pointer is already in the map
+			 */
+			template<typename T>
+			inline bool CheckPointerCache(T* &ptr) {
+				return pointerMap.find((void*) ptr) != pointerMap.end();
+			};
+
+			/**
+			 * \ingroup  Deep
+			 * Insert a pointer into map of shared pointers
+			 *
+			 * \param[in] oldPtr	The old "dangling" pointer
+			 * \param[in] ptr		The newly allocated pointer
+			 */
+			template<typename T>
+			inline void CachePointer(T* oldPtr, T* ptr) {
+				pointerMap.insert(std::make_pair((void*) oldPtr, (void*) ptr));
+			};
+
+			/**
+			 * \ingroup  Deep
+			 * Replace the value of the given pointer with the value mapped to it in the shared pointer map
+			 *
+			 * \param[in,out] ptr	The old "dangling" pointer to be modified
+			 */
+			template<typename T>
+			inline void GetCachedPointer(T* &ptr) {
+				auto it = pointerMap.find((void*) ptr);
+				if (it != pointerMap.end()) {
+					ptr = (T*) it->second;
+				}
+			};
+
+			/**
+			 * \ingroup  Deep
 			 * Send an array to the receiving process where it will need to be allocated, or if the message is buffered pack the array into the buffer
 			 *
 			 * \param[in] src		The pointer to the array to send
@@ -197,12 +237,12 @@ namespace MEL {
             template<typename T>
             inline void SendAlloc(T* &src, int len) {
                 if (src != nullptr) {
-                    if (isBuffered()) {
-                        BufferPtr(src, len);
-                    }
-                    else {
-                        MEL::Send<T>(src, len, pid, tag, comm);
-                    }
+					if (isBuffered()) {
+						BufferPtr(src, len);
+					}
+					else {
+						MEL::Send<T>(src, len, pid, tag, comm);
+					}
                 }
             };
 
@@ -216,14 +256,14 @@ namespace MEL {
             template<typename T>
             inline void RecvAlloc(T* &dst, int len) {
                 if (dst != nullptr) {
-                    dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
-
-                    if (isBuffered()) {
-                        BufferPtr(dst, len);
-                    }
-                    else {
-                        MEL::Recv<T>(dst, len, pid, tag, comm);
-                    }
+					dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+						
+					if (isBuffered()) {
+						BufferPtr(dst, len);
+					}
+					else {
+						MEL::Recv<T>(dst, len, pid, tag, comm);
+					}
                 }
             };
 
@@ -237,12 +277,12 @@ namespace MEL {
             template<typename T>
             inline void WriteAlloc(T* &src, int len) {
                 if (src != nullptr) {
-                    if (isBuffered()) {
-                        BufferPtr(src, len);
-                    }
-                    else {
-                        MEL::FileWrite<T>(*filePtr, src, len);
-                    }
+					if (isBuffered()) {
+						BufferPtr(src, len);
+					}
+					else {
+						MEL::FileWrite<T>(*filePtr, src, len);
+					}
                 }
             };
 
@@ -255,15 +295,16 @@ namespace MEL {
 			 */
             template<typename T>
             inline void ReadAlloc(T* &dst, int len) {
-                if (dst != nullptr) {
-                    dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
-
-                    if (isBuffered()) {
-                        BufferPtr(dst, len);
-                    }
-                    else {
-                        MEL::FileRead<T>(*filePtr, dst, len);
-                    }
+                if (dst != nullptr) {					
+					dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+					
+					if (isBuffered()) {
+						BufferPtr(dst, len);
+					}
+					else {
+						MEL::FileRead<T>(*filePtr, dst, len);
+					}
+					
                 }
             };
 
@@ -277,14 +318,24 @@ namespace MEL {
             template<typename T>
             inline void BcastAlloc(T* &buf, int len) {
                 if (buf != nullptr) {
-                    if (!isSource()) buf = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
-
-                    if (isBuffered()) {
-                        BufferPtr(buf, len);
-                    }
-                    else {
-                        MEL::Bcast<T>(buf, len, pid, comm); 
-                    }
+                    if (isSource()) {
+						if (isBuffered()) {
+							BufferPtr(buf, len);
+						}
+						else {
+							MEL::Bcast<T>(buf, len, pid, comm);
+						}
+					}
+					else {
+						buf = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+							
+						if (isBuffered()) {
+							BufferPtr(buf, len);
+						}
+						else {
+							MEL::Bcast<T>(buf, len, pid, comm);
+						}
+					}
                 }
             };
 
@@ -362,7 +413,7 @@ namespace MEL {
 			 */
             template<typename T>
             inline void TransportAlloc(T *&ptr, int len) {
-                if (isCollective()) {
+				if (isCollective()) {
 					BcastAlloc(ptr, len);
                 }
                 else if (isP2P()) {
@@ -454,14 +505,14 @@ namespace MEL {
             Message(const int _pid, const int _tag, const Comm _comm, const bool _src, const Mode _mode, const bool _buf)
                 : pid(_pid), tag(_tag), comm(_comm), source(_src), mode(_mode), buffered(_buf), buffer(nullptr), offset(0) {};
 			
+			/// \endcond
 
             /// Copies the footprint of an object as is
             ///
             template<typename T>
-            inline enable_if_not_deep<T> _packVar(T &obj) {
+            inline enable_if_not_deep<T> packVar(T &obj) {
                 Transport(obj);
             };
-			/// \endcond
 
             /**
 			 * \ingroup  Deep
@@ -497,6 +548,57 @@ namespace MEL {
 			template<typename T>
             inline enable_if_deep<T> packPtr(T* &ptr, int len = 1) {
                 TransportAlloc(ptr, len);
+                /// Copy elements
+                if (ptr != nullptr) {
+                    for (int i = 0; i < len; ++i) {
+                        ptr[i].DeepCopy(*this);
+                    }
+                }
+            };
+
+			/**
+			 * \ingroup  Deep
+			 * Transport a (potentially shared) array by its contiguous footprint in memory
+			 *
+			 * \param[in,out] ptr	Pointer to the array to be transported
+			 * \param[in] len		The number of elements to transport
+			 */
+			template<typename T>
+            inline enable_if_not_deep<T> packSharedPtr(T* &ptr, int len = 1) {
+				T *oldPtr = ptr;
+				if (CheckPointerCache(ptr)) {
+					if (!isSource()) {
+						GetCachedPointer(ptr);
+					}
+					return;
+				}
+
+				TransportAlloc(ptr, len);
+
+				CachePointer(oldPtr, ptr);
+            };
+
+            /**
+			 * \ingroup  Deep
+			 * Transport a (potentially shared) deep array
+			 *
+			 * \param[in,out] ptr	Pointer to the array to be transported
+			 * \param[in] len		The number of elements to transport
+			 */
+			template<typename T>
+			inline enable_if_deep<T> packSharedPtr(T* &ptr, int len = 1) {
+				T *oldPtr = ptr;
+				if (CheckPointerCache(ptr)) {
+					if (!isSource()) {
+						GetCachedPointer(ptr);
+					}
+					return;
+				}
+
+				TransportAlloc(ptr, len);
+
+				CachePointer(oldPtr, ptr);
+
                 /// Copy elements
                 if (ptr != nullptr) {
                     for (int i = 0; i < len; ++i) {
@@ -637,12 +739,12 @@ namespace MEL {
 
 			/**
 			 * \ingroup  Deep
-			 * Transport a deepobject reference
+			 * Transport a deep/non-deep object reference
 			 *
-			 * \param[in,out] obj	The deep object to transport
+			 * \param[in,out] obj	The object to transport
 			 */
             template<typename T>
-            inline enable_if_deep<T, Message&> operator&(T &obj) {
+            inline Message& operator&(T &obj) {
                 packVar(obj);
                 return *this;
             };
@@ -689,7 +791,7 @@ namespace MEL {
         inline enable_if_pointer<T, int> BufferSize(T &ptr, const int len) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::P2P, true);
             /// Determine the buffersize needed
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             return msg._GetOffset();
         };
@@ -721,7 +823,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_not_deep_not_pointer<T> Send(T &obj, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
-            msg._packVar(obj);
+            msg.packVar(obj);
         };
 
 		/**
@@ -752,7 +854,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_pointer<T> Send(T &ptr, const int len, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
@@ -860,7 +962,7 @@ namespace MEL {
             /// Allocate space for buffer
             msg._BufferAlloc(bufferSize);
             /// Fill the buffer on the sender
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             /// Share the buffer
             msg._BufferTransport();
@@ -883,7 +985,7 @@ namespace MEL {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, true);
             int bufferSize;
             /// Determine the buffersize needed
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             bufferSize = msg._GetOffset();
             BufferedSend(ptr, len, dst, tag, comm, bufferSize);
@@ -916,7 +1018,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_not_deep_not_pointer<T> Recv(T &obj, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
-            msg._packVar(obj);
+            msg.packVar(obj);
         };
 
 		/**
@@ -949,7 +1051,7 @@ namespace MEL {
         inline enable_if_pointer<T> Recv(T &ptr, int &len, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
             ptr = (T) 0x1;
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
@@ -968,7 +1070,7 @@ namespace MEL {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
             int _len = len;
 			ptr = (T) 0x1;
-            msg._packVar(_len);
+            msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::Recv(ptr, len) const int len provided does not match incomming message size.");
             msg.packPtr(ptr, _len);
         };
@@ -1040,7 +1142,7 @@ namespace MEL {
             msg._BufferTransport();
             /// Unpack the buffer 
             ptr = (T) 0x1;
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             /// Clean up
             msg._BufferFree();
@@ -1066,7 +1168,7 @@ namespace MEL {
             msg._BufferTransport();
             /// Unpack the buffer 
             ptr = (T) 0x1;
-            msg._packVar(_len);
+            msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedRecv(ptr, len) const int len provided does not match incomming message size.");
             msg.packPtr(ptr, _len);
             /// Clean up
@@ -1098,7 +1200,7 @@ namespace MEL {
 		template<typename T>
         inline enable_if_not_deep_not_pointer<T> Bcast(T &obj, const int root, const Comm &comm) {
             Message msg(root, 0, comm, (MEL::CommRank(comm) == root), Message::Mode::Collective, false);
-            msg._packVar(obj);
+            msg.packVar(obj);
         };
 
 		/**
@@ -1132,7 +1234,7 @@ namespace MEL {
             Message msg(root, 0, comm, source, Message::Mode::Collective, false);
             if (!source) ptr = (T) 0x1;
             int _len = len;
-            msg._packVar(_len);
+            msg.packVar(_len);
 			if (!source && len != _len) MEL::Exit(-1, "MEL::Deep::Bcast(ptr, len) const int len provided does not match incomming message size.");
             msg.packPtr(ptr, _len);
         };
@@ -1151,7 +1253,7 @@ namespace MEL {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, false);
             if (!source) ptr = (T) 0x1;
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
@@ -1285,7 +1387,7 @@ namespace MEL {
             msg._BufferAlloc(bufferSize);
             if (source) {
                 /// Fill the buffer on the sender
-                msg._packVar(len);
+                msg.packVar(len);
                 msg.packPtr(ptr);
             }
 
@@ -1295,7 +1397,7 @@ namespace MEL {
             if (!source) {
                 ptr = (T) 0x1;
                 /// Unpack the buffer on the receiver
-                msg._packVar(len);
+                msg.packVar(len);
                 msg.packPtr(ptr);
             }
 
@@ -1319,7 +1421,7 @@ namespace MEL {
             int bufferSize;
             if (source) {
                 /// Determine the buffersize needed
-                msg._packVar(len);
+                msg.packVar(len);
                 msg.packPtr(ptr);
                 bufferSize = msg._GetOffset();
             }
@@ -1347,7 +1449,7 @@ namespace MEL {
             msg._BufferAlloc(bufferSize);
             if (source) {
                 /// Fill the buffer on the sender
-				msg._packVar(_len);
+				msg.packVar(_len);
                 msg.packPtr(ptr);
             }
 
@@ -1357,7 +1459,7 @@ namespace MEL {
             if (!source) {
                 ptr = (T) 0x1;
                 /// Unpack the buffer on the receiver
-				msg._packVar(_len);
+				msg.packVar(_len);
 				if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedBcast(ptr, len) const int len provided does not match incomming message size.");
                 msg.packPtr(ptr);
             }
@@ -1383,7 +1485,7 @@ namespace MEL {
             int bufferSize;
             if (source) {
                 /// Determine the buffersize needed
-				msg._packVar(_len);
+				msg.packVar(_len);
                 msg.packPtr(ptr);
                 bufferSize = msg._GetOffset();
             }
@@ -1417,7 +1519,7 @@ namespace MEL {
         inline enable_if_not_deep_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
             msg._FileAttach(&file); 
-            msg._packVar(obj);
+            msg.packVar(obj);
             msg._FileDetach();
         };
 
@@ -1448,7 +1550,7 @@ namespace MEL {
         inline enable_if_pointer<T> FileWrite(T &ptr, const int len, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
             msg._FileAttach(&file); 
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             msg._FileDetach();
         };
@@ -1562,7 +1664,7 @@ namespace MEL {
             /// Allocate space for buffer
             msg._BufferAlloc(bufferSize);
             /// Fill the buffer on the sender
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             /// Share the buffer
             msg._BufferTransport();
@@ -1587,7 +1689,7 @@ namespace MEL {
             
             int bufferSize;
             /// Determine the buffersize needed
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             bufferSize = msg._GetOffset();
             
@@ -1621,7 +1723,7 @@ namespace MEL {
         inline enable_if_not_deep_not_pointer<T> FileRead(T &obj, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
             msg._FileAttach(&file); 
-            msg._packVar(obj);
+            msg.packVar(obj);
             msg._FileDetach();
         };
 
@@ -1655,7 +1757,7 @@ namespace MEL {
 			int _len = len;
 			msg._FileAttach(&file);
 			ptr = (T) 0x1;
-			msg._packVar(_len);
+			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
 			msg._FileDetach();
@@ -1674,7 +1776,7 @@ namespace MEL {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
             msg._FileAttach(&file); 
             ptr = (T) 0x1;
-            msg._packVar(len);
+            msg.packVar(len);
             msg.packPtr(ptr, len);
             msg._FileDetach();
         };
@@ -1776,7 +1878,7 @@ namespace MEL {
             msg._BufferTransport();
             /// Unpack the buffer 
             ptr = (T) 0x1;
-			msg._packVar(_len);
+			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
             /// Clean up
@@ -1818,7 +1920,7 @@ namespace MEL {
 			msg._BufferTransport();
 			/// Unpack the buffer 
 			ptr = (T) 0x1;
-			msg._packVar(len);
+			msg.packVar(len);
 			msg.packPtr(ptr, len);
 			/// Clean up
 			msg._BufferFree();
