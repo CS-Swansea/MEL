@@ -114,7 +114,7 @@ Collaboration diagram for MEL::Deep::Message:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_m_e_l_1_1_deep_1_1_message__coll__graph.png" border="0" usemap="#_m_e_l_1_1_deep_1_1_message_coll__map" alt="Collaboration graph"/></div>
 <map name="_m_e_l_1_1_deep_1_1_message_coll__map" id="_m_e_l_1_1_deep_1_1_message_coll__map">
-<area shape="rect" id="node2" href="struct_m_e_l_1_1_comm.html" title="MEL::Comm" alt="" coords="32,14,127,41"/>
+<area shape="rect" id="node3" href="struct_m_e_l_1_1_comm.html" title="MEL::Comm" alt="" coords="167,14,261,41"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -133,6 +133,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a02a3b0da4fff0cf5638f7505832cf20f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a02a3b0da4fff0cf5638f7505832cf20f"><td class="memTemplItemLeft" align="right" valign="top">enable_if_not_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f">packVar</a> (T &amp;obj)</td></tr>
+<tr class="memdesc:a02a3b0da4fff0cf5638f7505832cf20f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the footprint of an object as is.  <a href="#a02a3b0da4fff0cf5638f7505832cf20f">More...</a><br /></td></tr>
+<tr class="separator:a02a3b0da4fff0cf5638f7505832cf20f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga93c44d2282ec4a642d324abede405099"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga93c44d2282ec4a642d324abede405099"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga93c44d2282ec4a642d324abede405099">packVar</a> (T &amp;obj)</td></tr>
 <tr class="memdesc:ga93c44d2282ec4a642d324abede405099"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep object reference.  <a href="group___deep.html#ga93c44d2282ec4a642d324abede405099">More...</a><br /></td></tr>
@@ -145,6 +149,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html#ga2bad3257cf8a16936b4bf342ab15ec95">packPtr</a> (T *&amp;ptr, int len=1)</td></tr>
 <tr class="memdesc:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep array.  <a href="#ga2bad3257cf8a16936b4bf342ab15ec95">More...</a><br /></td></tr>
 <tr class="separator:ga2bad3257cf8a16936b4bf342ab15ec95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplItemLeft" align="right" valign="top">enable_if_not_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga4cb3ae640bb25837562aba89280929d4">packSharedPtr</a> (T *&amp;ptr, int len=1)</td></tr>
+<tr class="memdesc:ga4cb3ae640bb25837562aba89280929d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a (potentially shared) array by its contiguous footprint in memory.  <a href="group___deep.html#ga4cb3ae640bb25837562aba89280929d4">More...</a><br /></td></tr>
+<tr class="separator:ga4cb3ae640bb25837562aba89280929d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4cb3ae640bb25837562aba89280929d4"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html#ga4cb3ae640bb25837562aba89280929d4">packSharedPtr</a> (T *&amp;ptr, int len=1)</td></tr>
+<tr class="memdesc:ga4cb3ae640bb25837562aba89280929d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a (potentially shared) deep array.  <a href="#ga4cb3ae640bb25837562aba89280929d4">More...</a><br /></td></tr>
+<tr class="separator:ga4cb3ae640bb25837562aba89280929d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaae2eafb93bda638a375935a84388ec62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___deep.html#gaae2eafb93bda638a375935a84388ec62">packSTL</a> (std::string &amp;obj)</td></tr>
 <tr class="memdesc:gaae2eafb93bda638a375935a84388ec62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a std::string.  <a href="group___deep.html#gaae2eafb93bda638a375935a84388ec62">More...</a><br /></td></tr>
 <tr class="separator:gaae2eafb93bda638a375935a84388ec62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,10 +187,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga8686e42b6a393d9672d1d569516d7eea"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html">Message</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga8686e42b6a393d9672d1d569516d7eea">operator&amp;</a> (std::list&lt; T &gt; &amp;obj)</td></tr>
 <tr class="memdesc:ga8686e42b6a393d9672d1d569516d7eea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep/non-deep std::list.  <a href="group___deep.html#ga8686e42b6a393d9672d1d569516d7eea">More...</a><br /></td></tr>
 <tr class="separator:ga8686e42b6a393d9672d1d569516d7eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memTemplItemLeft" align="right" valign="top">enable_if_deep&lt; T, <a class="el" href="class_m_e_l_1_1_deep_1_1_message.html">Message</a> &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga09ac3f847bb7a272ed7312d35edda71b">operator&amp;</a> (T &amp;obj)</td></tr>
-<tr class="memdesc:ga09ac3f847bb7a272ed7312d35edda71b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deepobject reference.  <a href="group___deep.html#ga09ac3f847bb7a272ed7312d35edda71b">More...</a><br /></td></tr>
-<tr class="separator:ga09ac3f847bb7a272ed7312d35edda71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html">Message</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga9ba8b77e0f51c8b0c5d4513747615243">operator&amp;</a> (T &amp;obj)</td></tr>
+<tr class="memdesc:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transport a deep/non-deep object reference.  <a href="group___deep.html#ga9ba8b77e0f51c8b0c5d4513747615243">More...</a><br /></td></tr>
+<tr class="separator:ga9ba8b77e0f51c8b0c5d4513747615243"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -208,6 +220,18 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga381cf531ca694fabc4e1f2386bf5c68d">BufferPtr</a> (T *&amp;ptr, int len)</td></tr>
 <tr class="memdesc:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a non-deep array to the the messages buffer.  <a href="group___deep.html#ga381cf531ca694fabc4e1f2386bf5c68d">More...</a><br /></td></tr>
 <tr class="separator:ga381cf531ca694fabc4e1f2386bf5c68d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga59d25bb41529ab84af3bb96d80c40dd2">CheckPointerCache</a> (T *&amp;ptr)</td></tr>
+<tr class="memdesc:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a pointer is currently in the map of shared pointer.  <a href="group___deep.html#ga59d25bb41529ab84af3bb96d80c40dd2">More...</a><br /></td></tr>
+<tr class="separator:ga59d25bb41529ab84af3bb96d80c40dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab17f2cfa66ad2a083279741dff710e44"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gab17f2cfa66ad2a083279741dff710e44"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#gab17f2cfa66ad2a083279741dff710e44">CachePointer</a> (T *oldPtr, T *ptr)</td></tr>
+<tr class="memdesc:gab17f2cfa66ad2a083279741dff710e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a pointer into map of shared pointers.  <a href="group___deep.html#gab17f2cfa66ad2a083279741dff710e44">More...</a><br /></td></tr>
+<tr class="separator:gab17f2cfa66ad2a083279741dff710e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#gadc8f7e012e60014f2b24ac2908c5d3c8">GetCachedPointer</a> (T *&amp;ptr)</td></tr>
+<tr class="memdesc:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the value of the given pointer with the value mapped to it in the shared pointer map.  <a href="group___deep.html#gadc8f7e012e60014f2b24ac2908c5d3c8">More...</a><br /></td></tr>
+<tr class="separator:gadc8f7e012e60014f2b24ac2908c5d3c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4572c4589fd5243127236459cc4c1885"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga4572c4589fd5243127236459cc4c1885"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___deep.html#ga4572c4589fd5243127236459cc4c1885">SendAlloc</a> (T *&amp;src, int len)</td></tr>
 <tr class="memdesc:ga4572c4589fd5243127236459cc4c1885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an array to the receiving process where it will need to be allocated, or if the message is buffered pack the array into the buffer.  <a href="group___deep.html#ga4572c4589fd5243127236459cc4c1885">More...</a><br /></td></tr>
@@ -264,8 +288,58 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a3106e11453b7dc790e8f35ff6cf867bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2142cf5d34bbe0cf11f92be38789d92d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_m_e_l.html#a26ce0475ad514e47127fc79ce54913a3">MEL::File</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html#a2142cf5d34bbe0cf11f92be38789d92d">filePtr</a></td></tr>
 <tr class="separator:a2142cf5d34bbe0cf11f92be38789d92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35d117c2b829112b678219de9ed7c2d5"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; void *, void * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_e_l_1_1_deep_1_1_message.html#a35d117c2b829112b678219de9ed7c2d5">pointerMap</a></td></tr>
+<tr class="separator:a35d117c2b829112b678219de9ed7c2d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a02a3b0da4fff0cf5638f7505832cf20f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enable_if_not_deep&lt;T&gt; MEL::Deep::Message::packVar </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copies the footprint of an object as is. </p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_m_e_l_1_1_deep_1_1_message_a02a3b0da4fff0cf5638f7505832cf20f_icgraph.png" border="0" usemap="#class_m_e_l_1_1_deep_1_1_message_a02a3b0da4fff0cf5638f7505832cf20f_icgraph" alt=""/></div>
+<map name="class_m_e_l_1_1_deep_1_1_message_a02a3b0da4fff0cf5638f7505832cf20f_icgraph" id="class_m_e_l_1_1_deep_1_1_message_a02a3b0da4fff0cf5638f7505832cf20f_icgraph">
+<area shape="rect" id="node2" href="group___deep.html#ga57ceb28360bb25390874677c23ca6b35" title="Compute the buffer size needed to transport a pointer to an array of deep/non&#45;deep variables..." alt="" coords="221,5,376,32"/>
+<area shape="rect" id="node3" href="namespace_m_e_l_1_1_deep.html#ga9aca4b3bc42089c74c7b31783c1dc037" title="Send a non&#45;deep object reference. " alt="" coords="236,56,361,83"/>
+<area shape="rect" id="node4" href="group___deep.html#gade02f7388b28fdd7a0a27f9d799f2172" title="Send a pointer to an array of deep/non&#45;deep objects using a buffered send. " alt="" coords="213,107,385,133"/>
+<area shape="rect" id="node5" href="namespace_m_e_l_1_1_deep.html#ga134612a9cf6c60c0bfc34a201dde0ab1" title="Receive a non&#45;deep object reference. " alt="" coords="237,157,360,184"/>
+<area shape="rect" id="node6" href="group___deep.html#ga77789b6b25cd0409373fc22a0ad810d4" title="Receive a pointer to an array of deep/non&#45;deep objects using a buffered receive. " alt="" coords="213,208,384,235"/>
+<area shape="rect" id="node7" href="namespace_m_e_l_1_1_deep.html#ga1df31e10fe4928ca9e1e6e801a11605c" title="Broadcast a non&#45;deep object reference. " alt="" coords="234,259,363,285"/>
+<area shape="rect" id="node8" href="group___deep.html#ga6e1cf45753e06123311efb8c3d5e6f5b" title="Broadcast a pointer to a deep/non&#45;deep object using a buffered broadcast. " alt="" coords="211,309,387,336"/>
+<area shape="rect" id="node9" href="namespace_m_e_l_1_1_deep.html#ga7d3d665d2f332b4c4702d0ac7a0f3bf2" title="Write a non&#45;deep object reference to file. " alt="" coords="225,360,372,387"/>
+<area shape="rect" id="node10" href="group___deep.html#gacdee6a8b6aa47e1bab894e3bd234dc44" title="Write a pointer to an array of deep/non&#45;deep objects to file using a buffered write. " alt="" coords="201,411,396,437"/>
+<area shape="rect" id="node11" href="namespace_m_e_l_1_1_deep.html#ga5c6ea93297241cc349a991b54ee6e2a3" title="Read a non&#45;deep object reference from file. " alt="" coords="225,461,372,488"/>
+<area shape="rect" id="node12" href="group___deep.html#gaa4bdd3f753ae8cdd084943f12a7e88d3" title="Read a pointer to an array of deep/non&#45;deep objects to file using a buffered read. " alt="" coords="202,512,395,539"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="ga2bad3257cf8a16936b4bf342ab15ec95"></a>
 <div class="memitem">
 <div class="memproto">
@@ -301,6 +375,51 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Transport a deep array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ptr</td><td>Pointer to the array to be transported </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The number of elements to transport </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga4cb3ae640bb25837562aba89280929d4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enable_if_deep&lt;T&gt; MEL::Deep::Message::packSharedPtr </td>
+          <td>(</td>
+          <td class="paramtype">T *&amp;&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Transport a (potentially shared) deep array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">ptr</td><td>Pointer to the array to be transported </td></tr>
@@ -571,6 +690,26 @@ template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespace_m_e_l.html#a26ce0475ad514e47127fc79ce54913a3">MEL::File</a>* MEL::Deep::Message::filePtr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a35d117c2b829112b678219de9ed7c2d5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;void*, void*&gt; MEL::Deep::Message::pointerMap</td>
         </tr>
       </table>
   </td>

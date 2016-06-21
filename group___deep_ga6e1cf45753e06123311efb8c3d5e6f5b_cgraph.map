@@ -1,4 +1,5 @@
 <map id="MEL::Deep::BufferedBcast" name="MEL::Deep::BufferedBcast">
 <area shape="rect" id="node2" href="$group___comm.html#gac1bd06e47e7a5f002e82785fe538b64c" title="Get the Comm rank of the process. " alt="" coords="241,5,366,32"/>
-<area shape="rect" id="node3" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,57,377,98"/>
+<area shape="rect" id="node3" href="$class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="229,57,377,98"/>
+<area shape="rect" id="node4" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="229,122,377,163"/>
 </map>
