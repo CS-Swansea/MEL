@@ -148,6 +148,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gad6b1670d20f97c613b495dc6c53115da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___win.html#gad6b1670d20f97c613b495dc6c53115da">MEL::Put</a> (void *origin_ptr, int origin_num, const Datatype &amp;origin_datatype, const Aint target_disp, const int target_num, const Datatype &amp;target_datatype, const int target_rank, const Win &amp;win)</td></tr>
 <tr class="memdesc:gad6b1670d20f97c613b495dc6c53115da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put data into the mapped window of another process.  <a href="group___win.html#gad6b1670d20f97c613b495dc6c53115da">More...</a><br /></td></tr>
 <tr class="separator:gad6b1670d20f97c613b495dc6c53115da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1488bca53447d46b760df1bc0c664c9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___win.html#ga1488bca53447d46b760df1bc0c664c9d">MEL::Accumulate</a> (void *origin_ptr, int origin_num, const Datatype &amp;origin_datatype, const Aint target_disp, const int target_num, const Datatype &amp;target_datatype, const Op &amp;op, const int target_rank, const Win &amp;win)</td></tr>
+<tr class="memdesc:ga1488bca53447d46b760df1bc0c664c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate data into the mapped window of another process.  <a href="group___win.html#ga1488bca53447d46b760df1bc0c664c9d">More...</a><br /></td></tr>
+<tr class="separator:ga1488bca53447d46b760df1bc0c664c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae895da1d69be201aa7be2be504caaa5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___win.html#gae895da1d69be201aa7be2be504caaa5b">MEL::Get</a> (void *origin_ptr, int origin_num, const Datatype &amp;origin_datatype, const Aint target_disp, const int target_num, const Datatype &amp;target_datatype, const int target_rank, const Win &amp;win)</td></tr>
 <tr class="memdesc:gae895da1d69be201aa7be2be504caaa5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from the mapped window of another process.  <a href="group___win.html#gae895da1d69be201aa7be2be504caaa5b">More...</a><br /></td></tr>
 <tr class="separator:gae895da1d69be201aa7be2be504caaa5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1144,6 +1147,98 @@ Here is the caller graph for this function:</div>
 </map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="ga1488bca53447d46b760df1bc0c664c9d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MEL::Accumulate </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>origin_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>origin_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_m_e_l_1_1_datatype.html">Datatype</a> &amp;&#160;</td>
+          <td class="paramname"><em>origin_datatype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespace_m_e_l.html#a0b2c2b9ba99e45ab9b8ecc22bae8fdd6">Aint</a>&#160;</td>
+          <td class="paramname"><em>target_disp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>target_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_m_e_l_1_1_datatype.html">Datatype</a> &amp;&#160;</td>
+          <td class="paramname"><em>target_datatype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_m_e_l_1_1_op.html">Op</a> &amp;&#160;</td>
+          <td class="paramname"><em>op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>target_rank</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_m_e_l_1_1_win.html">Win</a> &amp;&#160;</td>
+          <td class="paramname"><em>win</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Accumulate data into the mapped window of another process. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">origin_ptr</td><td>Pointer to the array to put </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">origin_num</td><td>The number of elements to put from the local array </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">origin_datatype</td><td>The derived datatype of the elements to be put </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_disp</td><td>Element displacement into the window to put data into </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_num</td><td>The number of elements to put into the window </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_datatype</td><td>The derived datatype of the elements to be put into the window </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">op</td><td>The MPI operation to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_rank</td><td>Rank of the process to put into </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">win</td><td>The window to put into </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

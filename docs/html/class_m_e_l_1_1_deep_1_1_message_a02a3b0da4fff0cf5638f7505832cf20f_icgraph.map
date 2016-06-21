@@ -1,0 +1,13 @@
+<map id="MEL::Deep::Message::packVar" name="MEL::Deep::Message::packVar">
+<area shape="rect" id="node2" href="$group___deep.html#ga57ceb28360bb25390874677c23ca6b35" title="Compute the buffer size needed to transport a pointer to an array of deep/non&#45;deep variables..." alt="" coords="221,5,376,32"/>
+<area shape="rect" id="node3" href="$namespace_m_e_l_1_1_deep.html#ga9aca4b3bc42089c74c7b31783c1dc037" title="Send a non&#45;deep object reference. " alt="" coords="236,56,361,83"/>
+<area shape="rect" id="node4" href="$group___deep.html#gade02f7388b28fdd7a0a27f9d799f2172" title="Send a pointer to an array of deep/non&#45;deep objects using a buffered send. " alt="" coords="213,107,385,133"/>
+<area shape="rect" id="node5" href="$namespace_m_e_l_1_1_deep.html#ga134612a9cf6c60c0bfc34a201dde0ab1" title="Receive a non&#45;deep object reference. " alt="" coords="237,157,360,184"/>
+<area shape="rect" id="node6" href="$group___deep.html#ga77789b6b25cd0409373fc22a0ad810d4" title="Receive a pointer to an array of deep/non&#45;deep objects using a buffered receive. " alt="" coords="213,208,384,235"/>
+<area shape="rect" id="node7" href="$namespace_m_e_l_1_1_deep.html#ga1df31e10fe4928ca9e1e6e801a11605c" title="Broadcast a non&#45;deep object reference. " alt="" coords="234,259,363,285"/>
+<area shape="rect" id="node8" href="$group___deep.html#ga6e1cf45753e06123311efb8c3d5e6f5b" title="Broadcast a pointer to a deep/non&#45;deep object using a buffered broadcast. " alt="" coords="211,309,387,336"/>
+<area shape="rect" id="node9" href="$namespace_m_e_l_1_1_deep.html#ga7d3d665d2f332b4c4702d0ac7a0f3bf2" title="Write a non&#45;deep object reference to file. " alt="" coords="225,360,372,387"/>
+<area shape="rect" id="node10" href="$group___deep.html#gacdee6a8b6aa47e1bab894e3bd234dc44" title="Write a pointer to an array of deep/non&#45;deep objects to file using a buffered write. " alt="" coords="201,411,396,437"/>
+<area shape="rect" id="node11" href="$namespace_m_e_l_1_1_deep.html#ga5c6ea93297241cc349a991b54ee6e2a3" title="Read a non&#45;deep object reference from file. " alt="" coords="225,461,372,488"/>
+<area shape="rect" id="node12" href="$group___deep.html#gaa4bdd3f753ae8cdd084943f12a7e88d3" title="Read a pointer to an array of deep/non&#45;deep objects to file using a buffered read. " alt="" coords="202,512,395,539"/>
+</map>
