@@ -2528,6 +2528,9 @@ namespace MEL {
         OpFree(d1, args...);
     };
 
+#ifdef MEL_IMPLEMENTATION
+	const void* IN_PLACE = MPI_IN_PLACE;
+#endif
 
     typedef MPI_File File;
 
@@ -5384,6 +5387,24 @@ namespace MEL {
 	 */
     inline void Put(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const int target_rank, const Win &win) {
         MEL_THROW( MPI_Put(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Win) win), "RMA::Put" );
+    };
+
+	/**
+	 * \ingroup  Win
+     * Accumulate data into the mapped window of another process
+	 *
+	 * \param[in] origin_ptr		Pointer to the array to put
+	 * \param[in] origin_num		The number of elements to put from the local array
+	 * \param[in] origin_datatype	The derived datatype of the elements to be put
+	 * \param[in] target_disp		Element displacement into the window to put data into
+	 * \param[in] target_num		The number of elements to put into the window
+	 * \param[in] target_datatype	The derived datatype of the elements to be put into the window
+	 * \param[in] op				The MPI operation to use
+	 * \param[in] target_rank		Rank of the process to put into
+	 * \param[in] win				The window to put into
+	 */
+    inline void Accumulate(void *origin_ptr, int origin_num, const Datatype &origin_datatype, const Aint target_disp, const int target_num, const Datatype &target_datatype, const Op &op, const int target_rank, const Win &win) {
+        MEL_THROW( MPI_Accumulate(origin_ptr, origin_num, (MPI_Datatype) origin_datatype, target_rank, target_disp, target_num, (MPI_Datatype) target_datatype, (MPI_Op) op, (MPI_Win) win), "RMA::Accumulate" );
     };
 
     /**
