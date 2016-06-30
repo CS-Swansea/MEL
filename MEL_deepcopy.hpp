@@ -29,6 +29,7 @@ SOFTWARE.
 #include <vector>
 #include <list>
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 
 namespace MEL {
@@ -73,7 +74,8 @@ namespace MEL {
             enum class Mode {
                 P2P        = 0x1,
                 Collective = 0x2,
-                File       = 0x4
+                MEL_File   = 0x4,
+				STL_File   = 0x8
             };
 
         private:
@@ -85,8 +87,21 @@ namespace MEL {
 
             char *buffer;
             int offset, bufferSize;
-            MEL::File *filePtr;
-			std::unordered_map<void*, void*> pointerMap;
+			void *filePtr;
+			
+			struct PassThroughHash {
+				size_t operator()(const size_t val) const {
+					return val;
+				}
+			};
+
+			template<typename T>
+			inline size_t HashPtr(const T *val) const {
+				static const size_t shift = (size_t) log2(1 + sizeof(T));
+				return (size_t) (val) >> shift;
+			};
+
+			std::unordered_map<size_t, void*, PassThroughHash> pointerMap;
 
 			/**
 			 * \ingroup  Deep
@@ -124,8 +139,18 @@ namespace MEL {
 			 *
 			 * \return		Returns true if the message object represents a file access operation
 			 */
-            inline bool isFile() const {
-                return mode == Message::Mode::File;
+            inline bool isMELFile() const {
+                return mode == Message::Mode::MEL_File;
+            };
+
+			/**
+			 * \ingroup  Deep
+			 * Is the message representing a stl file access operation? 
+			 *
+			 * \return		Returns true if the message object represents an stl file access operation
+			 */
+            inline bool isSTLFile() const {
+                return mode == Message::Mode::STL_File;
             };
 
 			/**
@@ -198,7 +223,7 @@ namespace MEL {
 			 */
 			template<typename T>
 			inline bool CheckPointerCache(T* &ptr) {
-				return pointerMap.find((void*) ptr) != pointerMap.end();
+				return pointerMap.find(HashPtr(ptr)) != pointerMap.end();
 			};
 
 			/**
@@ -210,7 +235,7 @@ namespace MEL {
 			 */
 			template<typename T>
 			inline void CachePointer(T* oldPtr, T* ptr) {
-				pointerMap.insert(std::make_pair((void*) oldPtr, (void*) ptr));
+				pointerMap.insert(std::make_pair(HashPtr(oldPtr), (void*) ptr));
 			};
 
 			/**
@@ -221,7 +246,7 @@ namespace MEL {
 			 */
 			template<typename T>
 			inline void GetCachedPointer(T* &ptr) {
-				auto it = pointerMap.find((void*) ptr);
+				auto it = pointerMap.find(HashPtr(ptr));
 				if (it != pointerMap.end()) {
 					ptr = (T*) it->second;
 				}
@@ -275,13 +300,13 @@ namespace MEL {
 			 * \param[in] len		The number of elements to write
 			 */
             template<typename T>
-            inline void WriteAlloc(T* &src, int len) {
+            inline void MELWriteAlloc(T* &src, int len) {
                 if (src != nullptr) {
 					if (isBuffered()) {
 						BufferPtr(src, len);
 					}
 					else {
-						MEL::FileWrite<T>(*filePtr, src, len);
+						MEL::FileWrite<T>(*((MEL::File*) filePtr), src, len);
 					}
                 }
             };
@@ -294,7 +319,7 @@ namespace MEL {
 			 * \param[in] len		The number of elements to read
 			 */
             template<typename T>
-            inline void ReadAlloc(T* &dst, int len) {
+            inline void MELReadAlloc(T* &dst, int len) {
                 if (dst != nullptr) {					
 					dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
 					
@@ -302,7 +327,48 @@ namespace MEL {
 						BufferPtr(dst, len);
 					}
 					else {
-						MEL::FileRead<T>(*filePtr, dst, len);
+						MEL::FileRead<T>(*((MEL::File*) filePtr), dst, len);
+					}
+					
+                }
+            };
+
+			/**
+			 * \ingroup  Deep
+			 * Write an array to an stl file, or if the message is buffered pack the array into the buffer
+			 *
+			 * \param[in] src		The pointer to the array to write
+			 * \param[in] len		The number of elements to write
+			 */
+            template<typename T>
+			inline void STLWriteAlloc(T* &src, int len) {
+                if (src != nullptr) {
+					if (isBuffered()) {
+						BufferPtr(src, len);
+					}
+					else {
+						((std::ofstream*) filePtr)->write((const char*) src, len * sizeof(T));
+					}
+                }
+            };
+
+			/**
+			 * \ingroup  Deep
+			 * Read an array from an stl file, or if the message is buffered unpack the array from the buffer. An allocation will be made before receiving the data
+			 *
+			 * \param[out] dst		The pointer to the array to read
+			 * \param[in] len		The number of elements to read
+			 */
+            template<typename T>
+            inline void STLReadAlloc(T* &dst, int len) {
+                if (dst != nullptr) {					
+					dst = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+					
+					if (isBuffered()) {
+						BufferPtr(dst, len);
+					}
+					else {  
+						((std::ifstream*) filePtr)->read((char*) dst, len * sizeof(T));
 					}
 					
                 }
@@ -361,14 +427,22 @@ namespace MEL {
                         MEL::Recv<T>(&obj, 1, pid, tag, comm); 
                     }
                 }
-                else if (isFile()) {
+				else if (isMELFile()) {
                     if (isSource()) {
-                        MEL::FileWrite<T>(*filePtr, &obj, 1);
+						MEL::FileWrite<T>(*((MEL::File*) filePtr), &obj, 1);
                     }
                     else {
-                        MEL::FileRead<T>(*filePtr, &obj, 1);
+						MEL::FileRead<T>(*((MEL::File*) filePtr), &obj, 1);
                     }
                 }
+				else if (isSTLFile()) {
+					if (isSource()) {
+						((std::ofstream*) filePtr)->write((const char*) &obj, sizeof(T));
+					}
+					else {
+						((std::ifstream*) filePtr)->read((char*) &obj, sizeof(T));
+					}
+				}
             };
 
 			/**
@@ -394,14 +468,22 @@ namespace MEL {
                         MEL::Recv<T>(ptr, len, pid, tag, comm); 
                     }
                 }
-                else if (isFile()) {
-                    if (isSource()) {
-                        MEL::FileWrite<T>(*filePtr, ptr, len);
+                else if (isMELFile()) {
+                    if (isSource()) { 
+						MEL::FileWrite<T>(*((MEL::File*) filePtr), ptr, len);
                     }
                     else {
-                        MEL::FileRead<T>(*filePtr, ptr, len);
+						MEL::FileRead<T>(*((MEL::File*) filePtr), ptr, len);
                     }
                 }
+				else if (isSTLFile()) {
+					if (isSource()) {
+						((std::ofstream*) filePtr)->write((const char*) ptr, len * sizeof(T));
+					}
+					else {
+						((std::ifstream*) filePtr)->read((char*) ptr, len * sizeof(T));
+					}
+				}
             };
 
 			/**
@@ -424,14 +506,22 @@ namespace MEL {
 						RecvAlloc(ptr, len);
                     }
                 }
-                else if (isFile()) {
+                else if (isMELFile()) {
                     if (isSource()) {
-						WriteAlloc(ptr, len);
+						MELWriteAlloc(ptr, len);
                     }
                     else {
-						ReadAlloc(ptr, len);
+						MELReadAlloc(ptr, len);
                     }
                 }
+				else if (isSTLFile()) {
+					if (isSource()) {
+						STLWriteAlloc(ptr, len);
+					}
+					else {
+						STLReadAlloc(ptr, len);
+					}
+				}
             };
 
         public:
@@ -476,20 +566,34 @@ namespace MEL {
                         MEL::Recv(buffer, bufferSize, pid, tag, comm); 
                     }
                 }
-                else if (isFile()) {
-                    if (isSource()) {
-                        MEL::FileWrite(*filePtr, buffer, bufferSize);
-                    }
-                    else {
-                        MEL::FileRead(*filePtr, buffer, bufferSize);
-                    }
-                }
+                else if (isMELFile()) {
+					if (isSource()) {
+						MEL::FileWrite(*((MEL::File*) filePtr), buffer, bufferSize);
+					}
+					else {
+						MEL::FileRead(*((MEL::File*) filePtr), buffer, bufferSize);
+					}
+				}
+				else if (isSTLFile()) {
+					if (isSource()) {
+						((std::ofstream*) filePtr)->write((const char*) buffer, bufferSize);
+					}
+					else {
+						((std::ifstream*) filePtr)->read((char*) buffer, bufferSize);  
+					}
+				}
             };
 
             /// Internal helper - Don't call this yourself!
             inline void _FileAttach(MEL::File *ptr) {
                 filePtr = ptr;
             };
+			inline void _FileAttach(std::ofstream *ptr) {
+				filePtr = ptr;
+			};
+			inline void _FileAttach(std::ifstream *ptr) {
+				filePtr = ptr;
+			};
             inline void _FileDetach() {
                 filePtr = nullptr;
             };
@@ -1502,7 +1606,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_deep_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg & obj;
             msg._FileDetach();
@@ -1517,7 +1621,7 @@ namespace MEL {
 		 */
 		template<typename T>
         inline enable_if_not_deep_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             msg.packVar(obj);
             msg._FileDetach();
@@ -1532,7 +1636,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> FileWrite(T &ptr, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg.packPtr(ptr);
             msg._FileDetach();
@@ -1548,7 +1652,7 @@ namespace MEL {
 		 */
 		template<typename T>
         inline enable_if_pointer<T> FileWrite(T &ptr, const int len, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -1565,7 +1669,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, MEL::File &file, const int bufferSize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
             /// Allocate space for buffer
@@ -1589,7 +1693,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file); 
             
             int bufferSize;
@@ -1611,7 +1715,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileWrite(T &ptr, MEL::File &file, const int bufferSize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
             /// Allocate space for buffer
@@ -1635,7 +1739,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileWrite(T &ptr, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file); 
             
             int bufferSize;
@@ -1658,7 +1762,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, MEL::File &file, const int bufferSize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
             /// Allocate space for buffer
@@ -1684,7 +1788,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file); 
             
             int bufferSize;
@@ -1706,7 +1810,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_deep_not_pointer<T> FileRead(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg & obj;
             msg._FileDetach();
@@ -1721,7 +1825,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_not_deep_not_pointer<T> FileRead(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             msg.packVar(obj);
             msg._FileDetach();
@@ -1736,7 +1840,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> FileRead(T &ptr, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             ptr = (T) 0x1;
             msg.packPtr(ptr);
@@ -1753,7 +1857,7 @@ namespace MEL {
 		 */
 		template<typename T>
 		inline enable_if_pointer<T> FileRead(T &ptr, const int len, MEL::File &file) {
-			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
 			int _len = len;
 			msg._FileAttach(&file);
 			ptr = (T) 0x1;
@@ -1773,7 +1877,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> FileRead(T &ptr, int &len, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, false);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             ptr = (T) 0x1;
             msg.packVar(len);
@@ -1791,7 +1895,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedFileRead(T &obj, MEL::File &file, const int buffersize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
             /// Allocate space for buffer
@@ -1828,7 +1932,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileRead(T &ptr, MEL::File &file, const int buffersize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
             /// Allocate space for buffer
@@ -1867,7 +1971,7 @@ namespace MEL {
 		 */
         template<typename T>
         inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, MEL::File &file, const int buffersize) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, true);
+            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
             int _len = len;
 			
 			msg._FileAttach(&file);
@@ -1911,7 +2015,7 @@ namespace MEL {
 		 */
 		template<typename T>
 		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, MEL::File &file, const int buffersize) {
-			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::File, true);
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
 			msg._FileAttach(&file);
 
 			/// Allocate space for buffer
@@ -1939,6 +2043,474 @@ namespace MEL {
 		template<typename T>
 		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, MEL::File &file) {
 			BufferedFileRead(ptr, len, file, MEL::FileGetSize(file));
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a deep object reference to an stl file
+		*
+		* \param[in] obj	The deep object to transport
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg & obj;
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a non-deep object reference to an stl file
+		*
+		* \param[in] obj	The non-deep object to transport
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_not_deep_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg.packVar(obj);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to a deep/non-deep object to an stl file
+		*
+		* \param[in] ptr	Pointer to the deep/non-deep object to transport
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> FileWrite(T &ptr, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg.packPtr(ptr);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to an array of deep/non-deep objects to an stl file
+		*
+		* \param[in] ptr	Pointer to the array of deep/non-deep objects to transport
+		* \param[in] len	The number of elements to write
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> FileWrite(T &ptr, const int len, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg.packVar(len);
+			msg.packPtr(ptr, len);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a deep object reference to an stl file using a buffered write. Buffersize must be calculated ahead of time
+		*
+		* \param[in] obj	The deep object to transport
+		* \param[in] file	The file to write to
+		* \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, std::ofstream &file, const int bufferSize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(bufferSize);
+			/// Fill the buffer on the sender
+			msg & obj;
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a deep object reference to an stl file using a buffered write. Buffersize is calculated before transport
+		*
+		* \param[in] obj	The deep object to transport
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			int bufferSize;
+			/// Determine the buffersize needed
+			msg & obj;
+			bufferSize = msg._GetOffset();
+
+			msg._FileDetach();
+			BufferedFileWrite(obj, file, bufferSize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to a deep/non-deep object to an stl file using a buffered write. Buffersize must be calculated ahead of time
+		*
+		* \param[in] ptr	Pointer to the object to transport
+		* \param[in] file	The file to write to
+		* \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, std::ofstream &file, const int bufferSize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(bufferSize);
+			/// Fill the buffer on the sender
+			msg.packPtr(ptr);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to a deep/non-deep object to an stl file using a buffered write. Buffersize is calculated before transport
+		*
+		* \param[in] ptr	Pointer to the object to transport
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			int bufferSize;
+			/// Determine the buffersize needed
+			msg.packPtr(ptr);
+			bufferSize = msg._GetOffset();
+
+			msg._FileDetach();
+			BufferedFileWrite(ptr, file, bufferSize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. Buffersize must be calculated ahead of time
+		*
+		* \param[in] ptr	Pointer to the array of objects to transport
+		* \param[in] len	The number of elements to write
+		* \param[in] file	The file to write to
+		* \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, std::ofstream &file, const int bufferSize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(bufferSize);
+			/// Fill the buffer on the sender
+			msg.packVar(len);
+			msg.packPtr(ptr, len);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. Buffersize is calculated before transport
+		*
+		* \param[in] ptr	Pointer to the array of objects to transport
+		* \param[in] len	The number of elements to write
+		* \param[in] file	The file to write to
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, std::ofstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			int bufferSize;
+			/// Determine the buffersize needed
+			msg.packVar(len);
+			msg.packPtr(ptr, len);
+			bufferSize = msg._GetOffset();
+
+			msg._FileDetach();
+			BufferedFileWrite(ptr, len, file, bufferSize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a deep object reference from file
+		*
+		* \param[out] obj	The deep object to transport
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg & obj;
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a non-deep object reference from file
+		*
+		* \param[out] obj	The non-deep object to transport
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_not_deep_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			msg.packVar(obj);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to a deep/non-deep object from file
+		*
+		* \param[out] ptr	Pointer to the deep/non-deep object to transport
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> FileRead(T &ptr, std::ifstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			ptr = (T) 0x1;
+			msg.packPtr(ptr);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects from file
+		*
+		* \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
+		* \param[in] len	The number of elements to read
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> FileRead(T &ptr, const int len, std::ifstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
+			int _len = len;
+			msg._FileAttach(&file);
+			ptr = (T) 0x1;
+			msg.packVar(_len);
+			if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
+			msg.packPtr(ptr, _len);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects from file
+		*
+		* \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
+		* \param[out] len	The number of elements that were read
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> FileRead(T &ptr, int &len, std::ifstream &file) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
+			msg._FileAttach(&file);
+			ptr = (T) 0x1;
+			msg.packVar(len);
+			msg.packPtr(ptr, len);
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a deep object reference to an stl file using a buffered read. Buffersize must be calculated ahead of time
+		*
+		* \param[out] obj	The deep object to transport
+		* \param[in] file	The file to read from
+		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> BufferedFileRead(T &obj, std::ifstream &file, const int buffersize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(buffersize);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Unpack the buffer 
+			msg & obj;
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a deep object reference to an stl file using a buffered read. Buffersize is calculated before transport
+		*
+		* \param[out] obj	The deep object to transport
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_deep_not_pointer<T> BufferedFileRead(T &obj, std::ifstream &file) {
+			std::streampos pos = file.tellg();
+			file.seekg(0, std::ios::end);
+			int fsize = (int) file.tellg();
+			file.seekg(pos);
+			
+			BufferedFileRead(obj, file, fsize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to a deep/non-deep object to an stl file using a buffered read. Buffersize must be calculated ahead of time
+		*
+		* \param[out] ptr	Pointer to the object to transport
+		* \param[in] file	The file to read from
+		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, std::ifstream &file, const int buffersize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(buffersize);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Unpack the buffer 
+			ptr = (T) 0x1;
+			msg.packPtr(ptr);
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to a deep/non-deep object to an stl file using a buffered read. Buffersize is calculated before transport
+		*
+		* \param[out] ptr	Pointer to the object to transport
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, std::ifstream &file) {
+			std::streampos pos = file.tellg();
+			file.seekg(0, std::ios::end);
+			int fsize = (int) file.tellg();
+			file.seekg(pos);
+			
+			BufferedFileRead(ptr, file, fsize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize must be calculated ahead of time
+		*
+		* \param[out] ptr	Pointer to the array of objects to transport
+		* \param[in] len	The number of elements to read
+		* \param[in] file	The file to read from
+		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, std::ifstream &file, const int buffersize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
+			int _len = len;
+
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(buffersize);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Unpack the buffer 
+			ptr = (T) 0x1;
+			msg.packVar(_len);
+			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
+			msg.packPtr(ptr, _len);
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize is calculated before transport
+		*
+		* \param[out] ptr	Pointer to the array of objects to transport
+		* \param[in] len	The number of elements to read
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, std::ifstream &file) {
+			std::streampos pos = file.tellg();
+			file.seekg(0, std::ios::end);
+			int fsize = (int) file.tellg();
+			file.seekg(pos);
+			
+			BufferedFileRead(ptr, len, file, fsize);
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize must be calculated ahead of time
+		*
+		* \param[out] ptr	Pointer to the array of objects to transport
+		* \param[out] len	The number of elements that were read
+		* \param[in] file	The file to read from
+		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, std::ifstream &file, const int buffersize) {
+			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
+			msg._FileAttach(&file);
+
+			/// Allocate space for buffer
+			msg._BufferAlloc(buffersize);
+			/// Share the buffer
+			msg._BufferTransport();
+			/// Unpack the buffer 
+			ptr = (T) 0x1;
+			msg.packVar(len);
+			msg.packPtr(ptr, len);
+			/// Clean up
+			msg._BufferFree();
+
+			msg._FileDetach();
+		};
+
+		/**
+		* \ingroup  Deep
+		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize is calculated before transport
+		*
+		* \param[out] ptr	Pointer to the array of objects to transport
+		* \param[out] len	The number of elements that were read
+		* \param[in] file	The file to read from
+		*/
+		template<typename T>
+		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, std::ifstream &file) {
+			std::streampos pos = file.tellg();
+			file.seekg(0, std::ios::end);
+			int fsize = (int) file.tellg();
+			file.seekg(pos);
+			
+			BufferedFileRead(ptr, len, file, fsize);
 		};
     };
 };
