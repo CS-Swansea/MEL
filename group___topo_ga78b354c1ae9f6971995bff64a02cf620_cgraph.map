@@ -1,5 +1,0 @@
-<map id="MEL::TopoCartesianStencil2D9P" name="MEL::TopoCartesianStencil2D9P">
-<area shape="rect" id="node2" href="$group___topo.html#gaf0bca756c2ae0a241d000905bbbb58fb" title="Compute the ranks of a left and right shifted neighbor for a given dimension within a topology..." alt="" coords="267,5,434,32"/>
-<area shape="rect" id="node3" href="$group___topo.html#ga25989071792de210a7afdc5a88ff7c2e" title="Get the properties of an attached cartesian topology of a comm world. " alt="" coords="270,56,431,83"/>
-<area shape="rect" id="node4" href="$group___topo.html#ga7bc6a4ecf4697ed0a383714a4a09c14a" title="Get the rank within the attached cartesian topology of a comm world. " alt="" coords="265,107,436,133"/>
-</map>

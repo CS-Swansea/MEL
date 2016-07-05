@@ -1,4 +1,0 @@
-<map id="MEL::TopoCartesianMakeDims" name="MEL::TopoCartesianMakeDims">
-<area shape="rect" id="node2" href="$group___topo.html#ga31cbfb2acc351a147bd6283af00b66a4" title="Compute the &#39;ideal&#39; dimensions for a topolgy over n&#45;processes. " alt="" coords="256,5,459,32"/>
-<area shape="rect" id="node3" href="$group___comm.html#ga8421cb6792fd71164bf0db4619da5074" title="Get the Comm world size. " alt="" coords="297,56,418,83"/>
-</map>

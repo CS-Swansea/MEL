@@ -1,7 +1,0 @@
-<map id="MEL::Put" name="MEL::Put">
-<area shape="rect" id="node2" href="$group___mutex.html#gad1313781c5e45edfb85ea9ed33eacf8f" title="Get the exclusive lock on a MEL::Mutex. " alt="" coords="139,5,261,32"/>
-<area shape="rect" id="node4" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="133,56,267,83"/>
-<area shape="rect" id="node6" href="$group___shared.html#ga2781092e095750197aa62029972fedec" title="Release the lock on the shared array and synchronize the data. " alt="" coords="131,107,269,133"/>
-<area shape="rect" id="node3" href="$group___shared.html#gadf6f8b7df385f41166ad132315d89466" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="323,5,489,32"/>
-<area shape="rect" id="node5" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="317,56,495,83"/>
-</map>

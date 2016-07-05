@@ -1,8 +1,0 @@
-<map id="MEL::Deep::Message::TransportAlloc" name="MEL::Deep::Message::TransportAlloc">
-<area shape="rect" id="node2" href="$group___mem.html#ga2205316be910a71432809624f5670408" title="Free a pointer allocated with MPI_Alloc or the MEL equivilant functions. " alt="" coords="201,5,313,32"/>
-<area shape="rect" id="node3" href="$group___c_o_l.html#gaba8999e83ee783e712cf0d80cf334693" title="Broadcast an array to all processes in comm, where all processes know how many elements to expect..." alt="" coords="212,56,303,83"/>
-<area shape="rect" id="node4" href="$group___p2_p.html#ga619a6c0c00e5786e4a085a7016b3d188" title="Send num elements of a derived type from the given address. " alt="" coords="214,107,301,133"/>
-<area shape="rect" id="node5" href="$group___p2_p.html#gab7fefc0cf529addd07980fdf9737aa8f" title="Recieve a message of known length into the given pointer. " alt="" coords="215,157,300,184"/>
-<area shape="rect" id="node6" href="$group___file.html#gab6234a6ceae56a3d5e9431bff71023d9" title="Write to file from a single process. " alt="" coords="203,208,312,235"/>
-<area shape="rect" id="node7" href="$group___file.html#gac63021b02ec8c1f42bde091e264c1793" title="Read from file from a single process. " alt="" coords="203,259,311,285"/>
-</map>

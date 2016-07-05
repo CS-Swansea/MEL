@@ -1,5 +1,0 @@
-<map id="MEL::Deep::BufferedFileWrite" name="MEL::Deep::BufferedFileWrite">
-<area shape="rect" id="node2" href="$class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="271,5,419,47"/>
-<area shape="rect" id="node3" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="271,71,419,112"/>
-<area shape="rect" id="node4" href="$group___deep.html#gabf19d3f96e888ba1444411ebaae621ce" title="Write a deep object reference to file using a buffered write. " alt="" coords="248,137,443,163"/>
-</map>

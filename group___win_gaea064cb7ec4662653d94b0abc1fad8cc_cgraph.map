@@ -1,4 +1,0 @@
-<map id="MEL::WinLockExclusive" name="MEL::WinLockExclusive">
-<area shape="rect" id="node2" href="$group___win.html#ga1469598ee3d7b48cb3806b83e6efba76" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="216,5,379,32"/>
-<area shape="rect" id="node3" href="$group___win.html#ga7a716050cc6b63ca8ba1460abd8e5fdd" title="Get the lock on an RMA access epoch for a window. " alt="" coords="427,5,535,32"/>
-</map>

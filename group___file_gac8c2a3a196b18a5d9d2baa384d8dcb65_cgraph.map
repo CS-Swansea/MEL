@@ -1,5 +1,0 @@
-<map id="MEL::FileSetErrorHandler" name="MEL::FileSetErrorHandler">
-<area shape="rect" id="node2" href="$group___file.html#gad22d20774db61956b362ee3c92c82f8c" title="Set the error handler for a file. " alt="" coords="233,5,403,32"/>
-<area shape="rect" id="node3" href="$group___file.html#ga6912cbac20836c87544432f2cf06e99c" title="Create a file error handler. " alt="" coords="224,56,412,83"/>
-<area shape="rect" id="node4" href="$struct_m_e_l_1_1_error_handler.html#ac85f48f1ab9d30e87fa55ddfc085a845" title="MEL::ErrorHandler::\lErrorHandler" alt="" coords="460,49,597,90"/>
-</map>
