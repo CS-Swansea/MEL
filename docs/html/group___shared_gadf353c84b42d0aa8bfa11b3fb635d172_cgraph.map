@@ -1,7 +1,0 @@
-<map id="MEL::SharedFree" name="MEL::SharedFree">
-<area shape="rect" id="node2" href="$group___sync.html#ga0d85e07e4b0a7d6bc552c80f1d50de65" title="Collective operation that forces all processes to wait until they are all at the barrier. " alt="" coords="353,5,447,32"/>
-<area shape="rect" id="node3" href="$group___win.html#ga75efc38d443b7ad468afd61055672958" title="Free an RMA window. " alt="" coords="347,81,453,108"/>
-<area shape="rect" id="node4" href="$group___mem.html#ga2205316be910a71432809624f5670408" title="Free a pointer allocated with MPI_Alloc or the MEL equivilant functions. " alt="" coords="344,132,456,159"/>
-<area shape="rect" id="node5" href="$group___mutex.html#gab4b3614039ef59fff964e286e26c1dc5" title="Free a MEL::Mutex. " alt="" coords="177,93,296,120"/>
-<area shape="rect" id="node6" href="$group___datatype.html#gab24750f82528860a381a4de4464a0542" title="Free a derived datatype. " alt="" coords="181,195,292,221"/>
-</map>

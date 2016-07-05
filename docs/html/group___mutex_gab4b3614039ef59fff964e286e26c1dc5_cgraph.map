@@ -1,5 +1,0 @@
-<map id="MEL::MutexFree" name="MEL::MutexFree">
-<area shape="rect" id="node2" href="$group___sync.html#ga0d85e07e4b0a7d6bc552c80f1d50de65" title="Collective operation that forces all processes to wait until they are all at the barrier. " alt="" coords="181,5,275,32"/>
-<area shape="rect" id="node3" href="$group___win.html#ga75efc38d443b7ad468afd61055672958" title="Free an RMA window. " alt="" coords="175,56,281,83"/>
-<area shape="rect" id="node4" href="$group___mem.html#ga2205316be910a71432809624f5670408" title="Free a pointer allocated with MPI_Alloc or the MEL equivilant functions. " alt="" coords="172,107,284,133"/>
-</map>

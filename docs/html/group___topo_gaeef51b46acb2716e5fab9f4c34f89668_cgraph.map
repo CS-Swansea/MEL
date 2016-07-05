@@ -1,4 +1,0 @@
-<map id="MEL::TopoCartesianGet" name="MEL::TopoCartesianGet">
-<area shape="rect" id="node2" href="$group___topo.html#ga6aa571bb759f751cfdfd6b645d921b31" title="Get the number of dimensions in an attached cartesian topology of a comm world. " alt="" coords="215,5,412,32"/>
-<area shape="rect" id="node3" href="$group___topo.html#ga25989071792de210a7afdc5a88ff7c2e" title="Get the properties of an attached cartesian topology of a comm world. " alt="" coords="233,56,394,83"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="MEL::WinSetErrorHandler" name="MEL::WinSetErrorHandler">
-<area shape="rect" id="node2" href="$group___win.html#ga6b6735a05ec0beb2e6a47001840a6624" title="Set the error handler for a window. " alt="" coords="235,5,407,32"/>
-<area shape="rect" id="node3" href="$group___win.html#ga31a62325b407ce3bb95f029c28fa8579" title="Create a window error handler. " alt="" coords="225,56,416,83"/>
-<area shape="rect" id="node4" href="$struct_m_e_l_1_1_error_handler.html#ac85f48f1ab9d30e87fa55ddfc085a845" title="MEL::ErrorHandler::\lErrorHandler" alt="" coords="464,49,601,90"/>
-</map>

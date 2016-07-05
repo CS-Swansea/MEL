@@ -1,9 +1,0 @@
-<map id="MEL::WinLockExclusive" name="MEL::WinLockExclusive">
-<area shape="rect" id="node2" href="$group___win.html#gaea064cb7ec4662653d94b0abc1fad8cc" title="Get an exclusive lock on an RMA access epoch for a window. " alt="" coords="216,5,379,32"/>
-<area shape="rect" id="node3" href="$group___mutex.html#gad1313781c5e45edfb85ea9ed33eacf8f" title="Get the exclusive lock on a MEL::Mutex. " alt="" coords="237,56,358,83"/>
-<area shape="rect" id="node5" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="231,107,364,133"/>
-<area shape="rect" id="node7" href="$group___shared.html#ga67fb7e99a0d4341c9b3020cb37c59aec" title="Get the lock on the shared array and synchronize the data. " alt="" coords="234,157,361,184"/>
-<area shape="rect" id="node8" href="$group___shared.html#ga2781092e095750197aa62029972fedec" title="Release the lock on the shared array and synchronize the data. " alt="" coords="228,208,367,235"/>
-<area shape="rect" id="node4" href="$group___shared.html#gadf6f8b7df385f41166ad132315d89466" title="Get the lock on the shared array without synchronizing the data. " alt="" coords="433,56,598,83"/>
-<area shape="rect" id="node6" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="427,107,604,133"/>
-</map>

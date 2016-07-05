@@ -1,4 +1,0 @@
-<map id="MEL::MutexTest" name="MEL::MutexTest">
-<area shape="rect" id="node2" href="$group___mutex.html#gac935f3378026fd751eb4f53a6846c493" title="Release the exclusive lock on a MEL::Mutex. " alt="" coords="172,5,305,32"/>
-<area shape="rect" id="node3" href="$group___shared.html#gae04f1b91ea03435b89f4e14fc4814fbb" title="Release the lock on the shared array without synchronizing the data. " alt="" coords="353,5,531,32"/>
-</map>

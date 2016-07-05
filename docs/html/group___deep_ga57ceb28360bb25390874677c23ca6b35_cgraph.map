@@ -1,4 +1,0 @@
-<map id="MEL::Deep::BufferSize" name="MEL::Deep::BufferSize">
-<area shape="rect" id="node2" href="$class_m_e_l_1_1_deep_1_1_message.html#a02a3b0da4fff0cf5638f7505832cf20f" title="Copies the footprint of an object as is. " alt="" coords="208,5,356,47"/>
-<area shape="rect" id="node3" href="$group___deep.html#ga2bad3257cf8a16936b4bf342ab15ec95" title="Transport an array by its contiguous footprint in memory. " alt="" coords="208,71,356,112"/>
-</map>
