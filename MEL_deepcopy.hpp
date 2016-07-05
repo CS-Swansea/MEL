@@ -66,20 +66,19 @@ namespace MEL {
 
         class Message {
         public:
-
-			/**
-			 * \ingroup Deep
-			 * Internal flags for tracking which deep operation is being performed
-			 */
-            enum class Mode {
+			
+			/// \cond HIDE
+			enum class Mode {
                 P2P        = 0x1,
                 Collective = 0x2,
                 MEL_File   = 0x4,
 				STL_File   = 0x8
             };
+			/// \endcond
 
         private:
-            /// Members
+			/// \cond HIDE
+			/// Members
             const int pid, tag;
             const Mode mode;
             const Comm comm;
@@ -102,6 +101,7 @@ namespace MEL {
 			};
 
 			std::unordered_map<size_t, void*, PassThroughHash> pointerMap;
+			/// \endcond
 
 			/**
 			 * \ingroup  Deep
