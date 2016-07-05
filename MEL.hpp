@@ -2432,7 +2432,7 @@ namespace MEL {
 	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, T(*F)(T&, T&)>
-    inline Op CreateOp(bool commute = true) {
+	inline Op OpCreate(bool commute = true) {
         MPI_Op op;
         MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "Op::CreatOp" );
         return Op(op);
@@ -2446,7 +2446,7 @@ namespace MEL {
 	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, T(*F)(T&, T&, Datatype)>
-    inline Op CreateOp(bool commute = true) {
+	inline Op OpCreate(bool commute = true) {
         MPI_Op op;
         MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "Op::CreatOp" );
         return Op(op);
@@ -2460,7 +2460,7 @@ namespace MEL {
 	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int)>
-    inline Op CreateOp(bool commute = true) {
+	inline Op OpCreate(bool commute = true) {
         MPI_Op op;
         MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "Op::CreatOp" );
         return Op(op);
@@ -2474,7 +2474,7 @@ namespace MEL {
 	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int, Datatype)>
-    inline Op CreateOp(bool commute = true) {
+	inline Op OpCreate(bool commute = true) {
         MPI_Op op;
         MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "Op::CreatOp" );
         return Op(op);
@@ -2488,7 +2488,7 @@ namespace MEL {
 	 * \return			Returns a handle to a new Op
 	 */
     template<typename T, void(*F)(T*, T*, int*, MPI_Datatype*)>
-    inline Op CreateOp(bool commute = true) {
+	inline Op OpCreate(bool commute = true) {
         MPI_Op op;
         MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) F, commute, (MPI_Op*) &op), "Op::CreatOp" );
         return Op(op);

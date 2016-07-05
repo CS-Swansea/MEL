@@ -89,7 +89,7 @@ namespace MEL {
 		 * \return					Returns a handle to a new Op
 		 */
 		template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
-        inline MEL::Op CreateOp(bool commute = true) {
+		inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
             MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
@@ -103,7 +103,7 @@ namespace MEL {
 		 * \return					Returns a handle to a new Op
 		 */
         template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&, MEL::Datatype)>
-        inline MEL::Op CreateOp(bool commute = true) {
+		inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
             MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
