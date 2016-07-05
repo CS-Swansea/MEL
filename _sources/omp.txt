@@ -1,0 +1,7 @@
+OpenMP Extension
+================
+
+Located in file: :code:`MEL_omp.hpp`
+
+.. doxygengroup:: OMP
+	:content-only:

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Communicators &amp; Groups &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Synchronization" href="sync.html" />
+    <link rel="prev" title="RMA One-Sided Communication" href="win.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Communicators &amp; Groups</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="win.html" title="Previous Chapter: RMA One-Sided Communication"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; RMA One-Sided...</span>
+    </a>
+  </li>
+  <li>
+    <a href="sync.html" title="Next Chapter: Synchronization"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Synchronization &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="communicators-groups">
+<h1>Communicators &amp; Groups<a class="headerlink" href="#communicators-groups" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL22CommCreateErrorHandlerE16ErrorHandlerFunc">
+<span id="MEL::CommCreateErrorHandler__ErrorHandlerFunc"></span><span class="target" id="MELgroup___comm_1ga76cc4c64fd3d35d5862bda52f1e7fdb8"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">CommCreateErrorHandler</code><span class="sig-paren">(</span>ErrorHandlerFunc <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22CommCreateErrorHandlerE16ErrorHandlerFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Comm error handler by directly passing the function to use. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns an object that MPI can use to reference the error handler </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">func</span></code> - <p>The function to use as an error handler </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19CommSetErrorHandlerERK4CommRK12ErrorHandler">
+<span id="MEL::CommSetErrorHandler__CommCR.ErrorHandlerCR"></span><span class="target" id="MELgroup___comm_1ga30ecdc11add4c556da8d5d8bd4a19f87"></span>void <code class="descclassname">MEL::</code><code class="descname">CommSetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> ErrorHandler &amp;<em>errHndl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommSetErrorHandlerERK4CommRK12ErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a Comm error handler by passing the a error handler reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to attach the error handler to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">errHndl</span></code> - <p>The reference to a bound error handler </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19CommSetErrorHandlerERK4Comm16ErrorHandlerFunc">
+<span id="MEL::CommSetErrorHandler__CommCR.ErrorHandlerFunc"></span><span class="target" id="MELgroup___comm_1ga5cf4b3c45c5e57a507679f7ad422659d"></span>void <code class="descclassname">MEL::</code><code class="descname">CommSetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, ErrorHandlerFunc <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommSetErrorHandlerERK4Comm16ErrorHandlerFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a Comm error handler by directly passing the function to use. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to attach the error handler to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">func</span></code> - <p>The function to use as an error handler </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19CommGetErrorHandlerERK4Comm">
+<span id="MEL::CommGetErrorHandler__CommCR"></span><span class="target" id="MELgroup___comm_1gac5736530e96b00bf00c1f4863a839e48"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">CommGetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommGetErrorHandlerERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Comm error handler attached to a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a reference to a bound error handler </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to get the error handler of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8CommRankERK4Comm">
+<span id="MEL::CommRank__CommCR"></span><span class="target" id="MELgroup___comm_1gac1bd06e47e7a5f002e82785fe538b64c"></span>int <code class="descclassname">MEL::</code><code class="descname">CommRank</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommRankERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Comm rank of the process. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the rank or the process within comm </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to get the rank in </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8CommSizeERK4Comm">
+<span id="MEL::CommSize__CommCR"></span><span class="target" id="MELgroup___comm_1ga8421cb6792fd71164bf0db4619da5074"></span>int <code class="descclassname">MEL::</code><code class="descname">CommSize</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommSizeERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Comm world size. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the size of the comm world </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to get the size of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL14CommRemoteSizeERK4Comm">
+<span id="MEL::CommRemoteSize__CommCR"></span><span class="target" id="MELgroup___comm_1ga20652e66f4decde8348bce8053cc624c"></span>int <code class="descclassname">MEL::</code><code class="descname">CommRemoteSize</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14CommRemoteSizeERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Comm world remote size. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the remote size of the comm world </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to get the remote size of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9CommSplitERK4Commi">
+<span id="MEL::CommSplit__CommCR.i"></span><span class="target" id="MELgroup___comm_1ga3b6606d30fca7e4ed72842be36756439"></span>Comm <code class="descclassname">MEL::</code><code class="descname">CommSplit</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, int <em>colour</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9CommSplitERK4Commi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a comm world into seperate comms. </p>
+<p>Processes with the same colour will end up in the same comm world</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new comm world </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to split </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">colour</span></code> - <p>The group that this process will end up in in the new comm world </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL13CommDuplicateERK4Comm">
+<span id="MEL::CommDuplicate__CommCR"></span><span class="target" id="MELgroup___comm_1gaece977495533e01a7faed32ec719ab7f"></span>Comm <code class="descclassname">MEL::</code><code class="descname">CommDuplicate</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13CommDuplicateERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate a comm world so that it can be handled independently. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new comm world </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to duplicate </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12CommGetGroupERK4Comm">
+<span id="MEL::CommGetGroup__CommCR"></span><span class="target" id="MELgroup___comm_1gac9fddff6bb394ab081609350c70d14dd"></span>Group <code class="descclassname">MEL::</code><code class="descname">CommGetGroup</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12CommGetGroupERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the group of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a Group object representing the processes in comm </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to get the group of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19CommCreateFromGroupERK4CommRK5Group">
+<span id="MEL::CommCreateFromGroup__CommCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gaf6af545f753f147f0e8714090154adf9"></span>Comm <code class="descclassname">MEL::</code><code class="descname">CommCreateFromGroup</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommCreateFromGroupERK4CommRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a comm object from an existing comm object and a group object. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new comm object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to build off of </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to use to build the new comm object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8CommFreeER4Comm">
+<span id="MEL::CommFree__CommR"></span><span class="target" id="MELgroup___comm_1ga0fc905376bc4cd67f8e45e6e43496a7c"></span>void <code class="descclassname">MEL::</code><code class="descname">CommFree</code><span class="sig-paren">(</span>Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommFreeER4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8CommFreeERNSt6vectorI4CommEE">
+<span id="MEL::CommFree__std::vector:Comm:R"></span><span class="target" id="MELgroup___comm_1gaa6303b77b7dc7d1ede0724f61d4c6464"></span>void <code class="descclassname">MEL::</code><code class="descname">CommFree</code><span class="sig-paren">(</span>std::vector&lt;Comm&gt; &amp;<em>comms</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommFreeERNSt6vectorI4CommEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a vector comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comms</span></code> - <p>A std::vector of comm world </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T0, <em class="property">typename</em> T1, typename... <em>Args</em>&gt;</dt>
+<dt id="_CPPv2N3MEL8CommFreeER2T0R2T1DpRR4Args">
+<span id="MEL::CommFree__T0R.T1R.ArgsRRDp"></span><span class="target" id="MELgroup___comm_1ga0d4c5a8ce38512f595264aa5a8ac22ea"></span>void <code class="descclassname">MEL::</code><code class="descname">CommFree</code><span class="sig-paren">(</span>T0 &amp;<em>d0</em>, T1 &amp;<em>d1</em>, Args&amp;&amp;... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommFreeER2T0R2T1DpRR4Args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free the varadic set of comm worlds provided. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">d0</span></code> - <p>The first comm world to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">d1</span></code> - <p>The second comm world to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">args</span></code> - <p>The varadic set of remaining comm worlds to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL10CommIsNULLERK4Comm">
+<span id="MEL::CommIsNULL__CommCR"></span><span class="target" id="MELgroup___comm_1gab290ce4d0642b2254340b34ff0448a1b"></span>bool <code class="descclassname">MEL::</code><code class="descname">CommIsNULL</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10CommIsNULLERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a comm world is the null comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if comm is the null comm world </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to test </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL10GroupUnionERK5GroupRK5Group">
+<span id="MEL::GroupUnion__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gabb526fc3589782d53b7c3a20db8184ec"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupUnion</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10GroupUnionERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a set union of two comm groups. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the union of the two groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the union </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the union </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL15GroupDifferenceERK5GroupRK5Group">
+<span id="MEL::GroupDifference__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga98c71d2043888986b07eb2dc3b70b35e"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupDifference</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15GroupDifferenceERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a set difference of two comm groups. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the difference of the two groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the difference </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the difference </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17GroupIntersectionERK5GroupRK5Group">
+<span id="MEL::GroupIntersection__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gaed1e59c4edb5de49cc918ce1a06baad4"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupIntersection</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17GroupIntersectionERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a set intersection of two comm groups. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the intersection of the two groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the intersection </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the intersection </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12GroupIncludeERK5GroupPKiKi">
+<span id="MEL::GroupInclude__GroupCR.iCP.iC"></span><span class="target" id="MELgroup___comm_1ga2a009c1604b3e7ffccbe2621a697e19e"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupInclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> int *<em>ranks</em>, <em class="property">const</em> int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupIncludeERK5GroupPKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a comm group including just the ranks from an exisitng group given in an array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the new groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The original group to build off of </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">ranks</span></code> - <p>Pointer to the array of ranks </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12GroupIncludeERK5GroupRKNSt6vectorIiEE">
+<span id="MEL::GroupInclude__GroupCR.std::vector:i:CR"></span><span class="target" id="MELgroup___comm_1ga8dced0ba5439b6f1801d7ad32e379232"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupInclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> std::vector&lt;int&gt; &amp;<em>ranks</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupIncludeERK5GroupRKNSt6vectorIiEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a comm group including just the ranks from an exisitng group given in an array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the new groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The original group to build off of </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">ranks</span></code> - <p>A std::vector of ranks </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12GroupExcludeERK5GroupPKiKi">
+<span id="MEL::GroupExclude__GroupCR.iCP.iC"></span><span class="target" id="MELgroup___comm_1ga1b70cb0c4b7aa5647a79614137f040bc"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupExclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> int *<em>ranks</em>, <em class="property">const</em> int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupExcludeERK5GroupPKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a comm group excluding just the ranks from an exisitng group given in an array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the new groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The original group to build off of </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">ranks</span></code> - <p>Pointer to the array of ranks </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12GroupExcludeERK5GroupRKNSt6vectorIiEE">
+<span id="MEL::GroupExclude__GroupCR.std::vector:i:CR"></span><span class="target" id="MELgroup___comm_1ga91d5d430561d770885afa0d39ea3983f"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupExclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> std::vector&lt;int&gt; &amp;<em>ranks</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupExcludeERK5GroupRKNSt6vectorIiEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a comm group excluding just the ranks from an exisitng group given in an array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the new groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The original group to build off of </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">ranks</span></code> - <p>A std::vector of ranks </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL12GroupCompareERK5GroupRK5Group">
+<span id="MEL::GroupCompare__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga691a30d17f825d11f2420684972627ac"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupCompare</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupCompareERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare two comm groups. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the comparison of two groups </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the compare </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the compare </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL14GroupIsSimilarERK5GroupRK5Group">
+<span id="MEL::GroupIsSimilar__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga1825398d83352bb8239ee10d1b9a7069"></span>bool <code class="descclassname">MEL::</code><code class="descname">GroupIsSimilar</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14GroupIsSimilarERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare if two comm groups are similar. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if the groups are similar </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the compare </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the compare </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16GroupIsIdenticalERK5GroupRK5Group">
+<span id="MEL::GroupIsIdentical__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga7f23da27344b9034e0b2c7b4b7935021"></span>bool <code class="descclassname">MEL::</code><code class="descname">GroupIsIdentical</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16GroupIsIdenticalERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare if two comm groups are identical. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if the groups are identical </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the compare </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the compare </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16GroupIsCongruentERK5GroupRK5Group">
+<span id="MEL::GroupIsCongruent__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga3eb4e52ed6cb0b57e05ec0d7d8e2f476"></span>bool <code class="descclassname">MEL::</code><code class="descname">GroupIsCongruent</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16GroupIsCongruentERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare if two comm groups are congruent. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if the groups are congruent </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the compare </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the compare </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL14GroupIsUnequalERK5GroupRK5Group">
+<span id="MEL::GroupIsUnequal__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gace8c87ebd8471ae0941b0c80e5e92ab8"></span>bool <code class="descclassname">MEL::</code><code class="descname">GroupIsUnequal</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14GroupIsUnequalERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare if two comm groups are unequal. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if the groups are unequal </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">lhs</span></code> - <p>The first operand of the compare </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rhs</span></code> - <p>The second operand of the compare </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL11GroupIsNULLERK5Group">
+<span id="MEL::GroupIsNULL__GroupCR"></span><span class="target" id="MELgroup___comm_1gafa4fd715501f95b55f2d9265b2e3a535"></span>bool <code class="descclassname">MEL::</code><code class="descname">GroupIsNULL</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11GroupIsNULLERK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare if a comm group is the null comm group. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns true if the group is the null group </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to test </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9GroupRankERK5Group">
+<span id="MEL::GroupRank__GroupCR"></span><span class="target" id="MELgroup___comm_1ga37d99190360bb838325f0b34b597fb2e"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupRank</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupRankERK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the rank of the process within the given comm group. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the rank within the given group </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to use </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9GroupSizeERK5Group">
+<span id="MEL::GroupSize__GroupCR"></span><span class="target" id="MELgroup___comm_1gaf9c4f84ef94b4fd3a9302e45eff96fe2"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupSize</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupSizeERK5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the size of the given comm group. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the size of the given group </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to use </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9GroupFreeER5Group">
+<span id="MEL::GroupFree__GroupR"></span><span class="target" id="MELgroup___comm_1gab4c3081a241954ea58ce46c47df0aba6"></span>void <code class="descclassname">MEL::</code><code class="descname">GroupFree</code><span class="sig-paren">(</span>Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupFreeER5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frees a comm group. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9GroupFreeERNSt6vectorI5GroupEE">
+<span id="MEL::GroupFree__std::vector:Group:R"></span><span class="target" id="MELgroup___comm_1ga64188937b718390744e218a411ef882f"></span>void <code class="descclassname">MEL::</code><code class="descname">GroupFree</code><span class="sig-paren">(</span>std::vector&lt;Group&gt; &amp;<em>groups</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupFreeERNSt6vectorI5GroupEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a vector comm group. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">groups</span></code> - <p>A std::vector of comm group </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T0, <em class="property">typename</em> T1, typename... <em>Args</em>&gt;</dt>
+<dt id="_CPPv2N3MEL9GroupFreeER2T0R2T1DpRR4Args">
+<span id="MEL::GroupFree__T0R.T1R.ArgsRRDp"></span><span class="target" id="MELgroup___comm_1ga8cd508d61dcb2a1625447f77b457e067"></span>void <code class="descclassname">MEL::</code><code class="descname">GroupFree</code><span class="sig-paren">(</span>T0 &amp;<em>d0</em>, T1 &amp;<em>d1</em>, Args&amp;&amp;... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupFreeER2T0R2T1DpRR4Args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free the varadic set of comm groups provided. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">d0</span></code> - <p>The first comm groups to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">d1</span></code> - <p>The second comm groups to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">args</span></code> - <p>The varadic set of remaining comm groups to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

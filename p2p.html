@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Point-2-Point Communication &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Collective Communication" href="col.html" />
+    <link rel="prev" title="MEL - The MPI Extension Library Documentation" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Point-2-Point Communication</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: MEL - The MPI Extension Library Documentation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; MEL - The MPI...</span>
+    </a>
+  </li>
+  <li>
+    <a href="col.html" title="Next Chapter: Collective Communication"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Collective Co... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="point-2-point-communication">
+<h1>Point-2-Point Communication<a class="headerlink" href="#point-2-point-communication" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL4SendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Send__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga619a6c0c00e5786e4a085a7016b3d188"></span>void <code class="descclassname">MEL::</code><code class="descname">Send</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4SendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send num elements of a derived type from the given address. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5BsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Bsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gaac32542fb92f80b153622c6805eca5bc"></span>void <code class="descclassname">MEL::</code><code class="descname">Bsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5BsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buffered send num elements of a derived type from the given address. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5SsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Ssend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gae8ec07182d827fd98167583658e95588"></span>void <code class="descclassname">MEL::</code><code class="descname">Ssend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5SsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronous send num elements of a derived type from the given address. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5RsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Rsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga9e9cb5b6c42643485178ca74dd679843"></span>void <code class="descclassname">MEL::</code><code class="descname">Rsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5RsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ready send num elements of a derived type from the given address. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5IsendEPKvKiRK8DatatypeKiKiRK4CommR7Request">
+<span id="MEL::Isend__voidCP.iC.DatatypeCR.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga798239eb4f858f0f24ad78bfc7e6341f"></span>void <code class="descclassname">MEL::</code><code class="descname">Isend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IsendEPKvKiRK8DatatypeKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5IsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Isend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga03d38dadaeb3229fcf0cbd4663abc880"></span>Request <code class="descclassname">MEL::</code><code class="descname">Isend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IbsendEPKvKiRK8DatatypeKiKiRK4CommR7Request">
+<span id="MEL::Ibsend__voidCP.iC.DatatypeCR.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga9b2231b309e3481f18dec55c6c1b9c3e"></span>void <code class="descclassname">MEL::</code><code class="descname">Ibsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IbsendEPKvKiRK8DatatypeKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Buffered send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IbsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Ibsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga762d96a7a8d9aaf7cef6a9501211c1b6"></span>Request <code class="descclassname">MEL::</code><code class="descname">Ibsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IbsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Buffered send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IssendEPKvKiRK8DatatypeKiKiRK4CommR7Request">
+<span id="MEL::Issend__voidCP.iC.DatatypeCR.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga992e3e4a2889cb5c97431dc641a1e787"></span>void <code class="descclassname">MEL::</code><code class="descname">Issend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IssendEPKvKiRK8DatatypeKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Synchronous send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IssendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Issend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gad5378d3c70c1d7835d02ecbb6de834f9"></span>Request <code class="descclassname">MEL::</code><code class="descname">Issend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IssendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Synchronous send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IrsendEPKvKiRK8DatatypeKiKiRK4CommR7Request">
+<span id="MEL::Irsend__voidCP.iC.DatatypeCR.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga3e3dde3b5b34a6471cc54dcd9c6d9d4f"></span>void <code class="descclassname">MEL::</code><code class="descname">Irsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IrsendEPKvKiRK8DatatypeKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Ready send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IrsendEPKvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Irsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga48bece83c37d5884ec63eab417378cf4"></span>Request <code class="descclassname">MEL::</code><code class="descname">Irsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IrsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Ready send num elements of a derived type from the given address</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4SendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Send__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga5564c48889e6b417ce12bde1ce828505"></span>void <code class="descclassname">MEL::</code><code class="descname">Send</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4SendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send num elements of a derived type from the given address. </p>
+<p>Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5BsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Bsend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gaf9ceec3bd7f108f30d3205a610d83d80"></span>void <code class="descclassname">MEL::</code><code class="descname">Bsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5BsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buffered send num elements of a derived type from the given address. </p>
+<p>Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5SsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Ssend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga4ec1123dc5a2fc5392b656b8ed83bb92"></span>void <code class="descclassname">MEL::</code><code class="descname">Ssend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5SsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronous send num elements of a derived type from the given address. </p>
+<p>Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5RsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Rsend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gab063f0ee0a9799ea363bf213926bd2d0"></span>void <code class="descclassname">MEL::</code><code class="descname">Rsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5RsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ready send num elements of a derived type from the given address. </p>
+<p>Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5IsendEPK1TKiKiKiRK4CommR7Request">
+<span id="MEL::Isend__TCP.iC.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga09abc7c598184a7abebad8d2ef909f82"></span>void <code class="descclassname">MEL::</code><code class="descname">Isend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IsendEPK1TKiKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Send num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5IsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Isend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga7eb119fbd867b70b8d3cc1c91e969d39"></span>Request <code class="descclassname">MEL::</code><code class="descname">Isend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Send num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IbsendEPK1TKiKiKiRK4CommR7Request">
+<span id="MEL::Ibsend__TCP.iC.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga51743a992f298cc26d15cdc951ab5906"></span>void <code class="descclassname">MEL::</code><code class="descname">Ibsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IbsendEPK1TKiKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Buffered send num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IbsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Ibsend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga7a9f2132d1036d02fce8f110cabdf1f4"></span>Request <code class="descclassname">MEL::</code><code class="descname">Ibsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IbsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Buffered end num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IssendEPK1TKiKiKiRK4CommR7Request">
+<span id="MEL::Issend__TCP.iC.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga36eb267672d27c2c0949ae0e3c146111"></span>void <code class="descclassname">MEL::</code><code class="descname">Issend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IssendEPK1TKiKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Synchronous send num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IssendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Issend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gac8b1847e1b55bc339df27d9b09cc7d95"></span>Request <code class="descclassname">MEL::</code><code class="descname">Issend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IssendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Synchronous end num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IrsendEPK1TKiKiKiRK4CommR7Request">
+<span id="MEL::Irsend__TCP.iC.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1gadc8f4b2a38c92fa54d074aaa3e60d849"></span>void <code class="descclassname">MEL::</code><code class="descname">Irsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IrsendEPK1TKiKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Ready send num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL6IrsendEPK1TKiKiKiRK4Comm">
+<span id="MEL::Irsend__TCP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gab6d708bfd13af9e2dc9c9a698ac07309"></span>Request <code class="descclassname">MEL::</code><code class="descname">Irsend</code><span class="sig-paren">(</span><em class="property">const</em> T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IrsendEPK1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Ready end num elements of a derived type from the given address. Element size determined by template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5ProbeEKiKiRK4Comm">
+<span id="MEL::Probe__iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga675afe61c41e0ace70a340e4b80e10bd"></span>Status <code class="descclassname">MEL::</code><code class="descname">Probe</code><span class="sig-paren">(</span><em class="property">const</em> int <em>source</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5ProbeEKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probe an incoming message to predetermine its contents. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a status object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">source</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6IprobeEKiKiRK4Comm">
+<span id="MEL::Iprobe__iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gaf267352690dfea981052c0372d4fd596"></span>std::pair&lt;bool, Status&gt; <code class="descclassname">MEL::</code><code class="descname">Iprobe</code><span class="sig-paren">(</span><em class="property">const</em> int <em>source</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6IprobeEKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Probe an incoming message to predetermine its contents</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair of a bool representing if a message was available and status object for that message </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">source</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL13ProbeGetCountERK10MPI_Status">
+<span id="MEL::ProbeGetCount__MPI_StatusCR"></span><span class="target" id="MELgroup___p2_p_1gaa8adedc1a8adb939b5179296d09f7e57"></span>int <code class="descclassname">MEL::</code><code class="descname">ProbeGetCount</code><span class="sig-paren">(</span><em class="property">const</em> MPI_Status &amp;<em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13ProbeGetCountERK10MPI_Status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probe the length of an incoming message. </p>
+<p>Element type is determined from the template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the number of elements in the message </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">status</span></code> - <p>A status object containing the rank and tag for the message </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL13ProbeGetCountERK8DatatypeRK6Status">
+<span id="MEL::ProbeGetCount__DatatypeCR.StatusCR"></span><span class="target" id="MELgroup___p2_p_1ga132e60164711de3c4b31e1058ae34b8b"></span>int <code class="descclassname">MEL::</code><code class="descname">ProbeGetCount</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> Status &amp;<em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13ProbeGetCountERK8DatatypeRK6Status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probe the length of an incoming message. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the number of elements in the message </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">status</span></code> - <p>A status object containing the rank and tag for the message </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL13ProbeGetCountEKiKiRK4Comm">
+<span id="MEL::ProbeGetCount__iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga939c4283f374c464af25c463d2c6d62c"></span>int <code class="descclassname">MEL::</code><code class="descname">ProbeGetCount</code><span class="sig-paren">(</span><em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13ProbeGetCountEKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probe the length of an incoming message. </p>
+<p>Element type is determined from the template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the number of elements in the message </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to send to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to send within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL13ProbeGetCountERK8DatatypeKiKiRK4Comm">
+<span id="MEL::ProbeGetCount__DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gae071780967f13a0c168d7538158ad78f"></span>int <code class="descclassname">MEL::</code><code class="descname">ProbeGetCount</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13ProbeGetCountERK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probe the length of an incoming message. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the number of elements in the message </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to probe from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL4RecvEPvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Recv__voidP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gab7fefc0cf529addd07980fdf9737aa8f"></span>Status <code class="descclassname">MEL::</code><code class="descname">Recv</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4RecvEPvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recieve a message of known length into the given pointer. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a status object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5IrecvEPvKiRK8DatatypeKiKiRK4CommR7Request">
+<span id="MEL::Irecv__voidP.iC.DatatypeCR.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1ga4ccddead6cee4393f3a6d61b9e9968e9"></span>void <code class="descclassname">MEL::</code><code class="descname">Irecv</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IrecvEPvKiRK8DatatypeKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Recieve a message of known length into the given pointer</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL5IrecvEPvKiRK8DatatypeKiKiRK4Comm">
+<span id="MEL::Irecv__voidP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gabb5fda08dc18e58c5f242e2fd33e0089"></span>Request <code class="descclassname">MEL::</code><code class="descname">Irecv</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IrecvEPvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Recieve a message of known length into the given pointer</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The derived datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4RecvEP1TKiKiKiRK4Comm">
+<span id="MEL::Recv__TP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gacc99815dc961f2b82898994876401a8c"></span>Status <code class="descclassname">MEL::</code><code class="descname">Recv</code><span class="sig-paren">(</span>T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4RecvEP1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recieve a message of known length into the given pointer. </p>
+<p>Element size is determined from the template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a status object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5IrecvEP1TKiKiKiRK4CommR7Request">
+<span id="MEL::Irecv__TP.iC.iC.iC.CommCR.RequestR"></span><span class="target" id="MELgroup___p2_p_1gae039f7da5528fa4cb6c29262987ccbbe"></span>void <code class="descclassname">MEL::</code><code class="descname">Irecv</code><span class="sig-paren">(</span>T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IrecvEP1TKiKiKiRK4CommR7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Recieve a message of known length into the given pointer. Element size is determined from the template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>A request object </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL5IrecvEP1TKiKiKiRK4Comm">
+<span id="MEL::Irecv__TP.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gaa992de4e48346c1f12b72d04d0af4370"></span>Request <code class="descclassname">MEL::</code><code class="descname">Irecv</code><span class="sig-paren">(</span>T *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5IrecvEP1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking. </p>
+<p>Recieve a message of known length into the given pointer. Element size is determined from the template parameter</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a request object </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the process to receive from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>A tag for the message </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to receive within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Datatypes &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Operations" href="ops.html" />
+    <link rel="prev" title="Memory Allocation" href="mem.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Datatypes</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="mem.html" title="Previous Chapter: Memory Allocation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Memory Alloca...</span>
+    </a>
+  </li>
+  <li>
+    <a href="ops.html" title="Next Chapter: Operations"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Operations &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="datatypes">
+<h1>Datatypes<a class="headerlink" href="#datatypes" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL20TypeCreateContiguousERK8DatatypeKi">
+<span id="MEL::TypeCreateContiguous__DatatypeCR.iC"></span><span class="target" id="MELgroup___datatype_1ga6855969d0e0d2f09fcaaeb2eb1e28691"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateContiguous</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateContiguousERK8DatatypeKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a contiguous block of an elementary type. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The base type to use </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">length</span></code> - <p>The number of elements in the new type </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16TypeCreateStructEKiPK8DatatypePKiPK4Aint">
+<span id="MEL::TypeCreateStruct__iC.DatatypeCP.iCP.AintCP"></span><span class="target" id="MELgroup___datatype_1gacaae51ddcfa171e4e8cc787367490f32"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateStruct</code><span class="sig-paren">(</span><em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype *<em>datatypes</em>, <em class="property">const</em> int *<em>blockLengths</em>, <em class="property">const</em> Aint *<em>offsets</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TypeCreateStructEKiPK8DatatypePKiPK4Aint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a struct. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of members within the struct </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">datatypes</span></code> - <p>Pointer to an array of datatypes </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">blockLengths</span></code> - <p>Pointer to an array of block lengths </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">offsets</span></code> - <p>Pointer to an array of offsets </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16TypeCreateStructERKNSt6vectorI16TypeStruct_BlockEE">
+<span id="MEL::TypeCreateStruct__std::vector:TypeStruct_Block:CR"></span><span class="target" id="MELgroup___datatype_1gaa212d084a2a4c20e724343fbd5ab7da2"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateStruct</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;TypeStruct_Block&gt; &amp;<em>blocks</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TypeCreateStructERKNSt6vectorI16TypeStruct_BlockEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a struct. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">blocks</span></code> - <p>A std::vector of triples representing the size of the current member block </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TypeCreateSubArrayERK8DatatypeKiPKiPKiPKi">
+<span id="MEL::TypeCreateSubArray__DatatypeCR.iC.iCP.iCP.iCP"></span><span class="target" id="MELgroup___datatype_1gaca8ab69cbf8c15041a6e1a2a8b187a21"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>starts</em>, <em class="property">const</em> int *<em>subSizes</em>, <em class="property">const</em> int *<em>sizes</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateSubArrayERK8DatatypeKiPKiPKiPKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of dimensions of the data </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">starts</span></code> - <p>Pointer to an array of start indices </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">subSizes</span></code> - <p>Pointer to an array of sub sizes </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sizes</span></code> - <p>Pointer to an array of sizes of the parent array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TypeCreateSubArrayERK8DatatypeRKNSt6vectorI16TypeSubArray_DimEE">
+<span id="MEL::TypeCreateSubArray__DatatypeCR.std::vector:TypeSubArray_Dim:CR"></span><span class="target" id="MELgroup___datatype_1ga40baf998fe2b959735cce1de9d838051"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> std::vector&lt;TypeSubArray_Dim&gt; &amp;<em>dims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateSubArrayERK8DatatypeRKNSt6vectorI16TypeSubArray_DimEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>A std::vector of triples representing the start, sub size, and parent size of each dimension of the data </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL20TypeCreateSubArray1DERK8DatatypeKiKiKi">
+<span id="MEL::TypeCreateSubArray1D__DatatypeCR.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga8f84629ea2035fa8dcbd4bd684a5d257"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray1D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>dx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray1DERK8DatatypeKiKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a 1D sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">x</span></code> - <p>The start index in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sx</span></code> - <p>The sub size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dx</span></code> - <p>The parent size in the x dimension </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL20TypeCreateSubArray2DERK8DatatypeKiKiKiKiKiKi">
+<span id="MEL::TypeCreateSubArray2D__DatatypeCR.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga6dd2d4a7056d504d12457b3eebdc5383"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray2D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray2DERK8DatatypeKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a 2D sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">x</span></code> - <p>The start index in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">y</span></code> - <p>The start index in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sx</span></code> - <p>The sub size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sy</span></code> - <p>The sub size in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dx</span></code> - <p>The parent size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dy</span></code> - <p>The parent size in the y dimension </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL20TypeCreateSubArray3DERK8DatatypeKiKiKiKiKiKiKiKiKi">
+<span id="MEL::TypeCreateSubArray3D__DatatypeCR.iC.iC.iC.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga411aa5e9648a5b2612668953bf7654c6"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray3D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>z</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>sz</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em>, <em class="property">const</em> int <em>dz</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray3DERK8DatatypeKiKiKiKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a 3D sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">x</span></code> - <p>The start index in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">y</span></code> - <p>The start index in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">z</span></code> - <p>The start index in the z dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sx</span></code> - <p>The sub size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sy</span></code> - <p>The sub size in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sz</span></code> - <p>The sub size in the z dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dx</span></code> - <p>The parent size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dy</span></code> - <p>The parent size in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dz</span></code> - <p>The parent size in the z dimension </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL20TypeCreateSubArray4DERK8DatatypeKiKiKiKiKiKiKiKiKiKiKiKi">
+<span id="MEL::TypeCreateSubArray4D__DatatypeCR.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga66dd59db644e4c0544c899aa4fb34782"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray4D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>z</em>, <em class="property">const</em> int <em>w</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>sz</em>, <em class="property">const</em> int <em>sw</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em>, <em class="property">const</em> int <em>dz</em>, <em class="property">const</em> int <em>dw</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray4DERK8DatatypeKiKiKiKiKiKiKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a 4D sub array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the parent array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">x</span></code> - <p>The start index in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">y</span></code> - <p>The start index in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">z</span></code> - <p>The start index in the z dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">w</span></code> - <p>The start index in the w dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sx</span></code> - <p>The sub size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sy</span></code> - <p>The sub size in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sz</span></code> - <p>The sub size in the z dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">sw</span></code> - <p>The sub size in the w dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dx</span></code> - <p>The parent size in the x dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dy</span></code> - <p>The parent size in the y dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dz</span></code> - <p>The parent size in the z dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dw</span></code> - <p>The parent size in the w dimension </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17TypeCreateIndexedERK8DatatypeKiPKiPKi">
+<span id="MEL::TypeCreateIndexed__DatatypeCR.iC.iCP.iCP"></span><span class="target" id="MELgroup___datatype_1ga50ee2dc0fd49f1404248c16e39543f78"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>lengths</em>, <em class="property">const</em> int *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TypeCreateIndexedERK8DatatypeKiPKiPKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks at different offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of blocks </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">lengths</span></code> - <p>Pointer to an array of block lengths </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">displs</span></code> - <p>Pointer to an array of block displacements </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17TypeCreateIndexedERK8DatatypeRKNSt6vectorI17TypeIndexed_BlockEE">
+<span id="MEL::TypeCreateIndexed__DatatypeCR.std::vector:TypeIndexed_Block:CR"></span><span class="target" id="MELgroup___datatype_1ga55350313d3e5a00a421689576da7f132"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> std::vector&lt;TypeIndexed_Block&gt; &amp;<em>blocks</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TypeCreateIndexedERK8DatatypeRKNSt6vectorI17TypeIndexed_BlockEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks at different offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">blocks</span></code> - <p>A std::vector of pairs representing the length and displacement of the blocks </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TypeCreateHIndexedERK8DatatypeKiPKiPK4Aint">
+<span id="MEL::TypeCreateHIndexed__DatatypeCR.iC.iCP.AintCP"></span><span class="target" id="MELgroup___datatype_1ga0f08a7cee60ac0de8f1f8bc549351df7"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateHIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>lengths</em>, <em class="property">const</em> Aint *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateHIndexedERK8DatatypeKiPKiPK4Aint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of blocks </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">lengths</span></code> - <p>Pointer to an array of block lengths </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">displs</span></code> - <p>Pointer to an array of block displacements </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TypeCreateHIndexedERK8DatatypeRKNSt6vectorI18TypeHIndexed_BlockEE">
+<span id="MEL::TypeCreateHIndexed__DatatypeCR.std::vector:TypeHIndexed_Block:CR"></span><span class="target" id="MELgroup___datatype_1ga70bf07154037bf219885cd37723ffd6e"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateHIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> std::vector&lt;TypeHIndexed_Block&gt; &amp;<em>blocks</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateHIndexedERK8DatatypeRKNSt6vectorI18TypeHIndexed_BlockEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">blocks</span></code> - <p>A std::vector of pairs representing the length and displacement of the blocks </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL22TypeCreateIndexedBlockERK8DatatypeKiKiPKi">
+<span id="MEL::TypeCreateIndexedBlock__DatatypeCR.iC.iC.iCP"></span><span class="target" id="MELgroup___datatype_1ga08aac0cc112a734f4546f890bfd0b9dd"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexedBlock</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> int *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22TypeCreateIndexedBlockERK8DatatypeKiKiPKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks of the same length at different offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of blocks </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">length</span></code> - <p>The common block length </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">displs</span></code> - <p>Pointer to an array of block displacements </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL22TypeCreateIndexedBlockERK8DatatypeKiRKNSt6vectorIiEE">
+<span id="MEL::TypeCreateIndexedBlock__DatatypeCR.iC.std::vector:i:CR"></span><span class="target" id="MELgroup___datatype_1gaa03da9dd7109c386b686378df1641bf6"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexedBlock</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> std::vector&lt;int&gt; &amp;<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22TypeCreateIndexedBlockERK8DatatypeKiRKNSt6vectorIiEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a set of contiguous blocks of the same length at different offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">length</span></code> - <p>The common block length </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">displs</span></code> - <p>A std::vector representing the displacement of the blocks </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16TypeCreateVectorERK8DatatypeKiKiKi">
+<span id="MEL::TypeCreateVector__DatatypeCR.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga267b1bd0cd73ac2442cc78775f40cb6b"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateVector</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> int <em>stride</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TypeCreateVectorERK8DatatypeKiKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a strided sub array of a parent array. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of strided regions </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">length</span></code> - <p>The common block length of the strided regions </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">stride</span></code> - <p>The number of elements between each region </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17TypeCreateHVectorERK8DatatypeKiKiK4Aint">
+<span id="MEL::TypeCreateHVector__DatatypeCR.iC.iC.AintC"></span><span class="target" id="MELgroup___datatype_1gadd8b70f1a158507a9aadd907bfde0e27"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateHVector</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> Aint <em>stride</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TypeCreateHVectorERK8DatatypeKiKiK4Aint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived type representing a strided sub array of a parent array, using byte offsets. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype of the elements </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The number of strided regions </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">length</span></code> - <p>The common block length of the strided regions </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">stride</span></code> - <p>The number of bytes between each region </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL13TypeDuplicateERK8Datatype">
+<span id="MEL::TypeDuplicate__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga639323d008ed63af8f4a66c3dc8db72c"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeDuplicate</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13TypeDuplicateERK8Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate a derived type so it can be managed independently. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a new type </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to duplicate </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8TypeSizeERK8Datatype">
+<span id="MEL::TypeSize__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga2023777e451889d0025df9e6fefbedd0"></span>int <code class="descclassname">MEL::</code><code class="descname">TypeSize</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeSizeERK8Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the contiguous packed size of a datatype. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the contiguous size of the datatype in bytes </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to size </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL10TypeExtentERK8Datatype">
+<span id="MEL::TypeExtent__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1gaa32238d82b27fc5dd0f059009542e8f4"></span>std::pair&lt;Aint, Aint&gt; <code class="descclassname">MEL::</code><code class="descname">TypeExtent</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10TypeExtentERK8Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the extent of a datatype. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair of the datatype extent and lower bound </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to get the extent of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL13TypeGetExtentERK8Datatype">
+<span id="MEL::TypeGetExtent__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga0204c50759f09ae491b9c1ba36510909"></span>Aint <code class="descclassname">MEL::</code><code class="descname">TypeGetExtent</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13TypeGetExtentERK8Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the extent of a datatype and discard the lower bound. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the datatype extent </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to get the extent of </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8TypeFreeER8Datatype">
+<span id="MEL::TypeFree__DatatypeR"></span><span class="target" id="MELgroup___datatype_1gab24750f82528860a381a4de4464a0542"></span>void <code class="descclassname">MEL::</code><code class="descname">TypeFree</code><span class="sig-paren">(</span>Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeFreeER8Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a derived datatype. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8TypeFreeERNSt6vectorI8DatatypeEE">
+<span id="MEL::TypeFree__std::vector:Datatype:R"></span><span class="target" id="MELgroup___datatype_1ga624c146bf2f2b097a61235f61b235586"></span>void <code class="descclassname">MEL::</code><code class="descname">TypeFree</code><span class="sig-paren">(</span>std::vector&lt;Datatype&gt; &amp;<em>datatypes</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeFreeERNSt6vectorI8DatatypeEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a vector datatypes. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">datatypes</span></code> - <p>A std::vector of derived datatypes </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T0, <em class="property">typename</em> T1, typename... <em>Args</em>&gt;</dt>
+<dt id="_CPPv2N3MEL8TypeFreeER2T0R2T1DpRR4Args">
+<span id="MEL::TypeFree__T0R.T1R.ArgsRRDp"></span><span class="target" id="MELgroup___datatype_1ga4ad0d75c5a010e0fa927af100260c246"></span>void <code class="descclassname">MEL::</code><code class="descname">TypeFree</code><span class="sig-paren">(</span>T0 &amp;<em>d0</em>, T1 &amp;<em>d1</em>, Args&amp;&amp;... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeFreeER2T0R2T1DpRR4Args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free the varadic set of datatypes provided. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">d0</span></code> - <p>The first datatype to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">d1</span></code> - <p>The second datatype to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">args</span></code> - <p>The varadic set of remaining datatypes to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

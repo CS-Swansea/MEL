@@ -1,0 +1,7 @@
+Error Handling
+==============
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Errors
+	:content-only:

@@ -1,0 +1,7 @@
+Operations
+==========
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Ops
+	:content-only:

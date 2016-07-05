@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shared Arrays &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Error Handling" href="errors.html" />
+    <link rel="prev" title="Mutex" href="mutex.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Shared Arrays</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="mutex.html" title="Previous Chapter: Mutex"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Mutex</span>
+    </a>
+  </li>
+  <li>
+    <a href="errors.html" title="Next Chapter: Error Handling"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Error Handling &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="shared-arrays">
+<h1>Shared Arrays<a class="headerlink" href="#shared-arrays" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL12SharedCreateEKiKiKiKiRK4Comm">
+<span id="MEL::SharedCreate__iC.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___shared_1gae80643ead5c80fbec45cf9319bd2107e"></span>Shared&lt;T&gt; <code class="descclassname">MEL::</code><code class="descname">SharedCreate</code><span class="sig-paren">(</span><em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>rank</em>, <em class="property">const</em> int <em>size</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12SharedCreateEKiKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a MEL::Shared array across a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to allocate </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank</span></code> - <p>The rank of the calling process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">size</span></code> - <p>The size of the comm world </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the process who will own the shared array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to share the array across </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL12SharedCreateEKiKiRK4Comm">
+<span id="MEL::SharedCreate__iC.iC.CommCR"></span><span class="target" id="MELgroup___shared_1ga8d346e68f948ab8f2372ac948219dfda"></span>Shared&lt;T&gt; <code class="descclassname">MEL::</code><code class="descname">SharedCreate</code><span class="sig-paren">(</span><em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12SharedCreateEKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a MEL::Shared array across a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to allocate </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the process who will own the shared array </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to share the array across </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL10SharedFreeER6SharedI1TE">
+<span id="MEL::SharedFree__Shared:T:R"></span><span class="target" id="MELgroup___shared_1gadf353c84b42d0aa8bfa11b3fb635d172"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedFree</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10SharedFreeER6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a MEL::Shared array. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL10SharedTestERK6SharedI1TE">
+<span id="MEL::SharedTest__Shared:T:CR"></span><span class="target" id="MELgroup___shared_1gaa8ca8132db630942e9bb1463687eb6cb"></span>bool <code class="descclassname">MEL::</code><code class="descname">SharedTest</code><span class="sig-paren">(</span><em class="property">const</em> Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10SharedTestERK6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the shared array is currently locked. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to test </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL16SharedLock_nogetER6SharedI1TE">
+<span id="MEL::SharedLock_noget__Shared:T:R"></span><span class="target" id="MELgroup___shared_1gaaa420eca9c2f52c036ca64804127d5c4"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedLock_noget</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16SharedLock_nogetER6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lock on the shared array without synchronizing the data. </p>
+<p>Useful for if you only intend to write to the array</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL16SharedLock_nogetER6SharedI1TEKiKi">
+<span id="MEL::SharedLock_noget__Shared:T:R.iC.iC"></span><span class="target" id="MELgroup___shared_1gadf6f8b7df385f41166ad132315d89466"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedLock_noget</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em>, <em class="property">const</em> int <em>start</em>, <em class="property">const</em> int <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16SharedLock_nogetER6SharedI1TEKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lock on the shared array without synchronizing the data. </p>
+<p>Useful for if you only intend to write to the array</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to lock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">start</span></code> - <p>The start index to lock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">end</span></code> - <p>The end index to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL10SharedLockER6SharedI1TE">
+<span id="MEL::SharedLock__Shared:T:R"></span><span class="target" id="MELgroup___shared_1gad93c0cf74d5c6fe0cb1fa024afe20a5a"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedLock</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10SharedLockER6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lock on the shared array and synchronize the data. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL10SharedLockER6SharedI1TEKiKi">
+<span id="MEL::SharedLock__Shared:T:R.iC.iC"></span><span class="target" id="MELgroup___shared_1ga67fb7e99a0d4341c9b3020cb37c59aec"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedLock</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em>, <em class="property">const</em> int <em>start</em>, <em class="property">const</em> int <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10SharedLockER6SharedI1TEKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lock on the shared array and synchronize the data. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to lock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">start</span></code> - <p>The start index to lock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">end</span></code> - <p>The end index to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL18SharedUnlock_noputER6SharedI1TE">
+<span id="MEL::SharedUnlock_noput__Shared:T:R"></span><span class="target" id="MELgroup___shared_1ga8d51775b4faad9ba4f4a75cea14c7d24"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedUnlock_noput</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18SharedUnlock_noputER6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the lock on the shared array without synchronizing the data. </p>
+<p>Useful for if you only read from the array</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to unlock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL18SharedUnlock_noputER6SharedI1TEKiKi">
+<span id="MEL::SharedUnlock_noput__Shared:T:R.iC.iC"></span><span class="target" id="MELgroup___shared_1gae04f1b91ea03435b89f4e14fc4814fbb"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedUnlock_noput</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em>, <em class="property">const</em> int <em>start</em>, <em class="property">const</em> int <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18SharedUnlock_noputER6SharedI1TEKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the lock on the shared array without synchronizing the data. </p>
+<p>Useful for if you only read from the array</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to unlock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">start</span></code> - <p>The start index to unlock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">end</span></code> - <p>The end index to unlock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL12SharedUnlockER6SharedI1TE">
+<span id="MEL::SharedUnlock__Shared:T:R"></span><span class="target" id="MELgroup___shared_1ga0b6c7dfd6546c97258952c25d4eb4616"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedUnlock</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12SharedUnlockER6SharedI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the lock on the shared array and synchronize the data. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to unlock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL12SharedUnlockER6SharedI1TEKiKi">
+<span id="MEL::SharedUnlock__Shared:T:R.iC.iC"></span><span class="target" id="MELgroup___shared_1ga2781092e095750197aa62029972fedec"></span>void <code class="descclassname">MEL::</code><code class="descname">SharedUnlock</code><span class="sig-paren">(</span>Shared&lt;T&gt; &amp;<em>shared</em>, <em class="property">const</em> int <em>start</em>, <em class="property">const</em> int <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12SharedUnlockER6SharedI1TEKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the lock on the shared array and synchronize the data. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">shared</span></code> - <p>The shared array to unlock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">start</span></code> - <p>The start index to unlock </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">end</span></code> - <p>The end index to unlock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

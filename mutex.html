@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mutex &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Shared Arrays" href="shared.html" />
+    <link rel="prev" title="File-IO" href="file.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Mutex</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="file.html" title="Previous Chapter: File-IO"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; File-IO</span>
+    </a>
+  </li>
+  <li>
+    <a href="shared.html" title="Next Chapter: Shared Arrays"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Shared Arrays &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="mutex">
+<h1>Mutex<a class="headerlink" href="#mutex" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL11MutexCreateEKiKiKiRK4Comm">
+<span id="MEL::MutexCreate__iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___mutex_1gaf3c9149feb5bd068e65cdfe33820fb20"></span>Mutex <code class="descclassname">MEL::</code><code class="descname">MutexCreate</code><span class="sig-paren">(</span><em class="property">const</em> int <em>rank</em>, <em class="property">const</em> int <em>size</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11MutexCreateEKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a MEL::Mutex across a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rank</span></code> - <p>The rank of the calling process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">size</span></code> - <p>The size of the comm world </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the process who will own the mutex </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to share the mutex across </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL11MutexCreateEKiRK4Comm">
+<span id="MEL::MutexCreate__iC.CommCR"></span><span class="target" id="MELgroup___mutex_1ga1260ec908e5d6903872bb86f117bd57f"></span>Mutex <code class="descclassname">MEL::</code><code class="descname">MutexCreate</code><span class="sig-paren">(</span><em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11MutexCreateEKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a MEL::Mutex across a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the process who will own the mutex </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to share the mutex across </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9MutexFreeER5Mutex">
+<span id="MEL::MutexFree__MutexR"></span><span class="target" id="MELgroup___mutex_1gab4b3614039ef59fff964e286e26c1dc5"></span>void <code class="descclassname">MEL::</code><code class="descname">MutexFree</code><span class="sig-paren">(</span>Mutex &amp;<em>mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9MutexFreeER5Mutex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a MEL::Mutex. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">mutex</span></code> - <p>The mutex to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9MutexLockER5Mutex">
+<span id="MEL::MutexLock__MutexR"></span><span class="target" id="MELgroup___mutex_1gad1313781c5e45edfb85ea9ed33eacf8f"></span>void <code class="descclassname">MEL::</code><code class="descname">MutexLock</code><span class="sig-paren">(</span>Mutex &amp;<em>mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9MutexLockER5Mutex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the exclusive lock on a MEL::Mutex. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">mutex</span></code> - <p>The mutex to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL9MutexTestERK5Mutex">
+<span id="MEL::MutexTest__MutexCR"></span><span class="target" id="MELgroup___mutex_1ga34cf0e8992fd4346bdc2edff6f1339d9"></span>bool <code class="descclassname">MEL::</code><code class="descname">MutexTest</code><span class="sig-paren">(</span><em class="property">const</em> Mutex &amp;<em>mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9MutexTestERK5Mutex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the mutex is currently locked. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">mutex</span></code> - <p>The mutex to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL11MutexUnlockER5Mutex">
+<span id="MEL::MutexUnlock__MutexR"></span><span class="target" id="MELgroup___mutex_1gac935f3378026fd751eb4f53a6846c493"></span>void <code class="descclassname">MEL::</code><code class="descname">MutexUnlock</code><span class="sig-paren">(</span>Mutex &amp;<em>mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11MutexUnlockER5Mutex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the exclusive lock on a MEL::Mutex. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">mutex</span></code> - <p>The mutex to lock </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deep Copy Extension &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="prev" title="OpenMP Extension" href="omp.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="omp.html" title="Previous Chapter: OpenMP Extension"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; OpenMP Extension</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="deep-copy-extension">
+<h1>Deep Copy Extension<a class="headerlink" href="#deep-copy-extension" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL_deepcopy.hpp</span></code></p>
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7Message7packVarER1T">
+<span id="MEL::Deep::Message::packVar__TR"></span><span class="target" id="MELgroup___deep_1ga93c44d2282ec4a642d324abede405099"></span>enable_if_deep&lt;T&gt; <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packVar</code><span class="sig-paren">(</span>T &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message7packVarER1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>Pointer to the array to be transported </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7Message7packPtrERP1Ti">
+<span id="MEL::Deep::Message::packPtr__TPR.i"></span><span class="target" id="MELgroup___deep_1ga2bad3257cf8a16936b4bf342ab15ec95"></span>enable_if_not_deep&lt;T&gt; <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packPtr</code><span class="sig-paren">(</span>T *&amp;<em>ptr</em>, int <em>len</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message7packPtrERP1Ti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport an array by its contiguous footprint in memory. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array to be transported </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7Message13packSharedPtrERP1Ti">
+<span id="MEL::Deep::Message::packSharedPtr__TPR.i"></span><span class="target" id="MELgroup___deep_1ga4cb3ae640bb25837562aba89280929d4"></span>enable_if_not_deep&lt;T&gt; <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packSharedPtr</code><span class="sig-paren">(</span>T *&amp;<em>ptr</em>, int <em>len</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message13packSharedPtrERP1Ti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a (potentially shared) array by its contiguous footprint in memory. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array to be transported </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL4Deep7Message7packSTLERNSt6stringE">
+<span id="MEL::Deep::Message::packSTL__ssR"></span><span class="target" id="MELgroup___deep_1gaae2eafb93bda638a375935a84388ec62"></span>void <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packSTL</code><span class="sig-paren">(</span>std::string &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message7packSTLERNSt6stringE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a std::string. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::string to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7Message7packSTLERNSt6vectorI1TEE">
+<span id="MEL::Deep::Message::packSTL__std::vector:T:R"></span><span class="target" id="MELgroup___deep_1ga130cb263c2824c495525a1d826ed626a"></span>enable_if_not_deep&lt;T&gt; <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packSTL</code><span class="sig-paren">(</span>std::vector&lt;T&gt; &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message7packSTLERNSt6vectorI1TEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a std::vector. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::vector to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7Message7packSTLERNSt4listI1TEE">
+<span id="MEL::Deep::Message::packSTL__std::list:T:R"></span><span class="target" id="MELgroup___deep_1gaa7a14b6215de7ae8921d667680c0b98a"></span>enable_if_not_deep&lt;T&gt; <code class="descclassname">MEL::Deep::Message::</code><code class="descname">packSTL</code><span class="sig-paren">(</span>std::list&lt;T&gt; &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7Message7packSTLERNSt4listI1TEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a std::list. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::list to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL4Deep7MessageanERNSt6stringE">
+<span id="MEL::Deep::Message::and-operator__ssR"></span><span class="target" id="MELgroup___deep_1gabd79706277fde9f59e58a9c55c08dfaa"></span>Message &amp;<code class="descclassname">MEL::Deep::Message::</code><code class="descname">operator&amp;</code><span class="sig-paren">(</span>std::string &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7MessageanERNSt6stringE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a std::string. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::string to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7MessageanERNSt6vectorI1TEE">
+<span id="MEL::Deep::Message::and-operator__std::vector:T:R"></span><span class="target" id="MELgroup___deep_1gaa34c1816e852431f79eb54d96ef9264e"></span>Message &amp;<code class="descclassname">MEL::Deep::Message::</code><code class="descname">operator&amp;</code><span class="sig-paren">(</span>std::vector&lt;T&gt; &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7MessageanERNSt6vectorI1TEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a deep/non-deep std::vector. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::vector to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7MessageanERNSt4listI1TEE">
+<span id="MEL::Deep::Message::and-operator__std::list:T:R"></span><span class="target" id="MELgroup___deep_1ga8686e42b6a393d9672d1d569516d7eea"></span>Message &amp;<code class="descclassname">MEL::Deep::Message::</code><code class="descname">operator&amp;</code><span class="sig-paren">(</span>std::list&lt;T&gt; &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7MessageanERNSt4listI1TEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a deep/non-deep std::list. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The std::list to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep7MessageanER1T">
+<span id="MEL::Deep::Message::and-operator__TR"></span><span class="target" id="MELgroup___deep_1ga9ba8b77e0f51c8b0c5d4513747615243"></span>Message &amp;<code class="descclassname">MEL::Deep::Message::</code><code class="descname">operator&amp;</code><span class="sig-paren">(</span>T &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep7MessageanER1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transport a deep/non-deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The object to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep10BufferSizeER1T">
+<span id="MEL::Deep::BufferSize__TR"></span><span class="target" id="MELgroup___deep_1gaf7800362aed9b60a9505fccd7165edb8"></span>enable_if_deep_not_pointer&lt;T, int&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferSize</code><span class="sig-paren">(</span>T &amp;<em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep10BufferSizeER1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the buffer size needed to transport a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep10BufferSizeER1TKi">
+<span id="MEL::Deep::BufferSize__TR.iC"></span><span class="target" id="MELgroup___deep_1ga57ceb28360bb25390874677c23ca6b35"></span>enable_if_pointer&lt;T, int&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferSize</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep10BufferSizeER1TKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the buffer size needed to transport a pointer to an array of deep/non-deep variables. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array to be transported </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to be transported </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep4SendER1TKiKiRK4Comm">
+<span id="MEL::Deep::Send__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga9aca4b3bc42089c74c7b31783c1dc037"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Send</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep4SendER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep4SendER1TKiKiKiRK4Comm">
+<span id="MEL::Deep::Send__TR.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga7539f4ce90edff49eefe134bd765f8ea"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Send</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep4SendER1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedSendER1TKiKiRK4CommKi">
+<span id="MEL::Deep::BufferedSend__TR.iC.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_1ga6209aca2684d0b36d16fe70b3279adba"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedSend</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedSendER1TKiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a deep object reference using a buffered send. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedSendER1TKiKiRK4Comm">
+<span id="MEL::Deep::BufferedSend__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga02eebeb521093d0801cce06453e06979"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedSend</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedSendER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a deep object reference using a buffered send. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedSendER1TKiKiKiRK4CommKi">
+<span id="MEL::Deep::BufferedSend__TR.iC.iC.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_1gade02f7388b28fdd7a0a27f9d799f2172"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedSend</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedSendER1TKiKiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a pointer to an array of deep/non-deep objects using a buffered send. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedSendER1TKiKiKiRK4Comm">
+<span id="MEL::Deep::BufferedSend__TR.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gab88eb6e2ac94404e7b588e647080c851"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedSend</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedSendER1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a pointer to an array of deep/non-deep objects using a buffered send. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to send </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dst</span></code> - <p>The rank of the destination process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to send with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep4RecvER1TKiKiRK4Comm">
+<span id="MEL::Deep::Recv__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga134612a9cf6c60c0bfc34a201dde0ab1"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Recv</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep4RecvER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep4RecvER1TRiKiKiRK4Comm">
+<span id="MEL::Deep::Recv__TR.iR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga3eac666185ced6f13e6ec5b0d991c38c"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Recv</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep4RecvER1TRiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were received </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep4RecvER1TKiKiKiRK4Comm">
+<span id="MEL::Deep::Recv__TR.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gae97df15f2f6288f91ce475214882035b"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Recv</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep4RecvER1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedRecvER1TKiKiRK4Comm">
+<span id="MEL::Deep::BufferedRecv__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga0fe74e525c99bb38404c93a88394340d"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedRecv</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedRecvER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a deep object reference using a buffered receive. </p>
+<p>Buffersize determined by probing the incoming message</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedRecvER1TRiKiKiRK4Comm">
+<span id="MEL::Deep::BufferedRecv__TR.iR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga77789b6b25cd0409373fc22a0ad810d4"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedRecv</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedRecvER1TRiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a pointer to an array of deep/non-deep objects using a buffered receive. </p>
+<p>Buffersize determined by probing the incoming message</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were received </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep12BufferedRecvER1TKiKiKiRK4Comm">
+<span id="MEL::Deep::BufferedRecv__TR.iC.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gaef45113101d476911d05949bd11dafee"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedRecv</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep12BufferedRecvER1TKiKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a pointer to an array of deep/non-deep objects using a buffered receive. </p>
+<p>Buffersize determined by probing the incoming message</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to receive </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">src</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">tag</span></code> - <p>The message tag to receive with </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1TKiRK4Comm">
+<span id="MEL::Deep::Bcast__TR.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga1df31e10fe4928ca9e1e6e801a11605c"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1TKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1TKiKiRK4Comm">
+<span id="MEL::Deep::Bcast__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga1daeaf9843b3f9e423c5e0c34b4188d6"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1TRiKiRK4Comm">
+<span id="MEL::Deep::Bcast__TR.iR.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gae83ee15e35b3f8e0e1e4d069c87b17ee"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1TRiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__TR.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_1gad92aba1f64152bbb8857988a9cd5a2df"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__TR.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gac4d081a54f9186f0088c08d650b61d54"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TRiKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__TR.iR.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_1ga6e1cf45753e06123311efb8c3d5e6f5b"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TRiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TRiKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__TR.iR.iC.CommCR"></span><span class="target" id="MELgroup___deep_1ga4f837b28d56467487a2143982a665d6a"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TRiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__TR.iC.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_1ga019e666dead71bc0b0a26167343f0b83"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__TR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_1gab543462e791b988b0d840b6ade5521d1"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep9FileWriteER1TRN3MEL4FileE">
+<span id="MEL::Deep::FileWrite__TR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga7d3d665d2f332b4c4702d0ac7a0f3bf2"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep9FileWriteER1TRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep9FileWriteER1TKiRN3MEL4FileE">
+<span id="MEL::Deep::FileWrite__TR.iC.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga740975ac00e62d6fcac24b586898595b"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep9FileWriteER1TKiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TRN3MEL4FileEKi">
+<span id="MEL::Deep::BufferedFileWrite__TR.MEL::FileR.iC"></span><span class="target" id="MELgroup___deep_1gabf19d3f96e888ba1444411ebaae621ce"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TRN3MEL4FileEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to file using a buffered write. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TRN3MEL4FileE">
+<span id="MEL::Deep::BufferedFileWrite__TR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1gad500e49a528f8e93b56f19d9b1781a32"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to file using a buffered write. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRN3MEL4FileEKi">
+<span id="MEL::Deep::BufferedFileWrite__TR.iC.MEL::FileR.iC"></span><span class="target" id="MELgroup___deep_1gacdee6a8b6aa47e1bab894e3bd234dc44"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRN3MEL4FileEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to file using a buffered write. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRN3MEL4FileE">
+<span id="MEL::Deep::BufferedFileWrite__TR.iC.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga7ee1293caf951d90360a2584d6b4a435"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to file using a buffered write. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TRN3MEL4FileE">
+<span id="MEL::Deep::FileRead__TR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga5c6ea93297241cc349a991b54ee6e2a3"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TKiRN3MEL4FileE">
+<span id="MEL::Deep::FileRead__TR.iC.MEL::FileR"></span><span class="target" id="MELgroup___deep_1gae8bd526dc559bbe3076d3022546ba403"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TKiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TRiRN3MEL4FileE">
+<span id="MEL::Deep::FileRead__TR.iR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga28c1d0691200e95731f46cbedee4d4b6"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TRiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRN3MEL4FileEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.MEL::FileR.iC"></span><span class="target" id="MELgroup___deep_1ga5fd572adff211e4b7cc671efa8970436"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRN3MEL4FileEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference to file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRN3MEL4FileE">
+<span id="MEL::Deep::BufferedFileRead__TR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga5ba9a32c4837bc1a836a1180b28e0f54"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference to file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRN3MEL4FileEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.iC.MEL::FileR.iC"></span><span class="target" id="MELgroup___deep_1gaa4bdd3f753ae8cdd084943f12a7e88d3"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRN3MEL4FileEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRN3MEL4FileE">
+<span id="MEL::Deep::BufferedFileRead__TR.iC.MEL::FileR"></span><span class="target" id="MELgroup___deep_1ga2cce42b6d3e9b380b7873a02b5b0a5ad"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRN3MEL4FileEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.iR.MEL::FileR.iC"></span><span class="target" id="MELgroup___deep_1gab6a61e9f36dd65f72028a539cf8ae150"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, MEL::File &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRN3MEL4FileEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRN3MEL4FileE">
+<span id="MEL::Deep::BufferedFileRead__TR.iR.MEL::FileR"></span><span class="target" id="MELgroup___deep_1gad44a0e31289751702c86ae6a6c0965f1"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, MEL::File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRN3MEL4FileE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep9FileWriteER1TRNSt8ofstreamE">
+<span id="MEL::Deep::FileWrite__TR.std::ofstreamR"></span><span class="target" id="MELgroup___deep_1ga1132b35dd413f5920b42a2c8939c97b6"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ofstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep9FileWriteER1TRNSt8ofstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to an stl file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep9FileWriteER1TKiRNSt8ofstreamE">
+<span id="MEL::Deep::FileWrite__TR.iC.std::ofstreamR"></span><span class="target" id="MELgroup___deep_1ga3ee3a4c33ad279972d95cfb3efce8e9b"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ofstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep9FileWriteER1TKiRNSt8ofstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to an stl file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TRNSt8ofstreamEKi">
+<span id="MEL::Deep::BufferedFileWrite__TR.std::ofstreamR.iC"></span><span class="target" id="MELgroup___deep_1gacc53796c3c4f9fe0278571eb3b47110b"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ofstream &amp;<em>file</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TRNSt8ofstreamEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to an stl file using a buffered write. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TRNSt8ofstreamE">
+<span id="MEL::Deep::BufferedFileWrite__TR.std::ofstreamR"></span><span class="target" id="MELgroup___deep_1ga284e32665b7ae80a425cd78923a735f5"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ofstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TRNSt8ofstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a deep object reference to an stl file using a buffered write. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRNSt8ofstreamEKi">
+<span id="MEL::Deep::BufferedFileWrite__TR.iC.std::ofstreamR.iC"></span><span class="target" id="MELgroup___deep_1ga9d85ce9deabc9ee29dc7b4123cc74e71"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ofstream &amp;<em>file</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRNSt8ofstreamEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRNSt8ofstreamE">
+<span id="MEL::Deep::BufferedFileWrite__TR.iC.std::ofstreamR"></span><span class="target" id="MELgroup___deep_1gac777f26a6139690322f525aa489b344e"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileWrite</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ofstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep17BufferedFileWriteER1TKiRNSt8ofstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to write </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to write to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TRNSt8ifstreamE">
+<span id="MEL::Deep::FileRead__TR.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1gaae01af867653c14b8bc256ee605634a9"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TKiRNSt8ifstreamE">
+<span id="MEL::Deep::FileRead__TR.iC.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1ga5d8b63dbb3ccef42009d0f7540841809"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TKiRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep8FileReadER1TRiRNSt8ifstreamE">
+<span id="MEL::Deep::FileRead__TR.iR.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1gaf817e2ce6ef38fc7bcf4e6454fa3750c"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">FileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep8FileReadER1TRiRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects from file. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRNSt8ifstreamEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.std::ifstreamR.iC"></span><span class="target" id="MELgroup___deep_1gaa721462c7757583433f8b69edd919ab7"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ifstream &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRNSt8ifstreamEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference to an stl file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRNSt8ifstreamE">
+<span id="MEL::Deep::BufferedFileRead__TR.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1ga7acc89c1f01ff193c0291ed1709ef0ff"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a deep object reference to an stl file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRNSt8ifstreamEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.iC.std::ifstreamR.iC"></span><span class="target" id="MELgroup___deep_1ga9a52154ce56418710bdd10434afdfce2"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ifstream &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRNSt8ifstreamEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRNSt8ifstreamE">
+<span id="MEL::Deep::BufferedFileRead__TR.iC.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1ga0c90325bdf64c3465d8e142c01877de1"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TKiRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRNSt8ifstreamEKi">
+<span id="MEL::Deep::BufferedFileRead__TR.iR.std::ifstreamR.iC"></span><span class="target" id="MELgroup___deep_1ga564b6a28f921849a57bc531e146027ef"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, std::ifstream &amp;<em>file</em>, <em class="property">const</em> int <em>buffersize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRNSt8ifstreamEKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">buffersize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRNSt8ifstreamE">
+<span id="MEL::Deep::BufferedFileRead__TR.iR.std::ifstreamR"></span><span class="target" id="MELgroup___deep_1gaaf6914acd71958b5b0a59b345af93819"></span>enable_if_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedFileRead</code><span class="sig-paren">(</span>T &amp;<em>ptr</em>, int &amp;<em>len</em>, std::ifstream &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep16BufferedFileReadER1TRiRNSt8ifstreamE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements that were read </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to read from </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

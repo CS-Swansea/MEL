@@ -1,0 +1,7 @@
+Collective Communication
+===========================
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: COL
+	:content-only:

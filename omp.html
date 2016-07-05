@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenMP Extension &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Deep Copy Extension" href="deep.html" />
+    <link rel="prev" title="Utilities" href="utils.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">OpenMP Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="utils.html" title="Previous Chapter: Utilities"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Utilities</span>
+    </a>
+  </li>
+  <li>
+    <a href="deep.html" title="Next Chapter: Deep Copy Extension"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Deep Copy Ext... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="openmp-extension">
+<h1>OpenMP Extension<a class="headerlink" href="#openmp-extension" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL_omp.hpp</span></code></p>
+<dl class="type">
+<dt id="_CPPv2N3OMP8ScheduleE">
+<span id="OMP::Schedule"></span><span class="target" id="MELgroup___o_m_p_1ga15a66fa09cee5f8acd4e39a88e45ca13"></span><em class="property">enum </em><code class="descclassname">OMP::</code><code class="descname">Schedule</code><a class="headerlink" href="#_CPPv2N3OMP8ScheduleE" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Values:</em></p>
+<dl class="member">
+<dt id="_CPPv2N3OMP6STATICE">
+<span id="OMP::STATIC"></span><span class="target" id="MELgroup___o_m_p_1gga15a66fa09cee5f8acd4e39a88e45ca13ad173da9cc36f46a6c017aaefe929d3ca"></span><code class="descname">STATIC</code> = omp_sched_static<a class="headerlink" href="#_CPPv2N3OMP6STATICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv2N3OMP7DYNAMICE">
+<span id="OMP::DYNAMIC"></span><span class="target" id="MELgroup___o_m_p_1gga15a66fa09cee5f8acd4e39a88e45ca13a0c467a6b6457e67d6290edfcfc3e7547"></span><code class="descname">DYNAMIC</code> = omp_sched_dynamic<a class="headerlink" href="#_CPPv2N3OMP7DYNAMICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv2N3OMP6GUIDEDE">
+<span id="OMP::GUIDED"></span><span class="target" id="MELgroup___o_m_p_1gga15a66fa09cee5f8acd4e39a88e45ca13a13a367d4260017238cb7f1edea576dd8"></span><code class="descname">GUIDED</code> = omp_sched_guided<a class="headerlink" href="#_CPPv2N3OMP6GUIDEDE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv2N3OMP4AUTOE">
+<span id="OMP::AUTO"></span><span class="target" id="MELgroup___o_m_p_1gga15a66fa09cee5f8acd4e39a88e45ca13ade132ab8a6e3ea1a29d35caa7e852c2a"></span><code class="descname">AUTO</code> = omp_sched_auto<a class="headerlink" href="#_CPPv2N3OMP4AUTOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;int <em>NUM_THREADS</em>, int <em>CHUNK</em>, Schedule <em>SCHEDULE</em>, <em class="property">typename</em> T, T(*)(T &amp;, T &amp;) <em>F</em>&gt;</dt>
+<dt id="_CPPv2N3MEL3OMP7Functor13ARRAY_OP_FUNCEP1TP1TPiP12MPI_Datatype">
+<span id="MEL::OMP::Functor::ARRAY_OP_FUNC__TP.TP.iP.MPI_DatatypeP"></span><span class="target" id="MELgroup___o_m_p_1ga7ee5006bc3438cc6856418c91e88a011"></span>void <code class="descclassname">MEL::OMP::Functor::</code><code class="descname">ARRAY_OP_FUNC</code><span class="sig-paren">(</span>T *<em>in</em>, T *<em>inout</em>, int *<em>len</em>, MPI_Datatype *<em>dptr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL3OMP7Functor13ARRAY_OP_FUNCEP1TP1TPiP12MPI_Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">in</span></code> - <p>The left hand array for the reduction </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">inout</span></code> - <p>The right hand array for the reduction. This array is modified to reflect the result of the functor on each element </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>Pointer to a single int representing the number of elements to be processed </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dptr</span></code> - <p>Pointer to a single derived datatype representing the data to be processed </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;int <em>NUM_THREADS</em>, int <em>CHUNK</em>, Schedule <em>SCHEDULE</em>, <em class="property">typename</em> T, T(*)(T &amp;, T &amp;) <em>F</em>&gt;</dt>
+<dt id="_CPPv2N3MEL3OMP8OpCreateEb">
+<span id="MEL::OMP::OpCreate__b"></span><span class="target" id="MELgroup___o_m_p_1ga2569b58db4ab72589042b7534d518297"></span>MEL::Op <code class="descclassname">MEL::OMP::</code><code class="descname">OpCreate</code><span class="sig-paren">(</span>bool <em>commute</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL3OMP8OpCreateEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a handle to a new Op </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">commute</span></code> - <p>Is the operation commutative </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

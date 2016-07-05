@@ -1,0 +1,7 @@
+Shared Arrays
+=============
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Shared
+	:content-only:

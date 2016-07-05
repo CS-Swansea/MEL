@@ -1,0 +1,69 @@
+---------------------------------------------
+MEL - The MPI Extension Library Documentation
+---------------------------------------------
+
+Version 0.01 Beta
+=================
+
+MEL Core
+""""""""
+
+.. toctree::
+   	:maxdepth: 1
+
+   	Point-2-Point Communication <p2p>
+	Collective Communication <col>
+	RMA One-Sided Communication <win>
+	Communicators & Groups <comm>
+	Synchronization 	<sync>
+	Memory Allocation	<mem>
+	Derived Datatypes	<datatype>
+	Operations			<ops>
+	Topology 			<topo>
+	File-IO				<file>
+	Mutex 				<mutex>
+	Shared Arrays		<shared>
+	Error Handling 		<errors>
+	Utilities			<utils>
+
+MEL OpenMP
+""""""""""
+
+.. toctree::
+   	:maxdepth: 1
+
+	OpenMP Extension	<omp>
+
+MEL Deep Copy
+"""""""""""""
+
+.. toctree::
+   	:maxdepth: 1
+
+	Deep Copy Extension	<deep>
+
+
+MEL is a C++11, header-only library, being developed with the goal of creating a light weight and robust framework for building parallel applications on top of MPI. 
+MEL is designed to introduce no (or minimal) overheads while drastically reducing code complexity. It allows for a greater range of common MPI errors to be caught at 
+compile-time rather than during program execution where it can be far more difficult to debug what is going wrong. 
+
+A good example of this is type safety in the MPI standard. The standard does not dictate how many of the object types should be implemented leaving these details to 
+the implementation vendor. For instance, in Intel MPI 5.1 :code:`MPI_Comm` objects and many other simple types are implemented as indexes, :code:`typedef int MPI_Comm`
+, leaving the implementation to use these indexes to manage the real objects internally. A drawback with this approach is it causes compile time type-checking of 
+function parameters to not flag erroneous combinations of variables. The common signature :code:`MPI_Send(void*, int, MPI_Datatype, int, int, MPI_Comm)` is actually seen 
+by the compiler as :code:`MPI_Send(void*, int, int, int, int, int)`, allowing any ordering of the last five variables to be compiled as valid MPI code, while causing 
+catastrophic failure at run-time. In contrast, OpenMPI 1.10.2 implements these types as structs which are inherently type-safe. 
+
+With MEL we aim to provide a consistent and unified function syntax that allows all MPI distributions to behave in a common and predictable way; while also providing
+some higher-level functionality that is not available from the MPI standard such as deep-copy, mutexes, RMA shared memory synchronization, and more. 
+
+We plan to keep MEL in active development and hope that the research community will join us as we continue to grow the features and capabilities encompassed within the project. 
+MEL is Open-Source and available on Github under the MIT license at: https://github.com/CS-Swansea/MEL .
+
+Todo
+""""
+
+- Add Distributed Graph Topology functions.
+- Add overloads for p2p/collective communications for transmitting :code:`std::array`/:code:`std::vector` by start/end iterators.
+- Improve error handler implementation. A rough version is currently in place.
+- Implement ranged-mutexes. 

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Operations &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Topology" href="topo.html" />
+    <link rel="prev" title="Datatypes" href="datatype.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Operations</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="datatype.html" title="Previous Chapter: Datatypes"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Datatypes</span>
+    </a>
+  </li>
+  <li>
+    <a href="topo.html" title="Next Chapter: Topology"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Topology &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="operations">
+<h1>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor3MAXER1TR1T">
+<span id="MEL::Functor::MAX__TR.TR"></span><span class="target" id="MELgroup___ops_1gad0fee8dd1301602c6b01087eca4e4332"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">MAX</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor3MAXER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary Max Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the max of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor3MINER1TR1T">
+<span id="MEL::Functor::MIN__TR.TR"></span><span class="target" id="MELgroup___ops_1gacb6e92ba4f26864dd144d41b7136ae24"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">MIN</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor3MINER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary Min Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the min of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor3SUMER1TR1T">
+<span id="MEL::Functor::SUM__TR.TR"></span><span class="target" id="MELgroup___ops_1ga9b24da38a532ead24b3f73a2aaadd11e"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">SUM</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor3SUMER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary Sum Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the sum of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor4PRODER1TR1T">
+<span id="MEL::Functor::PROD__TR.TR"></span><span class="target" id="MELgroup___ops_1gaa6173f84ccd12e133635d0ffdcf46377"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">PROD</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor4PRODER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary Product Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the product of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor4LANDER1TR1T">
+<span id="MEL::Functor::LAND__TR.TR"></span><span class="target" id="MELgroup___ops_1ga5098ad6072069e1085111c37eef272e4"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">LAND</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor4LANDER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary Logical And Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the logical and of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor4BANDER1TR1T">
+<span id="MEL::Functor::BAND__TR.TR"></span><span class="target" id="MELgroup___ops_1ga528cf8e2d81876b14c14b4809ae3fce4"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">BAND</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor4BANDER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary bitwise and Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the bitwise and of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor3LORER1TR1T">
+<span id="MEL::Functor::LOR__TR.TR"></span><span class="target" id="MELgroup___ops_1ga957971f4d15959015ee6eeff3a141545"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">LOR</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor3LORER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary logical or Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the logical or of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor3BORER1TR1T">
+<span id="MEL::Functor::BOR__TR.TR"></span><span class="target" id="MELgroup___ops_1ga8ebc192b75c0d111a3c89e724aafee82"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">BOR</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor3BORER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary bitwise or Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the bitwise or of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor4LXORER1TR1T">
+<span id="MEL::Functor::LXOR__TR.TR"></span><span class="target" id="MELgroup___ops_1ga58537d02cb2577135ad19f9c160d4020"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">LXOR</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor4LXORER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary logical exclusive or Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the logical exclusive or of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor4BXORER1TR1T">
+<span id="MEL::Functor::BXOR__TR.TR"></span><span class="target" id="MELgroup___ops_1ga42459821c85d5fe35485bf570a165e25"></span>T <code class="descclassname">MEL::Functor::</code><code class="descname">BXOR</code><span class="sig-paren">(</span>T &amp;<em>a</em>, T &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor4BXORER1TR1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary bitwise exclusive or Functor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the bitwise exclusive or of the two inputs </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">a</span></code> - <p>The left argument </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">b</span></code> - <p>The right argument </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T, T(*)(T &amp;, T &amp;) <em>F</em>&gt;</dt>
+<dt id="_CPPv2N3MEL7Functor13ARRAY_OP_FUNCEP1TP1TPiP12MPI_Datatype">
+<span id="MEL::Functor::ARRAY_OP_FUNC__TP.TP.iP.MPI_DatatypeP"></span><span class="target" id="MELgroup___ops_1gaf32f2b31e33d2ca219d4561334d34bc5"></span>void <code class="descclassname">MEL::Functor::</code><code class="descname">ARRAY_OP_FUNC</code><span class="sig-paren">(</span>T *<em>in</em>, T *<em>inout</em>, int *<em>len</em>, MPI_Datatype *<em>dptr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7Functor13ARRAY_OP_FUNCEP1TP1TPiP12MPI_Datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the given binary functor to the local array of a reduction / accumulate operation. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">in</span></code> - <p>The left hand array for the reduction </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">inout</span></code> - <p>The right hand array for the reduction. This array is modified to reflect the result of the functor on each element </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>Pointer to a single int representing the number of elements to be processed </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dptr</span></code> - <p>Pointer to a single derived datatype representing the data to be processed </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T, T(*)(T &amp;, T &amp;) <em>F</em>&gt;</dt>
+<dt id="_CPPv2N3MEL8OpCreateEb">
+<span id="MEL::OpCreate__b"></span><span class="target" id="MELgroup___ops_1ga2640820ccfee62aa898091307f7a2aec"></span>Op <code class="descclassname">MEL::</code><code class="descname">OpCreate</code><span class="sig-paren">(</span>bool <em>commute</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8OpCreateEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a derived operation for reduction type functions. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a handle to a new Op </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">commute</span></code> - <p>Is the operation commutative? </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6OpFreeER2Op">
+<span id="MEL::OpFree__OpR"></span><span class="target" id="MELgroup___ops_1ga082c43743aae6978a35f09f90e27645b"></span>void <code class="descclassname">MEL::</code><code class="descname">OpFree</code><span class="sig-paren">(</span>Op &amp;<em>op</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6OpFreeER2Op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a derived operation. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">op</span></code> - <p>The op to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL6OpFreeERNSt6vectorI2OpEE">
+<span id="MEL::OpFree__std::vector:Op:R"></span><span class="target" id="MELgroup___ops_1gacfc5a931e7bba28b509216ce9bbc3557"></span>void <code class="descclassname">MEL::</code><code class="descname">OpFree</code><span class="sig-paren">(</span>std::vector&lt;Op&gt; &amp;<em>ops</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6OpFreeERNSt6vectorI2OpEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a std::vector of derived operations. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ops</span></code> - <p>A std::vector of ops to be freed </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T0, <em class="property">typename</em> T1, typename... <em>Args</em>&gt;</dt>
+<dt id="_CPPv2N3MEL6OpFreeER2T0R2T1DpRR4Args">
+<span id="MEL::OpFree__T0R.T1R.ArgsRRDp"></span><span class="target" id="MELgroup___ops_1ga58a544a4222e176b46ca7f42b2eeb8b2"></span>void <code class="descclassname">MEL::</code><code class="descname">OpFree</code><span class="sig-paren">(</span>T0 &amp;<em>d0</em>, T1 &amp;<em>d1</em>, Args&amp;&amp;... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6OpFreeER2T0R2T1DpRR4Args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a varadic set of derived operations. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">d0</span></code> - <p>The first op to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">d1</span></code> - <p>The second op to free </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">args</span></code> - <p>The remaining ops to free </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

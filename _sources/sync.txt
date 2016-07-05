@@ -1,0 +1,7 @@
+Synchronization
+===============
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Sync
+	:content-only:

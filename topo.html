@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Topology &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="File-IO" href="file.html" />
+    <link rel="prev" title="Operations" href="ops.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Topology</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ops.html" title="Previous Chapter: Operations"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Operations</span>
+    </a>
+  </li>
+  <li>
+    <a href="file.html" title="Next Chapter: File-IO"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">File-IO &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="topology">
+<h1>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL21TopoCartesianMakeDimsEKiKiPi">
+<span id="MEL::TopoCartesianMakeDims__iC.iC.iP"></span><span class="target" id="MELgroup___topo_1ga31cbfb2acc351a147bd6283af00b66a4"></span>void <code class="descclassname">MEL::</code><code class="descname">TopoCartesianMakeDims</code><span class="sig-paren">(</span><em class="property">const</em> int <em>numProcs</em>, <em class="property">const</em> int <em>numdims</em>, int *<em>dims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21TopoCartesianMakeDimsEKiKiPi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the &#8216;ideal&#8217; dimensions for a topolgy over n-processes. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">numProcs</span></code> - <p>The number of processes in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>Pointer to an (already allocated) array of length numdims </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL21TopoCartesianMakeDimsERK4CommKiPi">
+<span id="MEL::TopoCartesianMakeDims__CommCR.iC.iP"></span><span class="target" id="MELgroup___topo_1gaacf0d98f62401c2fb0290b9d8b3bf71b"></span>void <code class="descclassname">MEL::</code><code class="descname">TopoCartesianMakeDims</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>numdims</em>, int *<em>dims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21TopoCartesianMakeDimsERK4CommKiPi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the &#8216;ideal&#8217; dimensions for a topolgy over n-processes. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology should represent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>Pointer to an (already allocated) array of length numdims </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL21TopoCartesianMakeDimsEKiKi">
+<span id="MEL::TopoCartesianMakeDims__iC.iC"></span><span class="target" id="MELgroup___topo_1gade2e1a9db0e9aab9cf0fa636ae219ba4"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianMakeDims</code><span class="sig-paren">(</span><em class="property">const</em> int <em>numProcs</em>, <em class="property">const</em> int <em>numdims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21TopoCartesianMakeDimsEKiKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the &#8216;ideal&#8217; dimensions for a topolgy over n-processes. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of dimension sizes </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">numProcs</span></code> - <p>The number of processes in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL21TopoCartesianMakeDimsERK4CommKi">
+<span id="MEL::TopoCartesianMakeDims__CommCR.iC"></span><span class="target" id="MELgroup___topo_1gae0d34d511db2ba60b79b3a3b7407622a"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianMakeDims</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>numdims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21TopoCartesianMakeDimsERK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the &#8216;ideal&#8217; dimensions for a topolgy over n-processes. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of dimension sizes </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology should represent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCreateERK4CommiPKiPKi">
+<span id="MEL::TopoCartesianCreate__CommCR.i.iCP.iCP"></span><span class="target" id="MELgroup___topo_1ga74f012ac5bfae14d86daab5e72239c08"></span>Comm <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCreate</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, int <em>numdims</em>, <em class="property">const</em> int *<em>dims</em>, <em class="property">const</em> int *<em>periods</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCreateERK4CommiPKiPKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a cartesian topology over a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a Comm world with an attached topology </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology should represent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>Pointer to an array of sizes of each dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">periods</span></code> - <p>Pointer to an array of logicals representing if each dimension is periodic or not </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCreateERK4CommRKNSt6vectorI17TopoCartesian_DimEE">
+<span id="MEL::TopoCartesianCreate__CommCR.std::vector:TopoCartesian_Dim:CR"></span><span class="target" id="MELgroup___topo_1ga9b8314c3932de20d0df317cffb1746de"></span>Comm <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCreate</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> std::vector&lt;TopoCartesian_Dim&gt; &amp;<em>dims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCreateERK4CommRKNSt6vectorI17TopoCartesian_DimEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a cartesian topology over a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a Comm world with an attached topology </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology should represent </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>A std::vector of pairs representing dimension sizes and whether dimensions are periodic </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL20TopoCartesianNumDimsERK4Comm">
+<span id="MEL::TopoCartesianNumDims__CommCR"></span><span class="target" id="MELgroup___topo_1ga6aa571bb759f751cfdfd6b645d921b31"></span>int <code class="descclassname">MEL::</code><code class="descname">TopoCartesianNumDims</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TopoCartesianNumDimsERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of dimensions in an attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the number of dimensions in the attached cartesian topology </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17TopoCartesianRankERK4CommPKi">
+<span id="MEL::TopoCartesianRank__CommCR.iCP"></span><span class="target" id="MELgroup___topo_1ga7bc6a4ecf4697ed0a383714a4a09c14a"></span>int <code class="descclassname">MEL::</code><code class="descname">TopoCartesianRank</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int *<em>coords</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TopoCartesianRankERK4CommPKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the rank within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the rank in the attached cartesian topology </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">coords</span></code> - <p>Pointer to an array representing the n-dim coordinates in the topology </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL17TopoCartesianRankERK4CommKNSt6vectorIiEE">
+<span id="MEL::TopoCartesianRank__CommCR.std::vector:i:C"></span><span class="target" id="MELgroup___topo_1ga1371b3bd7b125f3e039c8de04444b038"></span>int <code class="descclassname">MEL::</code><code class="descname">TopoCartesianRank</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> std::vector&lt;int&gt; <em>coords</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TopoCartesianRankERK4CommKNSt6vectorIiEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the rank within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the rank in the attached cartesian topology </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">coords</span></code> - <p>A std::vector representing the n-dim coordinates in the topology </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCoordsERK4CommKiiPi">
+<span id="MEL::TopoCartesianCoords__CommCR.iC.i.iP"></span><span class="target" id="MELgroup___topo_1ga8e22daa042135d2d4c6de0c8d880dc64"></span>void <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCoords</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>rank</em>, int <em>numdims</em>, int *<em>coords</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCoordsERK4CommKiiPi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the n-dim coordinates within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank</span></code> - <p>The rank within comm </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">coords</span></code> - <p>Pointer to an array of numdims ints representing the coordinates </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCoordsERK4CommKii">
+<span id="MEL::TopoCartesianCoords__CommCR.iC.i"></span><span class="target" id="MELgroup___topo_1gac8021d92ee04982af422f76f5d7e72fd"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCoords</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>rank</em>, int <em>numdims</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCoordsERK4CommKii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the n-dim coordinates within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector representing the n-dim coordinates </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank</span></code> - <p>The rank within comm </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCoordsERK4CommKi">
+<span id="MEL::TopoCartesianCoords__CommCR.iC"></span><span class="target" id="MELgroup___topo_1ga9806e61118de6cf771ab62cad94bcea6"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCoords</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>rank</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCoordsERK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the n-dim coordinates within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector representing the n-dim coordinates </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank</span></code> - <p>The rank within comm </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL19TopoCartesianCoordsERK4Comm">
+<span id="MEL::TopoCartesianCoords__CommCR"></span><span class="target" id="MELgroup___topo_1ga0cf60e4736bcbff906e19fca273e3a15"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianCoords</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19TopoCartesianCoordsERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the n-dim coordinates within the attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector representing the n-dim coordinates </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16TopoCartesianGetERK4CommiPiPiPi">
+<span id="MEL::TopoCartesianGet__CommCR.i.iP.iP.iP"></span><span class="target" id="MELgroup___topo_1ga25989071792de210a7afdc5a88ff7c2e"></span>void <code class="descclassname">MEL::</code><code class="descname">TopoCartesianGet</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, int <em>numdims</em>, int *<em>dims</em>, int *<em>periods</em>, int *<em>coords</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TopoCartesianGetERK4CommiPiPiPi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the properties of an attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">numdims</span></code> - <p>The number of dimensions in the topology </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">dims</span></code> - <p>Pointer to an array of n-dims size representing the sizes of each dimension </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">periods</span></code> - <p>Pointer to an array of n-dims size representing whether each dimension is periodic </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">coords</span></code> - <p>Pointer to an array of n-dims size representing the coordinate in each dimension </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL16TopoCartesianGetERK4Comm">
+<span id="MEL::TopoCartesianGet__CommCR"></span><span class="target" id="MELgroup___topo_1gaeef51b46acb2716e5fab9f4c34f89668"></span>std::pair&lt;std::vector&lt;int&gt;, std::vector&lt;TopoCartesian_Dim&gt;&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianGet</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TopoCartesianGetERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the properties of an attached cartesian topology of a comm world. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair of a std::vector representing the process coordinates, and a std::vector of pairs representing the dimension sizes and periods </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TopoCartesianShiftERK4CommiiRiRi">
+<span id="MEL::TopoCartesianShift__CommCR.i.i.iR.iR"></span><span class="target" id="MELgroup___topo_1gaf0bca756c2ae0a241d000905bbbb58fb"></span>void <code class="descclassname">MEL::</code><code class="descname">TopoCartesianShift</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, int <em>direction</em>, int <em>disp</em>, int &amp;<em>rank_prev</em>, int &amp;<em>rank_next</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TopoCartesianShiftERK4CommiiRiRi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the ranks of a left and right shifted neighbor for a given dimension within a topology. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">direction</span></code> - <p>The dimension to shift in </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">disp</span></code> - <p>How much to shift by </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank_prev</span></code> - <p>The left neighbour </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">rank_next</span></code> - <p>The right neighbour </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL18TopoCartesianShiftERK4Commii">
+<span id="MEL::TopoCartesianShift__CommCR.i.i"></span><span class="target" id="MELgroup___topo_1gae1ec091095f8a6ca6aebead3d35aea8e"></span>std::pair&lt;int, int&gt; <code class="descclassname">MEL::</code><code class="descname">TopoCartesianShift</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, int <em>direction</em>, int <em>disp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TopoCartesianShiftERK4Commii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the ranks of a left and right shifted neighbor for a given dimension within a topology. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair representing the ranks of the left and right neighbour </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">direction</span></code> - <p>The dimension to shift in </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">disp</span></code> - <p>How much to shift by </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL24TopoCartesianStencil2D5PERK4Comm">
+<span id="MEL::TopoCartesianStencil2D5P__CommCR"></span><span class="target" id="MELgroup___topo_1gabb8f0f99082fcc3a8067f17f65e45842"></span>CartesianStencil2D5P <code class="descclassname">MEL::</code><code class="descname">TopoCartesianStencil2D5P</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL24TopoCartesianStencil2D5PERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 2D 5-point stencil of ranks representing the neighbouring processes. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a 2D 5-point stencil of comm ranks </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL24TopoCartesianStencil2D9PERK4Comm">
+<span id="MEL::TopoCartesianStencil2D9P__CommCR"></span><span class="target" id="MELgroup___topo_1ga78b354c1ae9f6971995bff64a02cf620"></span>CartesianStencil2D9P <code class="descclassname">MEL::</code><code class="descname">TopoCartesianStencil2D9P</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL24TopoCartesianStencil2D9PERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 2D 9-point stencil of ranks representing the neighbouring processes. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a 2D 9-point stencil of comm ranks </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm object the topology is attached to </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

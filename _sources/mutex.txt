@@ -1,0 +1,7 @@
+Mutex
+=====
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Mutex
+	:content-only:

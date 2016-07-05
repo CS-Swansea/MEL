@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Synchronization &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Memory Allocation" href="mem.html" />
+    <link rel="prev" title="Communicators &amp; Groups" href="comm.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL - The MPI Extension Library</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Synchronization</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="comm.html" title="Previous Chapter: Communicators & Groups"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Communicators...</span>
+    </a>
+  </li>
+  <li>
+    <a href="mem.html" title="Next Chapter: Memory Allocation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Memory Alloca... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="synchronization">
+<h1>Synchronization<a class="headerlink" href="#synchronization" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL.hpp</span></code></p>
+<dl class="function">
+<dt id="_CPPv2N3MEL7BarrierERK4Comm">
+<span id="MEL::Barrier__CommCR"></span><span class="target" id="MELgroup___sync_1ga0d85e07e4b0a7d6bc552c80f1d50de65"></span>void <code class="descclassname">MEL::</code><code class="descname">Barrier</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7BarrierERK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collective operation that forces all processes to wait until they are all at the barrier. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to synchronize </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL4WaitER7Request">
+<span id="MEL::Wait__RequestR"></span><span class="target" id="MELgroup___sync_1gaf3548ca51afd62999fb4e2cb278e3ec2"></span>void <code class="descclassname">MEL::</code><code class="descname">Wait</code><span class="sig-paren">(</span>Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4WaitER7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until a request object has completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>The request object to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL4TestER7Request">
+<span id="MEL::Test__RequestR"></span><span class="target" id="MELgroup___sync_1ga8bf2c7d0f1602796002c9f67ea131883"></span>bool <code class="descclassname">MEL::</code><code class="descname">Test</code><span class="sig-paren">(</span>Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4TestER7Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if a request object has completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>The request object to test </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7WaitallEP7Requesti">
+<span id="MEL::Waitall__RequestP.i"></span><span class="target" id="MELgroup___sync_1gadb1dc7cb276dcb8291ff0c09510c7237"></span>void <code class="descclassname">MEL::</code><code class="descname">Waitall</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitallEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until all request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7WaitallERNSt6vectorI7RequestEE">
+<span id="MEL::Waitall__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1ga3e8ff261c611648e0529750576a75e74"></span>void <code class="descclassname">MEL::</code><code class="descname">Waitall</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitallERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until all request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7TestallEP7Requesti">
+<span id="MEL::Testall__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga20fd8be0d5ead0cf81d8c4f990724113"></span>bool <code class="descclassname">MEL::</code><code class="descname">Testall</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7TestallEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if all request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7TestallERNSt6vectorI7RequestEE">
+<span id="MEL::Testall__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1gabd4c68530781fd44ae25965c4d8ba65c"></span>bool <code class="descclassname">MEL::</code><code class="descname">Testall</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7TestallERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if all request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7WaitanyEP7Requesti">
+<span id="MEL::Waitany__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga3295581c362fa9f1c1ce69209ec3ffb4"></span>int <code class="descclassname">MEL::</code><code class="descname">Waitany</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitanyEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until any of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the index of the completed request </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7WaitanyERNSt6vectorI7RequestEE">
+<span id="MEL::Waitany__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1ga6c043936ca765a139507ebadba9edb12"></span>int <code class="descclassname">MEL::</code><code class="descname">Waitany</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitanyERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until any of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns the index of the completed request </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7TestanyEP7Requesti">
+<span id="MEL::Testany__RequestP.i"></span><span class="target" id="MELgroup___sync_1gaf2572d956dab1ca21ae9790072d26904"></span>std::pair&lt;bool, int&gt; <code class="descclassname">MEL::</code><code class="descname">Testany</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7TestanyEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any test. </p>
+<p>Non-Blocking operation to test if any of the request objects in an array have completed</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair of a bool and int representing if any had completed, and if so what index </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL7TestanyERNSt6vectorI7RequestEE">
+<span id="MEL::Testany__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1ga228735c0db7f1a1acb76dc90be386ab2"></span>std::pair&lt;bool, int&gt; <code class="descclassname">MEL::</code><code class="descname">Testany</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7TestanyERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if any of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::pair of a bool and int representing if any had completed, and if so what index </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8WaitsomeEP7Requesti">
+<span id="MEL::Waitsome__RequestP.i"></span><span class="target" id="MELgroup___sync_1gab8c3f857fcba983b2ddae281a67373ea"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Waitsome</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8WaitsomeEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until some of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of indices of the completed requests </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8WaitsomeERNSt6vectorI7RequestEE">
+<span id="MEL::Waitsome__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1ga75515328d48a82323faf862f117c5730"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Waitsome</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8WaitsomeERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocking operation to wait until some of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of indices of the completed requests </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8TestsomeEP7Requesti">
+<span id="MEL::Testsome__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga4e99721c9b8dc5ea35ea25881ffc168d"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Testsome</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TestsomeEP7Requesti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if some of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of indices of the completed requests </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">num</span></code> - <p>The length of the array </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3MEL8TestsomeERNSt6vectorI7RequestEE">
+<span id="MEL::Testsome__std::vector:Request:R"></span><span class="target" id="MELgroup___sync_1ga998b9e2d00ba82e17c6e4ce3b41bd3f9"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Testsome</code><span class="sig-paren">(</span>std::vector&lt;Request&gt; &amp;<em>rqs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TestsomeERNSt6vectorI7RequestEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-Blocking operation to test if some of the request objects in an array have completed. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Returns a std::vector of indices of the completed requests </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">rqs</span></code> - <p>A std::vector of request objects to wait for </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

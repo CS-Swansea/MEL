@@ -1,0 +1,7 @@
+Communicators & Groups
+======================
+
+Located in file: :code:`MEL.hpp`
+
+.. doxygengroup:: Comm
+	:content-only:
