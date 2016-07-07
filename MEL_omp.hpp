@@ -26,6 +26,10 @@ SOFTWARE.
 #include <omp.h>
 #include "MEL.hpp"
 
+/**
+* \file MEL_omp.hpp
+*/
+
 namespace MEL {
     namespace OMP {
 
@@ -85,6 +89,8 @@ namespace MEL {
 		 * \ingroup  OMP
 		 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
 		 *
+		 * \see MPI_Op_create
+		 *
 		 * \param[in] commute		Is the operation commutative
 		 * \return					Returns a handle to a new Op
 		 */
@@ -98,6 +104,8 @@ namespace MEL {
 		/**
 		 * \ingroup  OMP
 		 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
+		 *
+		 * \see MPI_Op_create
 		 *
 		 * \param[in] commute		Is the operation commutative
 		 * \return					Returns a handle to a new Op
