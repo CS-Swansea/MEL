@@ -36,6 +36,10 @@ SOFTWARE.
 #include <chrono>
 #include <thread>
 
+/**
+* \file MEL.hpp
+*/
+
 namespace MEL {
     
 	/**
@@ -61,7 +65,7 @@ namespace MEL {
 	 * ## Todo
 	 * 
 	 * - Add Distributed Graph Topology functions.
-	 * - Add overloads for p2p/collective communications for transmitting std::array/std::vector by start/end iterators.
+	 * - Add overloads for p2p/collective communications for transmitting `std::array`/`std::vector` by start/end iterators.
 	 * - Improve error handler implementation. A rough version is currently in place.
 	 * - Implement ranged-mutexes. 
 	 *
@@ -129,6 +133,8 @@ namespace MEL {
     /**
 	 * \ingroup  Errors
      * Calls MPI_Abort with the given error code and prints a string message to stderr
+	 *
+	 * \see MPI_Comm_rank, MPI_Comm_size, MPI_Error_class, MPI_Error_string, MPI_Abort
      *
      * \param[in] ierr		The error code to throw
      * \param[in] message	The message to print to stderr describing what happened
@@ -156,7 +162,9 @@ namespace MEL {
     /**
 	 * \ingroup Utils 
      * Tests if MPI_Init has been successfully called
-     * 
+     *
+	 * \see MPI_Initialized
+     *
      * \return Returns whether MPI is initialized as a bool
      */
     inline bool IsInitialized() {
@@ -168,6 +176,8 @@ namespace MEL {
     /**
 	 * \ingroup Utils 
 	 * Tests if MPI_Finalize has been successfully called
+     *
+	 * \see MPI_Finalized
      * 
      * \return Returns whether MPI is finalized as a bool
      */
@@ -180,6 +190,8 @@ namespace MEL {
     /**
      * \ingroup Utils 
      * Call MPI_Init and setup default error handling
+     *
+	 * \see MPI_Init, MPI_Comm_set_errhandler
      *
      * \param[in] argc		Forwarded from program main
      * \param[in] argv		Forwarded from program main
@@ -195,6 +207,8 @@ namespace MEL {
     /**
      * \ingroup Utils 
      * Call MPI_Finalize
+     *
+	 * \see MPI_Finalize
      */
     inline void Finalize() {
         if (!IsFinalized()) {
@@ -227,6 +241,8 @@ namespace MEL {
     /**
      * \ingroup Utils 
      * Gets the current wall time since epoch in seconds
+     *
+	 * \see MPI_Wtime
      * 
      * \return Returns the current wall time as a double
      */
@@ -237,6 +253,8 @@ namespace MEL {
     /**
      * \ingroup Utils 
      * Gets the current system tick
+     *
+	 * \see MPI_Wtick
      * 
      * \return Returns the current system tick as a double
      */
@@ -269,7 +287,9 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * A default error handler that can be attached to MPI objects to give basic error catching
-     * 
+     *
+	 * \see MPI_Comm_rank, MPI_Comm_size, MPI_Error_class, MPI_Error_string, MPI_Abort
+	 * 
      * \param[in] comm		Comm world in which the error occured
      * \param[in] ierr		The error code that was thrown
      */
@@ -294,6 +314,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Add an error class for MPI to reference
+	 *
+	 * \see MPI_Add_error_class
      * 
      * \return Returns the new error class code that was added
      */
@@ -306,6 +328,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Add an error code to an exisiting error class for MPI to reference
+	 *
+	 * \see MPI_Add_error_code
      * 
      * \param[in] errClass	The error class to add the error code to
      * \return			Returns the new error code that was added
@@ -329,6 +353,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Add an error string to an existing error code for MPI to reference
+	 *
+	 * \see MPI_Add_error_string
      * 
      * \param[in] err		The error code to bind the string to
      * \param[in] str		The error string
@@ -353,6 +379,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Get the error class code of the given error code
+	 *
+	 * \see MPI_Error_class
      * 
      * \param[in] errCode	The error code
      * \return			Returns the error class
@@ -366,6 +394,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Get the error class code of the given error code
+	 *
+	 * \see MPI_Error_string
      * 
      * \param[in] errCode	The error code
      * \return			Returns the error class
@@ -380,6 +410,8 @@ namespace MEL {
     /**
      * \ingroup  Errors
      * Free an error handler that was previously added
+	 *
+	 * \see MPI_Errhandler_free
      * 
      * \param[in] errHndl	The error handler object that references the bound function
      */
@@ -415,6 +447,8 @@ namespace MEL {
     /**
      * \ingroup  Mem
 	 * Allocate a block of memory for 'size' number of type T
+	 *
+	 * \see MPI_Alloc_mem
      * 
      * \param[in] size		The number of elements of type T to allocate
      * \return			Returns the pointer to the allocated memory
@@ -458,6 +492,8 @@ namespace MEL {
     /**
      * \ingroup  Mem
 	 * Free a pointer allocated with MPI_Alloc or the MEL equivilant functions
+	 *
+	 * \see MPI_Free_mem
      * 
      * \param[in] ptr		The pointer to free
      */
@@ -570,6 +606,8 @@ namespace MEL {
     /**
      * \ingroup  Comm
      * Create a Comm error handler by directly passing the function to use
+	 *
+	 * \see MPI_Comm_create_errhandler
      * 
      * \param[in] func		The function to use as an error handler
      * \return			Returns an object that MPI can use to reference the error handler
@@ -583,6 +621,8 @@ namespace MEL {
     /**
      * \ingroup  Comm
      * Set a Comm error handler by passing the a error handler reference
+	 *
+	 * \see MPI_Comm_set_errhandler
      *
      * \param[in] comm		The comm world to attach the error handler to
      * \param[in] errHndl	The reference to a bound error handler
@@ -605,6 +645,8 @@ namespace MEL {
     /**
      * \ingroup  Comm
      * Get the Comm error handler attached to a comm world
+	 *
+	 * \see MPI_Comm_get_errhandler
      *
      * \param[in] comm		The comm world to get the error handler of
      * \return			Returns a reference to a bound error handler
@@ -618,6 +660,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Get the Comm rank of the process
+	 *
+	 * \see MPI_Comm_rank
      *
      * \param[in] comm		The comm world to get the rank in
      * \return			Returns the rank or the process within comm
@@ -631,6 +675,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Get the Comm world size
+	 *
+	 * \see MPI_Comm_size
      *
      * \param[in] comm		The comm world to get the size of
      * \return			Returns the size of the comm world
@@ -644,6 +690,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Get the Comm world remote size
+	 *
+	 * \see MPI_Comm_remote_size
      *
      * \param[in] comm		The comm world to get the remote size of
      * \return			Returns the remote size of the comm world
@@ -657,6 +705,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Split a comm world into seperate comms. Processes with the same colour will end up in the same comm world
+	 *
+	 * \see MPI_Comm_split
      *
      * \param[in] comm		The comm world to split
      * \param[in] colour	The group that this process will end up in in the new comm world
@@ -671,6 +721,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Duplicate a comm world so that it can be handled independently.
+	 *
+	 * \see MPI_Comm_dup
      *
      * \param[in] comm		The comm world to duplicate
      * \return			Returns a new comm world
@@ -686,6 +738,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Non-Blocking. Duplicate a comm world so that it can be handled independently.
+	 *
+	 * \see MPI_Comm_idup
      *
      * \param[in] comm		The comm world to duplicate
      * \param[out] rq		A request object that will signify when the comm world has been fully duplicated
@@ -714,6 +768,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Get the group of a comm world
+	 *
+	 * \see MPI_Comm_group
      *
      * \param[in] comm		The comm world to get the group of
      * \return			Returns a Group object representing the processes in comm
@@ -727,6 +783,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Create a comm object from an existing comm object and a group object
+	 *
+	 * \see MPI_Comm_create
      *
      * \param[in] comm		The comm world to build off of
      * \param[in] group		The group to use to build the new comm object
@@ -743,6 +801,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Create a comm object from an existing comm object and a group object. This is a non-collective version
+	 *
+	 * \see MPI_Comm_create_group
      *
      * \param[in] comm		The comm world to build off of
      * \param[in] group		The group to use to build the new comm object
@@ -759,6 +819,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Free a comm world
+	 *
+	 * \see MPI_Comm_disconnect
      *
      * \param[in] comm		The comm world to free
      */
@@ -805,6 +867,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Collective operation that forces all processes to wait until they are all at the barrier
+	 *
+	 * \see MPI_Barrier
      *
      * \param[in] comm		The comm world to synchronize
      */
@@ -817,6 +881,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Collective operation that forces all processes to wait until they are all at the barrier
+	 *
+	 * \see MPI_Ibarrier
      *
      * \param[in] comm		The comm world to synchronize
      * \param[out] rq		A reference to a request object used to determine when the barrier has been reached by all processes in comm
@@ -842,6 +908,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Blocking operation to wait until a request object has completed
+	 *
+	 * \see MPI_Wait
      *
      * \param[in] rq		The request object to wait for
      */
@@ -852,6 +920,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Non-Blocking operation to test if a request object has completed
+	 *
+	 * \see MPI_Test
      *
      * \param[in] rq		The request object to test
      */
@@ -864,6 +934,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Blocking operation to wait until all request objects in an array have completed
+	 *
+	 * \see MPI_Waitall
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -885,6 +957,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Non-Blocking operation to test if all request objects in an array have completed
+	 *
+	 * \see MPI_Testall
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -908,6 +982,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Blocking operation to wait until any of the request objects in an array have completed
+	 *
+	 * \see MPI_Waitany
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -935,6 +1011,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Non-Blocking operation to test if any of the request objects in an array have completed
+	 *
+	 * \see MPI_Testany
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -960,6 +1038,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Blocking operation to wait until some of the request objects in an array have completed
+	 *
+	 * \see MPI_Waitsome
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -986,6 +1066,8 @@ namespace MEL {
     /**
      * \ingroup Sync 
      * Non-Blocking operation to test if some of the request objects in an array have completed
+	 *
+	 * \see MPI_Testsome
      *
      * \param[in] ptr		Pointer to the array of request objects
      * \param[in] num		The length of the array
@@ -1012,6 +1094,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Perform a set union of two comm groups
+	 *
+	 * \see MPI_Group_union
      *
      * \param[in] lhs		The first operand of the union
      * \param[in] rhs		The second operand of the union
@@ -1026,6 +1110,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Perform a set difference of two comm groups
+	 *
+	 * \see MPI_Group_difference
      *
      * \param[in] lhs		The first operand of the difference
      * \param[in] rhs		The second operand of the difference
@@ -1040,6 +1126,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Perform a set intersection of two comm groups
+	 *
+	 * \see MPI_Group_intersection
      *
      * \param[in] lhs		The first operand of the intersection
      * \param[in] rhs		The second operand of the intersection
@@ -1054,6 +1142,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Create a comm group including just the ranks from an exisitng group given in an array
+	 *
+	 * \see MPI_Group_incl
      *
      * \param[in] group		The original group to build off of
      * \param[in] ranks		Pointer to the array of ranks
@@ -1081,6 +1171,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Create a comm group excluding just the ranks from an exisitng group given in an array
+	 *
+	 * \see MPI_Group_excl
      *
      * \param[in] group		The original group to build off of
      * \param[in] ranks		Pointer to the array of ranks
@@ -1108,6 +1200,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Compare two comm groups
+	 *
+	 * \see MPI_Group_compare
      *
      * \param[in] lhs		The first operand of the compare
      * \param[in] rhs		The second operand of the compare
@@ -1181,6 +1275,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Gets the rank of the process within the given comm group
+	 *
+	 * \see MPI_Group_rank
      *
      * \param[in] group		The group to use
      * \return			Returns the rank within the given group
@@ -1194,6 +1290,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Gets the size of the given comm group
+	 *
+	 * \see MPI_Group_size
      *
      * \param[in] group		The group to use
      * \return			Returns the size of the given group
@@ -1207,6 +1305,8 @@ namespace MEL {
     /**
      * \ingroup Comm 
      * Frees a comm group
+	 *
+	 * \see MPI_Group_free
      *
      * \param[in] group		The group to free
      */
@@ -1352,6 +1452,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a contiguous block of an elementary type
+	 *
+	 * \see MPI_Type_contiguous, MPI_Type_commit
      *
      * \param[in] datatype	The base type to use
      * \param[in] length	The number of elements in the new type
@@ -1367,6 +1469,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a struct
+	 *
+	 * \see MPI_Type_create_struct, MPI_Type_commit
      *
      * \param[in] num			The number of members within the struct
      * \param[in] datatypes		Pointer to an array of datatypes
@@ -1381,6 +1485,7 @@ namespace MEL {
         return dt;
     };
 
+	/// \cond HIDE
     struct TypeStruct_Block {
         Datatype datatype;
         int length;
@@ -1390,6 +1495,7 @@ namespace MEL {
         TypeStruct_Block(const Datatype &_dt, int _len, Aint _off) : datatype(_dt), length(_len), offset(_off) {};
         TypeStruct_Block(const Datatype &_dt, Aint _off) : datatype(_dt), length(1), offset(_off) {};
     };
+	/// \endcond
 
     /**
      * \ingroup Datatype 
@@ -1415,6 +1521,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a sub array
+	 *
+	 * \see MPI_Type_create_subarray, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the parent array
      * \param[in] num			The number of dimensions of the data
@@ -1430,12 +1538,14 @@ namespace MEL {
         return dt;
     };
 
+	/// \cond HIDE
     struct TypeSubArray_Dim {
         int start, size, extent;
 
         TypeSubArray_Dim() :start(0), size(0), extent(0) {};
         TypeSubArray_Dim(const int _start, const int _size, const int _extent) :start(_start), size(_size), extent(_extent) {};
     };
+	/// \endcond
 
     /**
      * \ingroup Datatype 
@@ -1462,6 +1572,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a 1D sub array
+	 *
+	 * \see MPI_Type_create_subarray, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the parent array
      * \param[in] x				The start index in the x dimension
@@ -1479,6 +1591,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a 2D sub array
+	 *
+	 * \see MPI_Type_create_subarray, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the parent array
      * \param[in] x				The start index in the x dimension
@@ -1505,6 +1619,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a 3D sub array
+	 *
+	 * \see MPI_Type_create_subarray, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the parent array
      * \param[in] x				The start index in the x dimension
@@ -1534,6 +1650,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a 4D sub array
+	 *
+	 * \see MPI_Type_create_subarray, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the parent array
      * \param[in] x				The start index in the x dimension
@@ -1567,6 +1685,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets
+	 *
+	 * \see MPI_Type_indexed, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of blocks
@@ -1581,12 +1701,14 @@ namespace MEL {
         return dt;
     };
 
+	/// \cond HIDE
     struct TypeIndexed_Block {
         int length, displ;
 
         TypeIndexed_Block() : length(), displ() {};
         TypeIndexed_Block(int _len, int _displ) : length(_len), displ(_displ) {};
     };
+	/// \endcond
 
     /**
      * \ingroup Datatype 
@@ -1611,6 +1733,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets
+	 *
+	 * \see MPI_Type_create_hindexed, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of blocks
@@ -1625,6 +1749,7 @@ namespace MEL {
         return dt;
     };
 
+	/// \cond HIDE
     struct TypeHIndexed_Block {
         int length;
         Aint displ;
@@ -1632,6 +1757,7 @@ namespace MEL {
         TypeHIndexed_Block() : length(), displ() {};
         TypeHIndexed_Block(int _len, Aint _displ) : length(_len), displ(_displ) {};
     };
+	/// \endcond
 
     /**
      * \ingroup Datatype 
@@ -1656,6 +1782,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets
+	 *
+	 * \see MPI_Type_create_indexed_block, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of blocks
@@ -1688,6 +1816,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a set of contiguous blocks of the same length at different offsets, using byte offsets
+	 *
+	 * \see MPI_Type_create_hindexed_block, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of blocks
@@ -1719,6 +1849,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a strided sub array of a parent array
+	 *
+	 * \see MPI_Type_vector, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of strided regions
@@ -1736,6 +1868,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Create a derived type representing a strided sub array of a parent array, using byte offsets
+	 *
+	 * \see MPI_Type_create_hvector, MPI_Type_commit
      *
      * \param[in] datatype		The datatype of the elements
      * \param[in] num			The number of strided regions
@@ -1753,6 +1887,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Duplicate a derived type so it can be managed independently
+	 *
+	 * \see MPI_Type_dup
      *
      * \param[in] datatype		The datatype to duplicate
      * \return				Returns a new type
@@ -1766,6 +1902,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Compute the contiguous packed size of a datatype
+	 *
+	 * \see MPI_Type_size
      *
      * \param[in] datatype		The datatype to size
      * \return				Returns the contiguous size of the datatype in bytes
@@ -1779,6 +1917,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Compute the extent of a datatype
+	 *
+	 * \see MPI_Type_get_extent
      *
      * \param[in] datatype		The datatype to get the extent of 
      * \return				Returns a std::pair of the datatype extent and lower bound
@@ -1792,6 +1932,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Compute the extent of a datatype and discard the lower bound
+	 *
+	 * \see MPI_Type_get_extent
      *
      * \param[in] datatype		The datatype to get the extent of 
      * \return				Returns the datatype extent
@@ -1805,6 +1947,8 @@ namespace MEL {
     /**
      * \ingroup Datatype 
      * Free a derived datatype
+	 *
+	 * \see MPI_Type_free
      *
      * \param[in] datatype		The datatype to free
      */
@@ -1842,6 +1986,8 @@ namespace MEL {
     /**
      * \ingroup Topo 
      * Compute the 'ideal' dimensions for a topolgy over n-processes
+	 *
+	 * \see MPI_Dims_create
      * 
      * \param[in] numProcs	The number of processes in the topology
      * \param[in] numdims	The number of dimensions in the topology
@@ -1892,6 +2038,8 @@ namespace MEL {
     /**
      * \ingroup Topo 
      * Create a cartesian topology over a comm world
+	 *
+	 * \see MPI_Cart_create
      * 
      * \param[in] comm		The comm object the topology should represent
      * \param[in] numdims	The number of dimensions in the topology
@@ -1937,6 +2085,8 @@ namespace MEL {
 	 * \ingroup Topo 
      * Get the number of dimensions in an attached cartesian topology of a comm world
 	 *
+	 * \see MPI_Cartdim_get
+	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \return			Returns the number of dimensions in the attached cartesian topology
 	 */
@@ -1949,6 +2099,8 @@ namespace MEL {
 	/**
 	 * \ingroup Topo 
      * Get the rank within the attached cartesian topology of a comm world
+	 *
+	 * \see MPI_Cart_rank
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] coords	Pointer to an array representing the n-dim coordinates in the topology
@@ -1975,6 +2127,8 @@ namespace MEL {
 	/**
 	 * \ingroup Topo 
      * Get the n-dim coordinates within the attached cartesian topology of a comm world
+	 *
+	 * \see MPI_Cart_coords
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] rank		The rank within comm
@@ -2027,6 +2181,8 @@ namespace MEL {
 	 * \ingroup Topo 
      * Get the properties of an attached cartesian topology of a comm world
 	 *
+	 * \see MPI_Cart_get
+	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] numdims	The number of dimensions in the topology
 	 * \param[out] dims		Pointer to an array of n-dims size representing the sizes of each dimension
@@ -2060,6 +2216,8 @@ namespace MEL {
 	/**
 	 * \ingroup Topo 
      * Compute the ranks of a left and right shifted neighbor for a given dimension within a topology
+	 *
+	 * \see MPI_Cart_shift
 	 *
 	 * \param[in] comm		The comm object the topology is attached to
 	 * \param[in] direction	The dimension to shift in
@@ -2428,6 +2586,8 @@ namespace MEL {
 	 * \ingroup Ops 
      * Create a derived operation for reduction type functions
 	 *
+	 * \see MPI_Op_create
+	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
 	 */
@@ -2441,6 +2601,8 @@ namespace MEL {
 	/**
 	 * \ingroup Ops 
      * Create a derived operation for reduction type functions
+	 *
+	 * \see MPI_Op_create
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2456,6 +2618,8 @@ namespace MEL {
 	 * \ingroup Ops 
      * Create a derived operation for reduction type functions
 	 *
+	 * \see MPI_Op_create
+	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
 	 */
@@ -2469,6 +2633,8 @@ namespace MEL {
 	/**
 	 * \ingroup Ops 
      * Create a derived operation for reduction type functions
+	 *
+	 * \see MPI_Op_create
 	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
@@ -2484,6 +2650,8 @@ namespace MEL {
 	 * \ingroup Ops 
      * Create a derived operation for reduction type functions
 	 *
+	 * \see MPI_Op_create
+	 *
 	 * \param[in] commute	Is the operation commutative?
 	 * \return			Returns a handle to a new Op
 	 */
@@ -2497,6 +2665,8 @@ namespace MEL {
 	/**
 	 * \ingroup Ops 
      * Free a derived operation
+	 *
+	 * \see MPI_Op_free
 	 *
 	 * \param[in] op		The op to free
 	 */
@@ -2569,6 +2739,8 @@ namespace MEL {
 	 * \ingroup  File
      * Create a file error handler
 	 *
+	 * \see MPI_File_create_errhandler
+	 *
 	 * \param[in] func	The function to use
 	 * \return		Returns a handle to an error handler
 	 */
@@ -2581,6 +2753,8 @@ namespace MEL {
 	/**
 	 * \ingroup  File
      * Set the error handler for a file
+	 *
+	 * \see MPI_File_set_errhandler
 	 *
 	 * \param[in] file		The file to attach to
 	 * \param[in] errHndl	The handler to use
@@ -2604,6 +2778,8 @@ namespace MEL {
 	 * \ingroup  File
      * Get the error handler for a file
 	 *
+	 * \see MPI_File_get_errhandler
+	 *
 	 * \param[in] file	The file to attach to
 	 * \return		Returns a handle to the error handler
 	 */
@@ -2616,6 +2792,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the mode a file was opened with
+	 *
+	 * \see MPI_File_get_amode
 	 *
 	 * \param[in] file	The file to attach to
 	 * \return		Returns the file mode
@@ -2630,6 +2808,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Is the file opened in an atomic mode?
 	 *
+	 * \see MPI_File_get_atomicity
+	 *
 	 * \param[in] file	The file to attach to
 	 * \return		Returns true is the file is opened atomically
 	 */
@@ -2643,6 +2823,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Set the atomicity of the file handle
 	 *
+	 * \see MPI_File_set_atomicity
+	 *
 	 * \param[in] file	The file to attach to
 	 * \param[in] atom	Boolean value representing atomicity
 	 */
@@ -2653,6 +2835,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the byte position of the file cursor relative to a given location
+	 *
+	 * \see MPI_File_get_byte_offset
 	 *
 	 * \param[in] file		The file to attach to
 	 * \param[in] offset	The relative offset to measure byte distance against
@@ -2668,6 +2852,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Get the comm group a file was opened as a part of
 	 *
+	 * \see MPI_File_get_group
+	 *
 	 * \param[in] file		The file to attach to
 	 * \return			Returns comm group the file handle belongs to
 	 */
@@ -2680,6 +2866,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the MPI_Info object attached to a file handle
+	 *
+	 * \see MPI_File_get_info
 	 *
 	 * \param[in] file		The file to attach to
 	 * \return			Returns the info object
@@ -2694,6 +2882,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Set the MPI_Info object attached to a file handle
 	 *
+	 * \see MPI_File_set_info
+	 *
 	 * \param[in] file		The file to attach to
 	 * \param[in] info		The info object to attach
 	 */
@@ -2704,6 +2894,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the position of the file cursor
+	 *
+	 * \see MPI_File_get_position
 	 *
 	 * \param[in] file		The file to attach to
 	 * \return			Returns the location of the file cursor in bytes
@@ -2718,6 +2910,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Get the position of the shared file cursor
 	 *
+	 * \see MPI_File_get_position_shared
+	 *
 	 * \param[in] file		The file to attach to
 	 * \return			Returns the location of the shared file cursor in bytes
 	 */
@@ -2730,6 +2924,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the size of the file in bytes
+	 *
+	 * \see MPI_File_get_size
 	 *
 	 * \param[in] file		The file to attach to
 	 * \return			Returns the size of the file in bytes
@@ -2744,6 +2940,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Set the size of the file in bytes
 	 *
+	 * \see MPI_File_set_size
+	 *
 	 * \param[in] file	The file to attach to
 	 * \param[in] size	The size in bytes to set the file size to
 	 */
@@ -2754,6 +2952,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the extent of the derived type set to the file handle
+	 *
+	 * \see MPI_File_get_type_extent
 	 *
 	 * \param[in] file			The file to attach to
 	 * \param[in] datatype		The derived datatype to measure the extent of
@@ -2768,6 +2968,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Open a file and return a handle to it
+	 *
+	 * \see MPI_File_open, MPI_File_set_errhandler
 	 *
 	 * \param[in] comm			The comm world to open the file with
 	 * \param[in] path			The path to the desired file
@@ -2797,6 +2999,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Delete a file by its path
 	 *
+	 * \see MPI_File_delete
+	 *
 	 * \param[in] path			The path to the file to be deleted
 	 */
     inline void FileDelete(const std::string &path) {
@@ -2806,6 +3010,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Close the file attached to the given file handle
+	 *
+	 * \see MPI_File_close
 	 *
 	 * \param[in] file			The file handle to be closed
 	 */
@@ -2817,6 +3023,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Preallocate the opened file to the given size on the file system
 	 *
+	 * \see MPI_File_preallocate
+	 *
 	 * \param[in] file			The file to be preallocated
 	 * \param[in] fileSize		The size of the file in bytes
 	 */
@@ -2827,6 +3035,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Move the file cursor to a specific position
+	 *
+	 * \see MPI_File_seek
 	 *
 	 * \param[in] file			The file
 	 * \param[in] offset		The position to move the file cursor to
@@ -2840,6 +3050,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Move the shared file cursor to a specific position. The same values must be provided by all processes
 	 *
+	 * \see MPI_File_seek_shared
+	 *
 	 * \param[in] file			The shared file
 	 * \param[in] offset		The position to move the file cursor to
 	 * \param[in] seekMode		The mode to move the cursor by
@@ -2852,12 +3064,15 @@ namespace MEL {
 	 * \ingroup File
 	 * Force all queued and pending disk operations on a file to be completed
 	 *
+	 * \see MPI_File_sync
+	 *
 	 * \param[in] file			The file to be synchronized
 	 */
     inline void FileSync(const File &file) {
         MEL_THROW( MPI_File_sync(file), "File::Sync");
     };
 
+	/// \cond HIDE
     struct FileView {
         Offset offset;
         Datatype elementaryType, fileType;
@@ -2866,10 +3081,13 @@ namespace MEL {
         FileView(const Offset _offset, const Datatype _elementaryType, const Datatype _fileType, const std::string &_datarep = "native") 
                 : offset(_offset), elementaryType(_elementaryType), fileType(_fileType), datarep(_datarep) {};
     };
+	/// \endcond
 
 	/**
 	 * \ingroup File
 	 * Set the view of a file handle for subsequent read/writes
+	 *
+	 * \see MPI_File_set_view
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset from start of the file
@@ -2895,6 +3113,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Get the view attached to a file handle
+	 *
+	 * \see MPI_File_get_view
 	 *
 	 * \param[in] file				The file handle
 	 * \param[out] offset			Byte offset from start of the file
@@ -2924,6 +3144,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Write to file from a single process
 	 *
+	 * \see MPI_File_write
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
 	 * \param[in] snum				The number of elements to write
@@ -2940,6 +3162,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Write to file from all processes that opened the file
 	 *
+	 * \see MPI_File_write_all
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
 	 * \param[in] snum				The number of elements to write
@@ -2955,6 +3179,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Write to file from a single process at the desired offset
+	 *
+	 * \see MPI_File_write_at
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to write at
@@ -2973,6 +3199,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Write to file from all processes that opened the file at the desired offset
 	 *
+	 * \see MPI_File_write_at_all
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to write at
 	 * \param[in] sptr				Pointer to the memory to be written
@@ -2990,6 +3218,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Write to file from all processes that opened the file in sequence
 	 *
+	 * \see MPI_File_write_ordered
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
 	 * \param[in] snum				The number of elements to write
@@ -3005,6 +3235,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Write to file from any processes that opened the file in parallel
+	 *
+	 * \see MPI_File_write_shared
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
@@ -3022,6 +3254,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Non-Blocking. Write to file from a single processes 
 	 *
+	 * \see MPI_File_iwrite
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
 	 * \param[in] snum				The number of elements to write
@@ -3037,6 +3271,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Non-Blocking. Write to file from a single process at the desired offset
+	 *
+	 * \see MPI_File_iwrite_at
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to write to
@@ -3055,6 +3291,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Non-Blocking. Write to file from any processes that opened the file in parallel
 	 *
+	 * \see MPI_File_iwrite_shared
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] sptr				Pointer to the memory to be written
 	 * \param[in] snum				The number of elements to write
@@ -3070,6 +3308,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Read from file from a single process
+	 *
+	 * \see MPI_File_read
 	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
@@ -3087,6 +3327,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Read from file from all processes that opened the file
 	 *
+	 * \see MPI_File_read_all
+	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
 	 * \param[in] rnum				The number of elements to read
@@ -3102,6 +3344,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Read from file from a single process at the desired offset
+	 *
+	 * \see MPI_File_read_at
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to read from
@@ -3120,6 +3364,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Read from file from all processes that opened the file at the desired offset
 	 *
+	 * \see MPI_File_read_at_all
+	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to read from
 	 * \param[out] rptr				Pointer to the memory to be read into
@@ -3137,6 +3383,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Read from file from all processes that opened the file in sequence
 	 *
+	 * \see MPI_File_read_ordered
+	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
 	 * \param[in] rnum				The number of elements to read
@@ -3152,6 +3400,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Read from file from any processes that opened the file in parallel
+	 *
+	 * \see MPI_File_read_shared
 	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
@@ -3169,6 +3419,8 @@ namespace MEL {
 	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process
 	 *
+	 * \see MPI_File_iread
+	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
 	 * \param[in] rnum				The number of elements to read
@@ -3184,6 +3436,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Non-Blocking. Read from file from a single process at the desired offset
+	 *
+	 * \see MPI_File_iread_at
 	 *
 	 * \param[in] file				The file handle
 	 * \param[in] offset			Byte offset into the file to read from
@@ -3201,6 +3455,8 @@ namespace MEL {
 	/**
 	 * \ingroup File
 	 * Non-Blocking. Read from file from any process that opened the file in parallel
+	 *
+	 * \see MPI_File_iread_shared
 	 *
 	 * \param[in] file				The file handle
 	 * \param[out] rptr				Pointer to the memory to be read into
@@ -3594,6 +3850,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Send num elements of a derived type from the given address
 	 *
+	 * \see MPI_Send
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3608,6 +3866,8 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Buffered send num elements of a derived type from the given address
+	 *
+	 * \see MPI_Bsend
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
@@ -3624,6 +3884,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Synchronous send num elements of a derived type from the given address
 	 *
+	 * \see MPI_Ssend
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3639,6 +3901,10 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Ready send num elements of a derived type from the given address
 	 *
+	 * \see MPI_Rsend
+	 *
+	 * \warning Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3653,6 +3919,8 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Non-Blocking. Send num elements of a derived type from the given address
+	 *
+	 * \see MPI_Isend
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
@@ -3688,6 +3956,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Non-Blocking. Buffered send num elements of a derived type from the given address
 	 *
+	 * \see MPI_Ibsend
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3722,6 +3992,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Non-Blocking. Synchronous send num elements of a derived type from the given address
 	 *
+	 * \see MPI_Issend
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] datatype			The derived datatype of the elements
@@ -3755,6 +4027,10 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Non-Blocking. Ready send num elements of a derived type from the given address
+	 *
+	 * \see MPI_Irsend
+	 *
+	 * \warning Requires that the matching Recieve has already been posted!Programmer is responsible for making a correct program.
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
@@ -3908,6 +4184,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Ready send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
+	 * \warning Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] dst				The rank of the process to send to
@@ -4019,6 +4297,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Non-Blocking. Ready send num elements of a derived type from the given address. Element size determined by template parameter
 	 *
+	 * \warning Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.
+	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
 	 * \param[in] dst				The rank of the process to send to
@@ -4034,6 +4314,8 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Non-Blocking. Ready end num elements of a derived type from the given address. Element size determined by template parameter
+	 *
+	 * \warning Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.
 	 *
 	 * \param[in] ptr				Pointer to the memory to be sent
 	 * \param[in] num				The number of elements to send
@@ -4051,6 +4333,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Probe an incoming message to predetermine its contents
 	 *
+	 * \see MPI_Probe
+	 *
 	 * \param[in] source			The rank of the process to send to
 	 * \param[in] tag				A tag for the message
 	 * \param[in] comm				The comm world to send within
@@ -4065,6 +4349,8 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Non-Blocking. Probe an incoming message to predetermine its contents
+	 *
+	 * \see MPI_Iprobe
 	 *
 	 * \param[in] source			The rank of the process to send to
 	 * \param[in] tag				A tag for the message
@@ -4081,6 +4367,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Probe the length of an incoming message. Element type is determined from the template parameter
 	 *
+	 * \see MPI_Get_count
+	 *
 	 * \param[in] status			A status object containing the rank and tag for the message
 	 * \return						Returns the number of elements in the message
 	 */
@@ -4093,7 +4381,9 @@ namespace MEL {
     
 	/**
 	 * \ingroup P2P
-	 * Probe the length of an incoming message 
+	 * Probe the length of an incoming message
+	 *
+	 * \see MPI_Get_count 
 	 *
 	 * \param[in] datatype			The derived datatype of the elements 
 	 * \param[in] status			A status object containing the rank and tag for the message
@@ -4139,6 +4429,8 @@ namespace MEL {
 	 * \ingroup P2P
 	 * Recieve a message of known length into the given pointer 
 	 *
+	 * \see MPI_Recv
+	 *
 	 * \param[out] ptr				Pointer to the memory receive into
 	 * \param[in] num				The number of elements to receive
 	 * \param[in] datatype			The derived datatype of the elements
@@ -4156,6 +4448,8 @@ namespace MEL {
 	/**
 	 * \ingroup P2P
 	 * Non-Blocking. Recieve a message of known length into the given pointer 
+	 *
+	 * \see MPI_Irecv
 	 *
 	 * \param[out] ptr				Pointer to the memory receive into
 	 * \param[in] num				The number of elements to receive
@@ -4280,6 +4574,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Broadcast an array to all processes in comm, where all processes know how many elements to expect 
 	 *
+	 * \see MPI_Bcast
+	 *
 	 * \param[in,out] ptr			Pointer to the memory receive into
 	 * \param[in] num				The number of elements to broadcast
 	 * \param[in] datatype			The derived datatype of the elements to broadcast
@@ -4293,6 +4589,8 @@ namespace MEL {
     /**
 	 * \ingroup COL
 	 * Scatter an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \see MPI_Scatter
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
 	 * \param[in] snum				The number of elements to scatter, significant only on root
@@ -4310,6 +4608,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
+	 *
+	 * \see MPI_Scatterv
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
 	 * \param[in] snum				Pointer to an array of number of elements to send to each process, significant only on root
@@ -4329,6 +4629,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Gather an array from all processes in comm 
 	 *
+	 * \see MPI_Gather
+	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4345,6 +4647,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Gather an array from all processes in comm, where all processes have an independent number of elements to send
+	 *
+	 * \see MPI_Gatherv
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
@@ -4364,6 +4668,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Gather an array from all processes in comm and distribute it to all processes 
 	 *
+	 * \see MPI_Allgather
+	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4379,6 +4685,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
+	 *
+	 * \see MPI_Allgatherv
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
@@ -4397,6 +4705,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Broadcast from all processes to all processes
 	 *
+	 * \see MPI_Alltoall
+	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				The number of elements to send
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4412,6 +4722,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Broadcast from all processes to all processes with independent number of elements for each process
+	 *
+	 * \see MPI_Alltoallv
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
@@ -4431,6 +4743,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
 	 *
+	 * \see MPI_Alltoallw
+	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
 	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
@@ -4449,6 +4763,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Reduce an array of known length across all processes in comm using the given operation
 	 *
+	 * \see MPI_Reduce
+	 *
 	 * \param[in] sptr				Pointer to num elements to send
 	 * \param[out] rptr				Pointer to the receive buffer, significant only on root
 	 * \param[in] num				The number of elements in the array
@@ -4465,6 +4781,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
 	 *
+	 * \see MPI_Allreduce
+	 *
 	 * \param[in] sptr				Pointer to num elements to send
 	 * \param[out] rptr				Pointer to the receive buffer
 	 * \param[in] num				The number of elements in the array
@@ -4480,6 +4798,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Broadcast an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \see MPI_Ibcast
 	 *
 	 * \param[in,out] ptr			Pointer to the memory receive into
 	 * \param[in] num				The number of elements to broadcast
@@ -4512,6 +4832,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Scatter an array to all processes in comm, where all processes know how many elements to expect 
+	 *
+	 * \see MPI_Iscatter
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
 	 * \param[in] snum				The number of elements to scatter, significant only on root
@@ -4549,7 +4871,9 @@ namespace MEL {
 
 	/**
 	 * \ingroup COL
-	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect 
+	 * Non-Blocking. Scatter an array to all processes in comm, where all processes have an independent number of elements to expect
+	 *
+	 * \see MPI_Iscatterv 
 	 *
 	 * \param[in] sptr				Pointer to the memory to scatter, significant only on root
 	 * \param[in] snum				Pointer to an array of number of elements to send to each process, significant only on root
@@ -4591,6 +4915,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm 
 	 *
+	 * \see MPI_Igather
+	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4628,6 +4954,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm, where all processes have an independent number of elements to send
+	 *
+	 * \see MPI_Igatherv
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
@@ -4669,6 +4997,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes 
 	 *
+	 * \see MPI_Iallgather
+	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4704,6 +5034,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send
+	 *
+	 * \see MPI_Iallgatherv
 	 *
 	 * \param[in] sptr				Pointer to the memory to gather
 	 * \param[in] snum				The number of elements to gather
@@ -4743,6 +5075,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes
 	 *
+	 * \see MPI_Ialltoall
+	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				The number of elements to send
 	 * \param[in] sdatatype			The derived datatype of the elements to send
@@ -4778,6 +5112,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent number of elements for each process
+	 *
+	 * \see MPI_Ialltoallv
 	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
@@ -4819,6 +5155,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Non-Blocking. Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process
 	 *
+	 * \see MPI_Ialltoallw
+	 *
 	 * \param[in] sptr				Pointer to snum elements to send
 	 * \param[in] snum				Pointer to an array of the number of elements to send from each process
 	 * \param[in] sdispl			Pointer to an array of element displacements of where each processes data is to be sent from
@@ -4859,6 +5197,8 @@ namespace MEL {
 	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation
 	 *
+	 * \see MPI_Ireduce
+	 *
 	 * \param[in] sptr				Pointer to num elements to send
 	 * \param[out] rptr				Pointer to the receive buffer, significant only on root
 	 * \param[in] num				The number of elements in the array
@@ -4894,6 +5234,8 @@ namespace MEL {
 	/**
 	 * \ingroup COL
 	 * Non-Blocking. Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes
+	 *
+	 * \see MPI_Iallreduce
 	 *
 	 * \param[in] sptr				Pointer to num elements to send
 	 * \param[out] rptr				Pointer to the receive buffer
@@ -5194,6 +5536,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Create a window error handler
 	 *
+	 * \see MPI_Win_create_errhandler
+	 *
 	 * \param[in] func	The function to use
 	 * \return			Returns a handle to an error handler
 	 */
@@ -5206,6 +5550,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Set the error handler for a window
+	 *
+	 * \see MPI_Win_set_errhandler
 	 *
 	 * \param[in] win		The file to attach to
 	 * \param[in] errHndl	The handler to use
@@ -5229,6 +5575,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Get the error handler for a window
 	 *
+	 * \see MPI_Win_get_errhandler
+	 *
 	 * \param[in] win	The file to attach to
 	 * \return			Returns a handle to the error handler
 	 */
@@ -5241,6 +5589,8 @@ namespace MEL {
     /**
 	 * \ingroup  Win
      * Create a window on memory allocated with MPI/MEL alloc functions
+	 *
+	 * \see MPI_Win_create, MPI_Win_set_errhandler
 	 *
 	 * \param[in] ptr			Pointer to the memory to be mapped
 	 * \param[in] size			The number of elements to be mapped
@@ -5273,6 +5623,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Synchronize the RMA access epoch for win across all processes attached to it
 	 *
+	 * \see MPI_Win_fence
+	 *
 	 * \param[in] win			The window to synchronize
 	 * \param[in] assert_tag	Program assertion
 	 */
@@ -5293,6 +5645,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Get the lock on an RMA access epoch for a window
+	 *
+	 * \see MPI_Win_lock
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
@@ -5365,6 +5719,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Release the lock on an RMA access epoch for a window
 	 *
+	 * \see MPI_Win_unlock
+	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] rank			The process rank to get the lock from
 	 */
@@ -5375,6 +5731,8 @@ namespace MEL {
     /**
 	 * \ingroup  Win
      * Put data into the mapped window of another process
+	 *
+	 * \see MPI_Put
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -5392,6 +5750,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Accumulate data into the mapped window of another process
+	 *
+	 * \see MPI_Accumulate
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -5411,6 +5771,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Get data from the mapped window of another process
 	 *
+	 * \see MPI_Get
+	 *
 	 * \param[out] origin_ptr		Pointer to the array to get
 	 * \param[in] origin_num		The number of elements to get into the local array
 	 * \param[in] origin_datatype	The derived datatype of the elements to be gotten
@@ -5429,6 +5791,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Get the lock on an RMA access epoch for a window on all attached processes
+	 *
+	 * \see MPI_Win_lock_all
 	 *
 	 * \param[in] win			The window to lock
 	 * \param[in] assert_tag	Program assertion
@@ -5451,6 +5815,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Release the lock on an RMA access epoch for a window on all attached processes
 	 *
+	 * \see MPI_Win_unlock_all
+	 *
 	 * \param[in] win			The window to unlock
 	 */
     inline void WinUnlockAll(const Win &win) {
@@ -5460,6 +5826,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Force all operations within an RMA access epoch for a window to finish
+	 *
+	 * \see MPI_Win_flush
 	 *
 	 * \param[in] win			The window to flush
 	 * \param[in] rank			Rank to force synchronization with
@@ -5472,6 +5840,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Force all operations within an RMA access epoch for a window to finish for all attached processes
 	 *
+	 * \see MPI_Win_flush_all
+	 *
 	 * \param[in] win			The window to flush
 	 */
 	inline void WinFlushAll(const Win &win) {
@@ -5481,6 +5851,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Force all local operations within an RMA access epoch for a window to finish
+	 *
+	 * \see MPI_Win_flush_local
 	 *
 	 * \param[in] win			The window to flush
 	 * \param[in] rank			Rank to force synchronization with
@@ -5493,6 +5865,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Force all local operations within an RMA access epoch for a window to finish for all attached processes
 	 *
+	 * \see MPI_Win_flush_local_all
+	 *
 	 * \param[in] win			The window to flush
 	 */
     inline void WinFlushLocalAll(const Win &win) {
@@ -5503,6 +5877,8 @@ namespace MEL {
 	 * \ingroup  Win
      * Synchronize the public and private copies of the window
 	 *
+	 * \see MPI_Win_sync
+	 *
 	 * \param[in] win			The window to synchronize
 	 */
     inline void WinSync(const Win &win) {
@@ -5512,6 +5888,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Put data into the mapped window of another process
+	 *
+	 * \see MPI_Rput
 	 *
 	 * \param[in] origin_ptr		Pointer to the array to put
 	 * \param[in] origin_num		The number of elements to put from the local array
@@ -5550,6 +5928,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Get data from the mapped window of another process
+	 *
+	 * \see MPI_Rget
 	 *
 	 * \param[out] origin_ptr		Pointer to the array to get
 	 * \param[in] origin_num		The number of elements to get into the local array
@@ -5590,6 +5970,8 @@ namespace MEL {
 	/**
 	 * \ingroup  Win
      * Free an RMA window
+	 *
+	 * \see MPI_Win_free
 	 *
 	 * \param[in] win			The window to free
 	 */

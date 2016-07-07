@@ -32,12 +32,27 @@ SOFTWARE.
 #include <fstream>
 #include <unordered_map>
 
+/**
+* \file MEL_deepcopy.hpp
+*/
+
 namespace MEL {
     namespace Deep {
 
 		/**
  		 * \defgroup Deep Deep Copy Extensions
-		 * Extensions to MEL that leverage template meta programming to implement efficient Deep Copy Semantics. Algorithm discussed in the paper "Implementing Generalized Deep Copy in MPI," Joss Whittle, Rita Borgo, Mark Jones, EuroMPI 2016 (Currently under review).
+		 * Extensions to MEL that leverage template meta programming to implement efficient Deep Copy Semantics. Algorithm discussed in the paper "Implementing Generalized Deep Copy in MPI," Joss Whittle, Rita Borgo, Mark Jones (Currently under review).
+		 *
+		 * \defgroup DeepMsg Deep Copy Message Transport API
+		 *
+		 * \defgroup DeepUtils Utilities for Deep Copy
+		 *
+		 * \defgroup DeepP2P Send/Recv Deep Copy
+		 *
+		 * \defgroup DeepCOL Bcast Deep Copy
+		 *
+		 * \defgroup DeepFile File-IO Deep Copy
+		 *
 		 */
         
 		/// \cond HIDE
@@ -611,27 +626,33 @@ namespace MEL {
 			
 			/// \endcond
 
-            /// Copies the footprint of an object as is
-            ///
-            template<typename T>
+            /**
+			 * \ingroup  DeepMsg
+			 *
+			 * Copies the footprint of an object as is
+			 *
+			 * \param[in,out] obj	The object to be transported
+			 */
+			template<typename T>
             inline enable_if_not_deep<T> packVar(T &obj) {
                 Transport(obj);
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
+			 *
 			 * Transport a deep object reference
 			 *
-			 * \param[in,out] obj	Pointer to the array to be transported
+			 * \param[in,out] obj	The object to be transported
 			 */
-            template<typename T>
-            inline enable_if_deep<T> packVar(T &obj) {
+            template<typename D>
+            inline enable_if_deep<D> packVar(D &obj) {
                 Transport(obj);
                 obj.DeepCopy(*this);
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport an array by its contiguous footprint in memory
 			 *
 			 * \param[in,out] ptr	Pointer to the array to be transported
@@ -643,14 +664,14 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a deep array
 			 *
 			 * \param[in,out] ptr	Pointer to the array to be transported
 			 * \param[in] len		The number of elements to transport
 			 */
-			template<typename T>
-            inline enable_if_deep<T> packPtr(T* &ptr, int len = 1) {
+			template<typename D>
+            inline enable_if_deep<D> packPtr(D* &ptr, int len = 1) {
                 TransportAlloc(ptr, len);
                 /// Copy elements
                 if (ptr != nullptr) {
@@ -661,7 +682,7 @@ namespace MEL {
             };
 
 			/**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a (potentially shared) array by its contiguous footprint in memory
 			 *
 			 * \param[in,out] ptr	Pointer to the array to be transported
@@ -683,15 +704,15 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a (potentially shared) deep array
 			 *
 			 * \param[in,out] ptr	Pointer to the array to be transported
 			 * \param[in] len		The number of elements to transport
 			 */
-			template<typename T>
-			inline enable_if_deep<T> packSharedPtr(T* &ptr, int len = 1) {
-				T *oldPtr = ptr;
+			template<typename D>
+			inline enable_if_deep<D> packSharedPtr(D* &ptr, int len = 1) {
+				D *oldPtr = ptr;
 				if (CheckPointerCache(ptr)) {
 					if (!isSource()) {
 						GetCachedPointer(ptr);
@@ -712,7 +733,7 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::string
 			 *
 			 * \param[in,out] obj	The std::string to transport
@@ -728,7 +749,7 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::vector
 			 *
 			 * \param[in,out] obj	The std::vector to transport
@@ -747,21 +768,21 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::vector of deep objects
 			 *
 			 * \param[in,out] obj	The std::vector to transport
 			 */
-			template<typename T>
-            inline enable_if_deep<T> packSTL(std::vector<T> &obj) {
+			template<typename D>
+            inline enable_if_deep<D> packSTL(std::vector<D> &obj) {
                 //int len;
                 //if (isSource()) len = obj.size();
                 //Transport(len);
 
                 int len = obj.size();
-                if (!isSource()) new (&obj) std::vector<T>(len, T());
+                if (!isSource()) new (&obj) std::vector<D>(len, D());
                 
-                T *p = &obj[0];
+                D *p = &obj[0];
                 if (len > 0) Transport(p, len);
                 /// Copy content
                 for (int i = 0; i < len; ++i) {
@@ -770,7 +791,7 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::list
 			 *
 			 * \param[in,out] obj	The std::list to transport
@@ -788,17 +809,17 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::list of deep objects
 			 *
 			 * \param[in,out] obj	The std::list to transport
 			 */
-            template<typename T>
-            inline enable_if_deep<T> packSTL(std::list<T> &obj) {
+            template<typename D>
+            inline enable_if_deep<D> packSTL(std::list<D> &obj) {
                 int len;
                 if (isSource()) len = obj.size();
                 Transport(len);
-                if (!isSource()) new (&obj) std::list<T>(len, T());
+                if (!isSource()) new (&obj) std::list<D>(len, D());
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
                     *this & *it;
@@ -807,7 +828,7 @@ namespace MEL {
             };
 
             /**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a std::string
 			 *
 			 * \param[in,out] obj	The std::string to transport
@@ -818,7 +839,7 @@ namespace MEL {
             };
 
 			/**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a deep/non-deep std::vector
 			 *
 			 * \param[in,out] obj	The std::vector to transport
@@ -830,7 +851,7 @@ namespace MEL {
             };
 
 			/**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a deep/non-deep std::list
 			 *
 			 * \param[in,out] obj	The std::list to transport
@@ -842,7 +863,7 @@ namespace MEL {
             };
 
 			/**
-			 * \ingroup  Deep
+			 * \ingroup  DeepMsg
 			 * Transport a deep/non-deep object reference
 			 *
 			 * \param[in,out] obj	The object to transport
@@ -857,7 +878,7 @@ namespace MEL {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         /**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepUtils
 		 * Compute the buffer size needed to transport a deep object reference
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -871,13 +892,13 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepUtils
 		 * Compute the buffer size needed to transport a pointer to a single deep/non-deep variable
 		 *
 		 * \param[in] ptr	Pointer to the object to be transported
 		 */
-        template<typename T>
-        inline enable_if_pointer<T, int> BufferSize(T &ptr) {
+        template<typename P>
+        inline enable_if_pointer<P, int> BufferSize(P &ptr) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::P2P, true);
             /// Determine the buffersize needed
             msg.packPtr(ptr);
@@ -885,14 +906,14 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepUtils
 		 * Compute the buffer size needed to transport a pointer to an array of deep/non-deep variables
 		 *
 		 * \param[in] ptr	Pointer to the array to be transported
 		 * \param[in] len	The number of elements to be transported
 		 */
-        template<typename T>
-        inline enable_if_pointer<T, int> BufferSize(T &ptr, const int len) {
+        template<typename P>
+        inline enable_if_pointer<P, int> BufferSize(P &ptr, const int len) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::P2P, true);
             /// Determine the buffersize needed
             msg.packVar(len);
@@ -901,7 +922,7 @@ namespace MEL {
         };
 
         /**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a deep object reference
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -910,28 +931,13 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 */
         template<typename T>
-        inline enable_if_deep_not_pointer<T> Send(T &obj, const int dst, const int tag, const Comm &comm) {
+        inline enable_if_not_pointer<T> Send(T &obj, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
             msg & obj;
         };
 
 		/**
-	 	 * \ingroup  Deep
-		 * Send a non-deep object reference
-		 *
-		 * \param[in] obj	The object to transport
-		 * \param[in] dst	The rank of the destination process
-		 * \param[in] tag	The message tag to send with
-		 * \param[in] comm	The comm world to transport within
-		 */
-        template<typename T>
-        inline enable_if_not_deep_not_pointer<T> Send(T &obj, const int dst, const int tag, const Comm &comm) {
-            Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
-            msg.packVar(obj);
-        };
-
-		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to a deep/non-deep object
 		 *
 		 * \param[in] ptr	Pointer to the object to transport
@@ -939,14 +945,14 @@ namespace MEL {
 		 * \param[in] tag	The message tag to send with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Send(T &ptr, const int dst, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Send(P &ptr, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
             msg.packPtr(ptr);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to an array of deep/non-deep objects
 		 *
 		 * \param[in] ptr	Pointer to the array of objects to transport
@@ -955,15 +961,15 @@ namespace MEL {
 		 * \param[in] tag	The message tag to send with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Send(T &ptr, const int len, const int dst, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Send(P &ptr, const int len, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, false);
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a deep object reference using a buffered send. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -987,7 +993,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a deep object reference using a buffered send. Buffersize is calculated before transport
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -1006,7 +1012,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to a deep/non-deep object using a buffered send. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] ptr	Pointer to the object to transport
@@ -1015,8 +1021,8 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedSend(T &ptr, const int dst, const int tag, const Comm &comm, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedSend(P &ptr, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, true);
 
             /// Allocate space for buffer
@@ -1030,7 +1036,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to a deep/non-deep object using a buffered send. Buffersize is calculated before transport
 		 *
 		 * \param[in] ptr	Pointer to the object to transport
@@ -1038,8 +1044,8 @@ namespace MEL {
 		 * \param[in] tag	The message tag to send with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedSend(T &ptr, const int dst, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedSend(P &ptr, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, true);
             int bufferSize;
             /// Determine the buffersize needed
@@ -1049,7 +1055,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to an array of deep/non-deep objects using a buffered send. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] ptr	Pointer to the array of objects to transport
@@ -1059,8 +1065,8 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedSend(T &ptr, const int len, const int dst, const int tag, const Comm &comm, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedSend(P &ptr, const int len, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, true);
 
             /// Allocate space for buffer
@@ -1075,7 +1081,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Send a pointer to an array of deep/non-deep objects using a buffered send. Buffersize is calculated before transport
 		 *
 		 * \param[in] ptr	Pointer to the array of objects to transport
@@ -1084,8 +1090,8 @@ namespace MEL {
 		 * \param[in] tag	The message tag to send with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedSend(T &ptr, const int len, const int dst, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedSend(P &ptr, const int len, const int dst, const int tag, const Comm &comm) {
             Message msg(dst, tag, comm, true, Message::Mode::P2P, true);
             int bufferSize;
             /// Determine the buffersize needed
@@ -1096,7 +1102,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a deep object reference
 		 *
 		 * \param[out] obj	The deep object to transport
@@ -1105,28 +1111,13 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 */
         template<typename T>
-        inline enable_if_deep_not_pointer<T> Recv(T &obj, const int src, const int tag, const Comm &comm) {
+        inline enable_if_not_pointer<T> Recv(T &obj, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
             msg & obj;
         };
 
 		/**
-	 	 * \ingroup  Deep
-		 * Receive a non-deep object reference
-		 *
-		 * \param[out] obj	The non-deep object to transport
-		 * \param[in] src	The rank of the source process
-		 * \param[in] tag	The message tag to receive with
-		 * \param[in] comm	The comm world to transport within
-		 */
-        template<typename T>
-        inline enable_if_not_deep_not_pointer<T> Recv(T &obj, const int src, const int tag, const Comm &comm) {
-            Message msg(src, tag, comm, false, Message::Mode::P2P, false);
-            msg.packVar(obj);
-        };
-
-		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to a deep/non-deep object
 		 *
 		 * \param[out] ptr	Pointer to the object to transport
@@ -1134,15 +1125,15 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Recv(T &ptr, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Recv(P &ptr, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packPtr(ptr);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to an array of deep/non-deep objects
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
@@ -1151,16 +1142,16 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Recv(T &ptr, int &len, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Recv(P &ptr, int &len, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to an array of deep/non-deep objects
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
@@ -1169,18 +1160,18 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Recv(T &ptr, const int len, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Recv(P &ptr, const int len, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, false);
             int _len = len;
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
             msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::Recv(ptr, len) const int len provided does not match incomming message size.");
             msg.packPtr(ptr, _len);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a deep object reference using a buffered receive. Buffersize determined by probing the incoming message
 		 *
 		 * \param[out] obj	The deep object to transport
@@ -1203,7 +1194,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to a deep/non-deep object using a buffered receive. Buffersize determined by probing the incoming message
 		 *
 		 * \param[out] ptr	Pointer to the deep/non-deep object to transport
@@ -1211,8 +1202,8 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedRecv(T &ptr, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedRecv(P &ptr, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, true);
 
             /// Allocate space for buffer
@@ -1220,14 +1211,14 @@ namespace MEL {
             /// Share the buffer
             msg._BufferTransport();
             /// Unpack the buffer 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packPtr(ptr);
             /// Clean up
             msg._BufferFree();
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to an array of deep/non-deep objects using a buffered receive. Buffersize determined by probing the incoming message
 		 *
 		 * \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
@@ -1236,8 +1227,8 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedRecv(T &ptr, int &len, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedRecv(P &ptr, int &len, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, true);
 
             /// Allocate space for buffer
@@ -1245,7 +1236,7 @@ namespace MEL {
             /// Share the buffer
             msg._BufferTransport();
             /// Unpack the buffer 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
             /// Clean up
@@ -1253,7 +1244,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepP2P
 		 * Receive a pointer to an array of deep/non-deep objects using a buffered receive. Buffersize determined by probing the incoming message
 		 *
 		 * \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
@@ -1262,8 +1253,8 @@ namespace MEL {
 		 * \param[in] tag	The message tag to receive with
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedRecv(T &ptr, const int len, const int src, const int tag, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedRecv(P &ptr, const int len, const int src, const int tag, const Comm &comm) {
             Message msg(src, tag, comm, false, Message::Mode::P2P, true);
 			int _len = len;
             /// Allocate space for buffer
@@ -1271,7 +1262,7 @@ namespace MEL {
             /// Share the buffer
             msg._BufferTransport();
             /// Unpack the buffer 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedRecv(ptr, len) const int len provided does not match incomming message size.");
             msg.packPtr(ptr, _len);
@@ -1280,7 +1271,7 @@ namespace MEL {
         };
 
         /**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a deep object reference
 		 *
 		 * \param[in,out] obj	The deep object to transport
@@ -1288,43 +1279,29 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 */
         template<typename T>
-        inline enable_if_deep_not_pointer<T> Bcast(T &obj, const int root, const Comm &comm) {
+        inline enable_if_not_pointer<T> Bcast(T &obj, const int root, const Comm &comm) {
             Message msg(root, 0, comm, (MEL::CommRank(comm) == root), Message::Mode::Collective, false);
             msg & obj;
         };
-        
-		/**
-	 	 * \ingroup  Deep
-		 * Broadcast a non-deep object reference
-		 *
-		 * \param[in,out] obj	The non-deep object to transport
-		 * \param[in] root	The rank of the source process
-		 * \param[in] comm	The comm world to transport within
-		 */
-		template<typename T>
-        inline enable_if_not_deep_not_pointer<T> Bcast(T &obj, const int root, const Comm &comm) {
-            Message msg(root, 0, comm, (MEL::CommRank(comm) == root), Message::Mode::Collective, false);
-            msg.packVar(obj);
-        };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> Bcast(T &ptr, const int root, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> Bcast(P &ptr, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, false);
-            if (!source) ptr = (T) 0x1;
+            if (!source) ptr = (P) 0x1;
             msg.packPtr(ptr);
         };
         
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to an array of deep/non-deep objects
 		 *
 		 * \param[in,out] ptr	Pointer to the array of deep/non-deep objects to transport
@@ -1332,11 +1309,11 @@ namespace MEL {
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-		template<typename T>
-        inline enable_if_pointer<T> Bcast(T &ptr, const int len, const int root, const Comm &comm) {
+		template<typename P>
+        inline enable_if_pointer<P> Bcast(P &ptr, const int len, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, false);
-            if (!source) ptr = (T) 0x1;
+            if (!source) ptr = (P) 0x1;
             int _len = len;
             msg.packVar(_len);
 			if (!source && len != _len) MEL::Exit(-1, "MEL::Deep::Bcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1344,7 +1321,7 @@ namespace MEL {
         };
         
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to an array of deep/non-deep objects
 		 *
 		 * \param[in,out] ptr	Pointer to the array of deep/non-deep objects to transport
@@ -1352,17 +1329,17 @@ namespace MEL {
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-		template<typename T>
-        inline enable_if_pointer<T> Bcast(T &ptr, int &len, const int root, const Comm &comm) {
+		template<typename P>
+        inline enable_if_pointer<P> Bcast(P &ptr, int &len, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, false);
-            if (!source) ptr = (T) 0x1;
+            if (!source) ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a deep object reference using a buffered broadcast. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in,out] obj	The deep object to transport
@@ -1395,7 +1372,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a deep object reference using a buffered broadcast. Buffersize is calculated before transport
 		 *
 		 * \param[in,out] obj	The deep object to transport
@@ -1417,7 +1394,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
@@ -1425,8 +1402,8 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, const int root, const Comm &comm, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, const int root, const Comm &comm, const int bufferSize) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
 
@@ -1441,7 +1418,7 @@ namespace MEL {
             msg._BufferTransport();
 
             if (!source) {
-                ptr = (T) 0x1;
+                ptr = (P) 0x1;
                 /// Unpack the buffer on the receiver
                 msg.packPtr(ptr);
             }
@@ -1451,15 +1428,15 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize is calculated before transport
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, const int root, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
             int bufferSize;
@@ -1473,7 +1450,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
@@ -1482,8 +1459,8 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, int &len, const int root, const Comm &comm, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, int &len, const int root, const Comm &comm, const int bufferSize) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
 
@@ -1499,7 +1476,7 @@ namespace MEL {
             msg._BufferTransport();
 
             if (!source) {
-                ptr = (T) 0x1;
+                ptr = (P) 0x1;
                 /// Unpack the buffer on the receiver
                 msg.packVar(len);
                 msg.packPtr(ptr);
@@ -1510,7 +1487,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize is calculated before transport
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
@@ -1518,8 +1495,8 @@ namespace MEL {
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, int &len, const int root, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, int &len, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
             int bufferSize;
@@ -1534,7 +1511,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
@@ -1543,8 +1520,8 @@ namespace MEL {
 		 * \param[in] comm	The comm world to transport within
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, const int len, const int root, const Comm &comm, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, const int len, const int root, const Comm &comm, const int bufferSize) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
 
@@ -1561,7 +1538,7 @@ namespace MEL {
             msg._BufferTransport();
 
             if (!source) {
-                ptr = (T) 0x1;
+                ptr = (P) 0x1;
                 /// Unpack the buffer on the receiver
 				msg.packVar(_len);
 				if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedBcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1573,7 +1550,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepCOL
 		 * Broadcast a pointer to a deep/non-deep object using a buffered broadcast. Buffersize is calculated before transport
 		 *
 		 * \param[in,out] ptr	Pointer to the deep/non-deep object to transport
@@ -1581,8 +1558,8 @@ namespace MEL {
 		 * \param[in] root	The rank of the source process
 		 * \param[in] comm	The comm world to transport within
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedBcast(T &ptr, const int len, const int root, const Comm &comm) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedBcast(P &ptr, const int len, const int root, const Comm &comm) {
             const bool source = (MEL::CommRank(comm) == root);
             Message msg(root, 0, comm, source, Message::Mode::Collective, true);
             int _len = len;
@@ -1598,44 +1575,29 @@ namespace MEL {
         };
 
         /**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a deep object reference to file
 		 *
 		 * \param[in] obj	The deep object to transport
 		 * \param[in] file	The file to write to
 		 */
         template<typename T>
-        inline enable_if_deep_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
+        inline enable_if_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg & obj;
             msg._FileDetach();
         };
-        
-		/**
-	 	 * \ingroup  Deep
-		 * Write a non-deep object reference to file
-		 *
-		 * \param[in] obj	The non-deep object to transport
-		 * \param[in] file	The file to write to
-		 */
-		template<typename T>
-        inline enable_if_not_deep_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
-            msg._FileAttach(&file); 
-            msg.packVar(obj);
-            msg._FileDetach();
-        };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to a deep/non-deep object to file
 		 *
 		 * \param[in] ptr	Pointer to the deep/non-deep object to transport
 		 * \param[in] file	The file to write to
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> FileWrite(T &ptr, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> FileWrite(P &ptr, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg.packPtr(ptr);
@@ -1643,15 +1605,15 @@ namespace MEL {
         };
         
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to an array of deep/non-deep objects to file
 		 *
 		 * \param[in] ptr	Pointer to the array of deep/non-deep objects to transport
 		 * \param[in] len	The number of elements to write
 		 * \param[in] file	The file to write to
 		 */
-		template<typename T>
-        inline enable_if_pointer<T> FileWrite(T &ptr, const int len, MEL::File &file) {
+		template<typename P>
+        inline enable_if_pointer<P> FileWrite(P &ptr, const int len, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
             msg.packVar(len);
@@ -1660,7 +1622,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a deep object reference to file using a buffered write. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -1685,7 +1647,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a deep object reference to file using a buffered write. Buffersize is calculated before transport
 		 *
 		 * \param[in] obj	The deep object to transport
@@ -1706,15 +1668,15 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to a deep/non-deep object to file using a buffered write. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] ptr	Pointer to the object to transport
 		 * \param[in] file	The file to write to
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileWrite(T &ptr, MEL::File &file, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileWrite(P &ptr, MEL::File &file, const int bufferSize) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
@@ -1731,14 +1693,14 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to a deep/non-deep object to file using a buffered write. Buffersize is calculated before transport
 		 *
 		 * \param[in] ptr	Pointer to the object to transport
 		 * \param[in] file	The file to write to
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileWrite(T &ptr, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileWrite(P &ptr, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file); 
             
@@ -1752,7 +1714,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to an array of deep/non-deep objects to file using a buffered write. Buffersize must be calculated ahead of time
 		 *
 		 * \param[in] ptr	Pointer to the array of objects to transport
@@ -1760,8 +1722,8 @@ namespace MEL {
 		 * \param[in] file	The file to write to
 		 * \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, MEL::File &file, const int bufferSize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, MEL::File &file, const int bufferSize) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
@@ -1779,15 +1741,15 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Write a pointer to an array of deep/non-deep objects to file using a buffered write. Buffersize is calculated before transport
 		 *
 		 * \param[in] ptr	Pointer to the array of objects to transport
 		 * \param[in] len	The number of elements to write
 		 * \param[in] file	The file to write to
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::MEL_File, true);
             msg._FileAttach(&file); 
             
@@ -1802,14 +1764,14 @@ namespace MEL {
         };
 
         /**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a deep object reference from file
 		 *
 		 * \param[out] obj	The deep object to transport
 		 * \param[in] file	The file to read from
 		 */
         template<typename T>
-        inline enable_if_deep_not_pointer<T> FileRead(T &obj, MEL::File &file) {
+        inline enable_if_not_pointer<T> FileRead(T &obj, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file);
             msg & obj;
@@ -1817,50 +1779,35 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
-		 * Read a non-deep object reference from file
-		 *
-		 * \param[out] obj	The non-deep object to transport
-		 * \param[in] file	The file to read from
-		 */
-        template<typename T>
-        inline enable_if_not_deep_not_pointer<T> FileRead(T &obj, MEL::File &file) {
-            Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
-            msg._FileAttach(&file); 
-            msg.packVar(obj);
-            msg._FileDetach();
-        };
-
-		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to a deep/non-deep object from file
 		 *
 		 * \param[out] ptr	Pointer to the deep/non-deep object to transport
 		 * \param[in] file	The file to read from
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> FileRead(T &ptr, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> FileRead(P &ptr, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packPtr(ptr);
             msg._FileDetach();
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects from file
 		 *
 		 * \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
 		 * \param[in] len	The number of elements to read
 		 * \param[in] file	The file to read from
 		 */
-		template<typename T>
-		inline enable_if_pointer<T> FileRead(T &ptr, const int len, MEL::File &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileRead(P &ptr, const int len, MEL::File &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
 			int _len = len;
 			msg._FileAttach(&file);
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
@@ -1868,25 +1815,25 @@ namespace MEL {
 		};
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects from file
 		 *
 		 * \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
 		 * \param[out] len	The number of elements that were read
 		 * \param[in] file	The file to read from
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> FileRead(T &ptr, int &len, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> FileRead(P &ptr, int &len, MEL::File &file) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, false);
             msg._FileAttach(&file); 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
             msg._FileDetach();
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a deep object reference to file using a buffered read. Buffersize must be calculated ahead of time
 		 *
 		 * \param[out] obj	The deep object to transport
@@ -1911,7 +1858,7 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a deep object reference to file using a buffered read. Buffersize is calculated before transport
 		 *
 		 * \param[out] obj	The deep object to transport
@@ -1923,15 +1870,15 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to a deep/non-deep object to file using a buffered read. Buffersize must be calculated ahead of time
 		 *
 		 * \param[out] ptr	Pointer to the object to transport
 		 * \param[in] file	The file to read from
 		 * \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileRead(T &ptr, MEL::File &file, const int buffersize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileRead(P &ptr, MEL::File &file, const int buffersize) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
             msg._FileAttach(&file);
 
@@ -1940,7 +1887,7 @@ namespace MEL {
             /// Share the buffer
             msg._BufferTransport();
             /// Unpack the buffer 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
             msg.packPtr(ptr);
             /// Clean up
             msg._BufferFree();
@@ -1949,19 +1896,19 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to a deep/non-deep object to file using a buffered read. Buffersize is calculated before transport
 		 *
 		 * \param[out] ptr	Pointer to the object to transport
 		 * \param[in] file	The file to read from
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileRead(T &ptr, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileRead(P &ptr, MEL::File &file) {
             BufferedFileRead(ptr, file, MEL::FileGetSize(file));
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects to file using a buffered read. Buffersize must be calculated ahead of time
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
@@ -1969,8 +1916,8 @@ namespace MEL {
 		 * \param[in] file	The file to read from
 		 * \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, MEL::File &file, const int buffersize) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileRead(P &ptr, const int len, MEL::File &file, const int buffersize) {
             Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
             int _len = len;
 			
@@ -1981,7 +1928,7 @@ namespace MEL {
             /// Share the buffer
             msg._BufferTransport();
             /// Unpack the buffer 
-            ptr = (T) 0x1;
+            ptr = (P) 0x1;
 			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
@@ -1992,20 +1939,20 @@ namespace MEL {
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects to file using a buffered read. Buffersize is calculated before transport
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
 		 * \param[in] len	The number of elements to read
 		 * \param[in] file	The file to read from
 		 */
-        template<typename T>
-        inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, MEL::File &file) {
+        template<typename P>
+        inline enable_if_pointer<P> BufferedFileRead(P &ptr, const int len, MEL::File &file) {
             BufferedFileRead(ptr, len, file, MEL::FileGetSize(file));
         };
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects to file using a buffered read. Buffersize must be calculated ahead of time
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
@@ -2013,8 +1960,8 @@ namespace MEL {
 		 * \param[in] file	The file to read from
 		 * \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		 */
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, MEL::File &file, const int buffersize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, int &len, MEL::File &file, const int buffersize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::MEL_File, true);
 			msg._FileAttach(&file);
 
@@ -2023,7 +1970,7 @@ namespace MEL {
 			/// Share the buffer
 			msg._BufferTransport();
 			/// Unpack the buffer 
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(len);
 			msg.packPtr(ptr, len);
 			/// Clean up
@@ -2033,27 +1980,27 @@ namespace MEL {
 		};
 
 		/**
-	 	 * \ingroup  Deep
+	 	 * \ingroup  DeepFile
 		 * Read a pointer to an array of deep/non-deep objects to file using a buffered read. Buffersize is calculated before transport
 		 *
 		 * \param[out] ptr	Pointer to the array of objects to transport
 		 * \param[out] len	The number of elements that were read
 		 * \param[in] file	The file to read from
 		 */
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, MEL::File &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, int &len, MEL::File &file) {
 			BufferedFileRead(ptr, len, file, MEL::FileGetSize(file));
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a deep object reference to an stl file
 		*
 		* \param[in] obj	The deep object to transport
 		* \param[in] file	The file to write to
 		*/
 		template<typename T>
-		inline enable_if_deep_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
+		inline enable_if_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
 			msg & obj;
@@ -2061,29 +2008,14 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
-		* Write a non-deep object reference to an stl file
-		*
-		* \param[in] obj	The non-deep object to transport
-		* \param[in] file	The file to write to
-		*/
-		template<typename T>
-		inline enable_if_not_deep_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
-			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
-			msg._FileAttach(&file);
-			msg.packVar(obj);
-			msg._FileDetach();
-		};
-
-		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to a deep/non-deep object to an stl file
 		*
 		* \param[in] ptr	Pointer to the deep/non-deep object to transport
 		* \param[in] file	The file to write to
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> FileWrite(T &ptr, std::ofstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileWrite(P &ptr, std::ofstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
 			msg.packPtr(ptr);
@@ -2091,15 +2023,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to an array of deep/non-deep objects to an stl file
 		*
 		* \param[in] ptr	Pointer to the array of deep/non-deep objects to transport
 		* \param[in] len	The number of elements to write
 		* \param[in] file	The file to write to
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> FileWrite(T &ptr, const int len, std::ofstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileWrite(P &ptr, const int len, std::ofstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
 			msg.packVar(len);
@@ -2108,7 +2040,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a deep object reference to an stl file using a buffered write. Buffersize must be calculated ahead of time
 		*
 		* \param[in] obj	The deep object to transport
@@ -2133,7 +2065,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a deep object reference to an stl file using a buffered write. Buffersize is calculated before transport
 		*
 		* \param[in] obj	The deep object to transport
@@ -2154,15 +2086,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to a deep/non-deep object to an stl file using a buffered write. Buffersize must be calculated ahead of time
 		*
 		* \param[in] ptr	Pointer to the object to transport
 		* \param[in] file	The file to write to
 		* \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, std::ofstream &file, const int bufferSize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileWrite(P &ptr, std::ofstream &file, const int bufferSize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2179,14 +2111,14 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to a deep/non-deep object to an stl file using a buffered write. Buffersize is calculated before transport
 		*
 		* \param[in] ptr	Pointer to the object to transport
 		* \param[in] file	The file to write to
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, std::ofstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileWrite(P &ptr, std::ofstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2200,7 +2132,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. Buffersize must be calculated ahead of time
 		*
 		* \param[in] ptr	Pointer to the array of objects to transport
@@ -2208,8 +2140,8 @@ namespace MEL {
 		* \param[in] file	The file to write to
 		* \param[in] bufferSize	The buffer size needed to pack the entire structure contiguously
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, std::ofstream &file, const int bufferSize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, std::ofstream &file, const int bufferSize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2227,15 +2159,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Write a pointer to an array of deep/non-deep objects to an stl file using a buffered write. Buffersize is calculated before transport
 		*
 		* \param[in] ptr	Pointer to the array of objects to transport
 		* \param[in] len	The number of elements to write
 		* \param[in] file	The file to write to
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileWrite(T &ptr, const int len, std::ofstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, std::ofstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, true, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2250,14 +2182,14 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a deep object reference from file
 		*
 		* \param[out] obj	The deep object to transport
 		* \param[in] file	The file to read from
 		*/
 		template<typename T>
-		inline enable_if_deep_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
+		inline enable_if_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
 			msg & obj;
@@ -2265,50 +2197,35 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
-		* Read a non-deep object reference from file
-		*
-		* \param[out] obj	The non-deep object to transport
-		* \param[in] file	The file to read from
-		*/
-		template<typename T>
-		inline enable_if_not_deep_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
-			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
-			msg._FileAttach(&file);
-			msg.packVar(obj);
-			msg._FileDetach();
-		};
-
-		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to a deep/non-deep object from file
 		*
 		* \param[out] ptr	Pointer to the deep/non-deep object to transport
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> FileRead(T &ptr, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileRead(P &ptr, std::ifstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packPtr(ptr);
 			msg._FileDetach();
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects from file
 		*
 		* \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
 		* \param[in] len	The number of elements to read
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> FileRead(T &ptr, const int len, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileRead(P &ptr, const int len, std::ifstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
 			int _len = len;
 			msg._FileAttach(&file);
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
@@ -2316,25 +2233,25 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects from file
 		*
 		* \param[out] ptr	Pointer to the array of deep/non-deep objects to transport
 		* \param[out] len	The number of elements that were read
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> FileRead(T &ptr, int &len, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> FileRead(P &ptr, int &len, std::ifstream &file) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, false);
 			msg._FileAttach(&file);
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(len);
 			msg.packPtr(ptr, len);
 			msg._FileDetach();
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a deep object reference to an stl file using a buffered read. Buffersize must be calculated ahead of time
 		*
 		* \param[out] obj	The deep object to transport
@@ -2359,7 +2276,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a deep object reference to an stl file using a buffered read. Buffersize is calculated before transport
 		*
 		* \param[out] obj	The deep object to transport
@@ -2376,15 +2293,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to a deep/non-deep object to an stl file using a buffered read. Buffersize must be calculated ahead of time
 		*
 		* \param[out] ptr	Pointer to the object to transport
 		* \param[in] file	The file to read from
 		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, std::ifstream &file, const int buffersize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, std::ifstream &file, const int buffersize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2393,7 +2310,7 @@ namespace MEL {
 			/// Share the buffer
 			msg._BufferTransport();
 			/// Unpack the buffer 
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packPtr(ptr);
 			/// Clean up
 			msg._BufferFree();
@@ -2402,14 +2319,14 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to a deep/non-deep object to an stl file using a buffered read. Buffersize is calculated before transport
 		*
 		* \param[out] ptr	Pointer to the object to transport
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, std::ifstream &file) {
 			std::streampos pos = file.tellg();
 			file.seekg(0, std::ios::end);
 			int fsize = (int) file.tellg();
@@ -2419,7 +2336,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize must be calculated ahead of time
 		*
 		* \param[out] ptr	Pointer to the array of objects to transport
@@ -2427,8 +2344,8 @@ namespace MEL {
 		* \param[in] file	The file to read from
 		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, std::ifstream &file, const int buffersize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, const int len, std::ifstream &file, const int buffersize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
 			int _len = len;
 
@@ -2439,7 +2356,7 @@ namespace MEL {
 			/// Share the buffer
 			msg._BufferTransport();
 			/// Unpack the buffer 
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(_len);
 			if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
 			msg.packPtr(ptr, _len);
@@ -2450,15 +2367,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize is calculated before transport
 		*
 		* \param[out] ptr	Pointer to the array of objects to transport
 		* \param[in] len	The number of elements to read
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, const int len, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, const int len, std::ifstream &file) {
 			std::streampos pos = file.tellg();
 			file.seekg(0, std::ios::end);
 			int fsize = (int) file.tellg();
@@ -2468,7 +2385,7 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize must be calculated ahead of time
 		*
 		* \param[out] ptr	Pointer to the array of objects to transport
@@ -2476,8 +2393,8 @@ namespace MEL {
 		* \param[in] file	The file to read from
 		* \param[in] buffersize	The buffer size needed to pack the entire structure contiguously
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, std::ifstream &file, const int buffersize) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, int &len, std::ifstream &file, const int buffersize) {
 			Message msg(0, 0, MEL::Comm::COMM_NULL, false, Message::Mode::STL_File, true);
 			msg._FileAttach(&file);
 
@@ -2486,7 +2403,7 @@ namespace MEL {
 			/// Share the buffer
 			msg._BufferTransport();
 			/// Unpack the buffer 
-			ptr = (T) 0x1;
+			ptr = (P) 0x1;
 			msg.packVar(len);
 			msg.packPtr(ptr, len);
 			/// Clean up
@@ -2496,15 +2413,15 @@ namespace MEL {
 		};
 
 		/**
-		* \ingroup  Deep
+		* \ingroup  DeepFile
 		* Read a pointer to an array of deep/non-deep objects to an stl file using a buffered read. Buffersize is calculated before transport
 		*
 		* \param[out] ptr	Pointer to the array of objects to transport
 		* \param[out] len	The number of elements that were read
 		* \param[in] file	The file to read from
 		*/
-		template<typename T>
-		inline enable_if_pointer<T> BufferedFileRead(T &ptr, int &len, std::ifstream &file) {
+		template<typename P>
+		inline enable_if_pointer<P> BufferedFileRead(P &ptr, int &len, std::ifstream &file) {
 			std::streampos pos = file.tellg();
 			file.seekg(0, std::ios::end);
 			int fsize = (int) file.tellg();
