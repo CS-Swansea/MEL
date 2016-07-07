@@ -33,14 +33,14 @@ SOFTWARE.
 namespace MEL {
     namespace OMP {
 
-		/**
- 		 * \defgroup OMP OpenMP Extensions
-		 * Extensions to MEL that leverage OpenMP for within node paralellism
-		 */
+        /**
+         * \defgroup OMP OpenMP Extensions
+         * Extensions to MEL that leverage OpenMP for within node paralellism
+         */
 
-		/**
-		 * \ingroup  OMP
-		 */
+        /**
+         * \ingroup  OMP
+         */
         enum Schedule : int {
             STATIC  = omp_sched_static,
             DYNAMIC = omp_sched_dynamic,
@@ -50,15 +50,15 @@ namespace MEL {
 
         namespace Functor {
 
-			/**
-			 * \ingroup  OMP
-			 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
-			 *
-			 * \param[in] in		The left hand array for the reduction
-			 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
-			 * \param[in] len		Pointer to a single int representing the number of elements to be processed
-			 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
-			 */
+            /**
+             * \ingroup  OMP
+             * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
+             *
+             * \param[in] in		The left hand array for the reduction
+             * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+             * \param[in] len		Pointer to a single int representing the number of elements to be processed
+             * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+             */
             template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
             void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
                 omp_set_schedule((omp_sched_t) SCHEDULE, CHUNK);
@@ -67,15 +67,15 @@ namespace MEL {
                     inout[i] = F(in[i], inout[i]);
             };
     
-			/**
-			 * \ingroup  OMP
-			 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
-			 *
-			 * \param[in] in		The left hand array for the reduction
-			 * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
-			 * \param[in] len		Pointer to a single int representing the number of elements to be processed
-			 * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
-			 */
+            /**
+             * \ingroup  OMP
+             * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
+             *
+             * \param[in] in		The left hand array for the reduction
+             * \param[in] inout		The right hand array for the reduction. This array is modified to reflect the result of the functor on each element
+             * \param[in] len		Pointer to a single int representing the number of elements to be processed
+             * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
+             */
             template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&, MEL::Datatype)>
             void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
                 omp_set_schedule((omp_sched_t) SCHEDULE, CHUNK);
@@ -86,32 +86,32 @@ namespace MEL {
         };
 
         /**
-		 * \ingroup  OMP
-		 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
-		 *
-		 * \see MPI_Op_create
-		 *
-		 * \param[in] commute		Is the operation commutative
-		 * \return					Returns a handle to a new Op
-		 */
-		template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
-		inline MEL::Op OpCreate(bool commute = true) {
+         * \ingroup  OMP
+         * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
+         *
+         * \see MPI_Op_create
+         *
+         * \param[in] commute		Is the operation commutative
+         * \return					Returns a handle to a new Op
+         */
+        template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
+        inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
             MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
         };
 
-		/**
-		 * \ingroup  OMP
-		 * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
-		 *
-		 * \see MPI_Op_create
-		 *
-		 * \param[in] commute		Is the operation commutative
-		 * \return					Returns a handle to a new Op
-		 */
+        /**
+         * \ingroup  OMP
+         * Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism
+         *
+         * \see MPI_Op_create
+         *
+         * \param[in] commute		Is the operation commutative
+         * \return					Returns a handle to a new Op
+         */
         template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&, MEL::Datatype)>
-		inline MEL::Op OpCreate(bool commute = true) {
+        inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
             MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
