@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Bcast Deep Copy &mdash; MEL Documentation 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Deep Copy Extension" href="deep.html" />
+    <link rel="next" title="File-IO Deep Copy" href="deepfile.html" />
+    <link rel="prev" title="Send/Recv Deep Copy" href="deepp2p.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          MEL Documentation</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/CS-Swansea/MEL">Github</a></li>
+            
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">MEL Core Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Bcast Deep Copy</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="deepp2p.html" title="Previous Chapter: Send/Recv Deep Copy"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Send/Recv Dee...</span>
+    </a>
+  </li>
+  <li>
+    <a href="deepfile.html" title="Next Chapter: File-IO Deep Copy"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">File-IO Deep ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="bcast-deep-copy">
+<h1>Bcast Deep Copy<a class="headerlink" href="#bcast-deep-copy" title="Permalink to this headline">¶</a></h1>
+<p>Located in file: <code class="code docutils literal"><span class="pre">MEL_deepcopy.hpp</span></code></p>
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1TKiRK4Comm">
+<span id="MEL::Deep::Bcast__TR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1ga08024d7bc561e5c4ce5ac241d045057e"></span>enable_if_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1TKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1PKiRK4Comm">
+<span id="MEL::Deep::Bcast__PR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1gaba752064989a5620b3985884b55bb762"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1PKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1PKiKiRK4Comm">
+<span id="MEL::Deep::Bcast__PR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1gaf0fff1bf9479fd0bb9e330ecf41c6cad"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1PKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep5BcastER1PRiKiRK4Comm">
+<span id="MEL::Deep::Bcast__PR.iR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1ga1349a4dee0de1e779749f6e162f7fa1f"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep5BcastER1PRiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to an array of deep/non-deep objects. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of deep/non-deep objects to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__TR.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_c_o_l_1gad92aba1f64152bbb8857988a9cd5a2df"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__TR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1gac4d081a54f9186f0088c08d650b61d54"></span>enable_if_deep_not_pointer&lt;T&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>T &amp;<em>obj</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1TKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a deep object reference using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">obj</span></code> - <p>The deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__PR.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_c_o_l_1ga7950465801fceaa377cf7014e6c2c8f5"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__PR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1ga2f46f902cae050ea0fd98c079118d7de"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PRiKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__PR.iR.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_c_o_l_1ga4f947f9826ab195e0caa4aa91546a584"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PRiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PRiKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__PR.iR.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1gadd616565e03e0dc97a7370b81fa3b742"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, int &amp;<em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PRiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast / that were broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PKiKiRK4CommKi">
+<span id="MEL::Deep::BufferedBcast__PR.iC.iC.CommCR.iC"></span><span class="target" id="MELgroup___deep_c_o_l_1gab6517fd34e1f61a54909639f1e5189dc"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> int <em>bufferSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PKiKiRK4CommKi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize must be calculated ahead of time</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">bufferSize</span></code> - <p>The buffer size needed to pack the entire structure contiguously </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> P&gt;</dt>
+<dt id="_CPPv2N3MEL4Deep13BufferedBcastER1PKiKiRK4Comm">
+<span id="MEL::Deep::BufferedBcast__PR.iC.iC.CommCR"></span><span class="target" id="MELgroup___deep_c_o_l_1gaf0883e4dc14bb23d44d7d03864fa207f"></span>enable_if_pointer&lt;P&gt; <code class="descclassname">MEL::Deep::</code><code class="descname">BufferedBcast</code><span class="sig-paren">(</span>P &amp;<em>ptr</em>, <em class="property">const</em> int <em>len</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4Deep13BufferedBcastER1PKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a pointer to a deep/non-deep object using a buffered broadcast. </p>
+<p>Buffersize is calculated before transport</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the deep/non-deep object to transport </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">len</span></code> - <p>The number of elements to broadcast </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">root</span></code> - <p>The rank of the source process </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to transport within </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Joss Whittle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

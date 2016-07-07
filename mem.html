@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Memory Allocation &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Memory Allocation &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Datatypes" href="datatype.html" />
     <link rel="prev" title="Synchronization" href="sync.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -156,6 +141,8 @@
 <span id="MEL::MemAlloc__AintC"></span><span class="target" id="MELgroup___mem_1ga94a749ba35ca1bba0ba9baec157ec925"></span>T *<code class="descclassname">MEL::</code><code class="descname">MemAlloc</code><span class="sig-paren">(</span><em class="property">const</em> Aint <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8MemAllocEK4Aint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allocate a block of memory for &#8216;size&#8217; number of type T. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Alloc_mem</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the pointer to the allocated memory </dd>
 <dt><strong>Parameters</strong></dt>
@@ -215,6 +202,8 @@
 <span id="MEL::MemFree__TPR"></span><span class="target" id="MELgroup___mem_1ga2205316be910a71432809624f5670408"></span>void <code class="descclassname">MEL::</code><code class="descname">MemFree</code><span class="sig-paren">(</span>T *&amp;<em>ptr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7MemFreeERP1T" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free a pointer allocated with MPI_Alloc or the MEL equivilant functions. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Free_mem</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>The pointer to free </p>

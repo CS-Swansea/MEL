@@ -1,7 +1,49 @@
-Deep Copy Extension
-===================
+MEL Deep Copy Extension
+=======================
 
 Located in file: :code:`MEL_deepcopy.hpp`
 
-.. doxygengroup:: Deep
+.. toctree::
+   	:maxdepth: 1
+   	:titlesonly:
+
+   	Message Transport API 	<deepmsg>
+   	Utilities for Deep Copy <deeputils>
+   	Send/Recv Deep Copy 	<deepp2p>
+	Bcast Deep Copy 		<deepcol>
+	File-IO Deep Copy		<deepfile>
+
+Message Transport API
+"""""""""""""""""""""
+
+.. doxygengroup:: DeepMsg
 	:content-only:
+	:outline:
+
+Utilities for Deep Copy
+"""""""""""""""""""""""
+
+.. doxygengroup:: DeepUtils
+	:content-only:
+	:outline:
+
+Send/Recv Deep Copy
+"""""""""""""""""""
+
+.. doxygengroup:: DeepP2P
+	:content-only:
+	:outline:
+
+Bcast Deep Copy
+"""""""""""""""
+
+.. doxygengroup:: DeepCOL
+	:content-only:
+	:outline:
+
+File-IO Deep Copy
+"""""""""""""""""
+
+.. doxygengroup:: DeepFile
+	:content-only:
+	:outline:

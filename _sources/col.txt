@@ -1,5 +1,5 @@
 Collective Communication
-===========================
+========================
 
 Located in file: :code:`MEL.hpp`
 

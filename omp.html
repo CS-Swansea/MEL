@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>OpenMP Extension &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>OpenMP Extension &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
-    <link rel="next" title="Deep Copy Extension" href="deep.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="next" title="MEL Deep Copy Extension" href="deep.html" />
     <link rel="prev" title="Utilities" href="utils.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +51,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -68,26 +69,9 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul class="current">
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -116,7 +100,7 @@
     </a>
   </li>
   <li>
-    <a href="deep.html" title="Next Chapter: Deep Copy Extension"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Deep Copy Ext... &raquo;</span>
+    <a href="deep.html" title="Next Chapter: MEL Deep Copy Extension"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">MEL Deep Copy... &raquo;</span>
     </a>
   </li>
               
@@ -205,6 +189,8 @@
 <span id="MEL::OMP::OpCreate__b"></span><span class="target" id="MELgroup___o_m_p_1ga2569b58db4ab72589042b7534d518297"></span>MEL::Op <code class="descclassname">MEL::OMP::</code><code class="descname">OpCreate</code><span class="sig-paren">(</span>bool <em>commute</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL3OMP8OpCreateEb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps the given binary functor to the local array of a reduction / accumulate operation, using OpenMP for parallelism. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Op_create</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to a new Op </dd>
 <dt><strong>Parameters</strong></dt>

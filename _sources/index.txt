@@ -1,45 +1,13 @@
----------------------------------------------
-MEL - The MPI Extension Library Documentation
----------------------------------------------
-
-Version 0.01 Beta
-=================
-
-MEL Core
-""""""""
+----------------------------------------------------------------
+MEL - The MPI Extension Library Documentation (0.1 Beta)
+----------------------------------------------------------------
 
 .. toctree::
-   	:maxdepth: 1
+   	:maxdepth: 2
+   	:titlesonly:
 
-   	Point-2-Point Communication <p2p>
-	Collective Communication <col>
-	RMA One-Sided Communication <win>
-	Communicators & Groups <comm>
-	Synchronization 	<sync>
-	Memory Allocation	<mem>
-	Derived Datatypes	<datatype>
-	Operations			<ops>
-	Topology 			<topo>
-	File-IO				<file>
-	Mutex 				<mutex>
-	Shared Arrays		<shared>
-	Error Handling 		<errors>
-	Utilities			<utils>
-
-MEL OpenMP
-""""""""""
-
-.. toctree::
-   	:maxdepth: 1
-
+   	MEL Core Library    <core>
 	OpenMP Extension	<omp>
-
-MEL Deep Copy
-"""""""""""""
-
-.. toctree::
-   	:maxdepth: 1
-
 	Deep Copy Extension	<deep>
 
 

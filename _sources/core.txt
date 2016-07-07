@@ -1,0 +1,121 @@
+MEL Core Library
+================
+
+Located in file: :code:`MEL.hpp`
+
+.. toctree::
+   	:maxdepth: 1
+   	:titlesonly:
+
+   	Point-2-Point Communication <p2p>
+	Collective Communication <col>
+	RMA One-Sided Communication <win>
+	Communicators & Groups <comm>
+	Synchronization 	<sync>
+	Memory Allocation	<mem>
+	Derived Datatypes	<datatype>
+	Operations			<ops>
+	Topology 			<topo>
+	File-IO				<file>
+	Mutex 				<mutex>
+	Shared Arrays		<shared>
+	Error Handling 		<errors>
+	Utilities			<utils>
+
+Point-2-Point Communication
+"""""""""""""""""""""""""""
+
+.. doxygengroup:: P2P
+	:content-only:
+	:outline:
+
+Collective Communication
+""""""""""""""""""""""""
+
+.. doxygengroup:: COL
+	:content-only:
+	:outline:
+
+RMA One-Sided Communication
+"""""""""""""""""""""""""""
+
+.. doxygengroup:: Win
+	:content-only:
+	:outline:
+
+Communicators & Groups
+""""""""""""""""""""""
+
+.. doxygengroup:: Comm
+	:content-only:
+	:outline:
+
+Synchronization
+"""""""""""""""
+
+.. doxygengroup:: Sync
+	:content-only:
+	:outline:
+
+Memory Allocation
+"""""""""""""""""
+
+.. doxygengroup:: Mem
+	:content-only:
+	:outline:
+
+Datatypes
+"""""""""
+
+.. doxygengroup:: Datatype
+	:content-only:
+	:outline:
+
+Operations
+""""""""""
+
+.. doxygengroup:: Ops
+	:content-only:
+	:outline:
+
+Topology
+""""""""
+
+.. doxygengroup:: Topo
+	:content-only:
+	:outline:
+
+File-IO
+"""""""
+
+.. doxygengroup:: File
+	:content-only:
+	:outline:
+
+Mutex
+"""""
+
+.. doxygengroup:: Mutex
+	:content-only:
+	:outline:
+
+Shared Arrays
+"""""""""""""
+
+.. doxygengroup:: Shared
+	:content-only:
+	:outline:
+
+Error Handling
+""""""""""""""
+
+.. doxygengroup:: Errors
+	:content-only:
+	:outline:
+
+Utilities
+"""""""""
+
+.. doxygengroup:: Utils
+	:content-only:
+	:outline:

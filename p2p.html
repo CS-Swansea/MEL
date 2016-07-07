@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Point-2-Point Communication &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Point-2-Point Communication &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,9 +29,11 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Collective Communication" href="col.html" />
-    <link rel="prev" title="MEL - The MPI Extension Library Documentation" href="index.html" />
+    <link rel="prev" title="MEL Core Library" href="core.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -112,7 +97,7 @@
               
                 
   <li>
-    <a href="index.html" title="Previous Chapter: MEL - The MPI Extension Library Documentation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; MEL - The MPI...</span>
+    <a href="core.html" title="Previous Chapter: MEL Core Library"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; MEL Core Library</span>
     </a>
   </li>
   <li>
@@ -154,6 +139,8 @@
 <span id="MEL::Send__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga619a6c0c00e5786e4a085a7016b3d188"></span>void <code class="descclassname">MEL::</code><code class="descname">Send</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4SendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send num elements of a derived type from the given address. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Send</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -179,6 +166,8 @@
 <span id="MEL::Bsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gaac32542fb92f80b153622c6805eca5bc"></span>void <code class="descclassname">MEL::</code><code class="descname">Bsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5BsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Buffered send num elements of a derived type from the given address. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Bsend</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -204,6 +193,8 @@
 <span id="MEL::Ssend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gae8ec07182d827fd98167583658e95588"></span>void <code class="descclassname">MEL::</code><code class="descname">Ssend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5SsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronous send num elements of a derived type from the given address. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Ssend</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -229,6 +220,10 @@
 <span id="MEL::Rsend__voidCP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga9e9cb5b6c42643485178ca74dd679843"></span>void <code class="descclassname">MEL::</code><code class="descname">Rsend</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>dst</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5RsendEPKvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ready send num elements of a derived type from the given address. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Rsend</dd>
+<dt><strong>Warning</strong></dt>
+<dd>Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -255,6 +250,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Send num elements of a derived type from the given address</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Isend</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -311,6 +308,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Buffered send num elements of a derived type from the given address</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Ibsend</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -367,6 +366,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Synchronous send num elements of a derived type from the given address</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Issend</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -423,6 +424,10 @@
 <dd><p>Non-Blocking. </p>
 <p>Ready send num elements of a derived type from the given address</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Irsend</dd>
+<dt><strong>Warning</strong></dt>
+<dd>Requires that the matching Recieve has already been posted!Programmer is responsible for making a correct program.</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -559,6 +564,8 @@
 <dd><p>Ready send num elements of a derived type from the given address. </p>
 <p>Element size determined by template parameter</p>
 <p><dl class="docutils">
+<dt><strong>Warning</strong></dt>
+<dd>Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -753,6 +760,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Ready send num elements of a derived type from the given address. Element size determined by template parameter</p>
 <p><dl class="docutils">
+<dt><strong>Warning</strong></dt>
+<dd>Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory to be sent </p>
@@ -781,6 +790,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Ready end num elements of a derived type from the given address. Element size determined by template parameter</p>
 <p><dl class="docutils">
+<dt><strong>Warning</strong></dt>
+<dd>Requires that the matching Recieve has already been posted! Programmer is responsible for making a correct program.</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -806,6 +817,8 @@
 <span id="MEL::Probe__iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1ga675afe61c41e0ace70a340e4b80e10bd"></span>Status <code class="descclassname">MEL::</code><code class="descname">Probe</code><span class="sig-paren">(</span><em class="property">const</em> int <em>source</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5ProbeEKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Probe an incoming message to predetermine its contents. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Probe</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -828,6 +841,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Probe an incoming message to predetermine its contents</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Iprobe</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a std::pair of a bool representing if a message was available and status object for that message </dd>
 <dt><strong>Parameters</strong></dt>
@@ -852,6 +867,8 @@
 <dd><p>Probe the length of an incoming message. </p>
 <p>Element type is determined from the template parameter</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Get_count</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the number of elements in the message </dd>
 <dt><strong>Parameters</strong></dt>
@@ -869,6 +886,8 @@
 <span id="MEL::ProbeGetCount__DatatypeCR.StatusCR"></span><span class="target" id="MELgroup___p2_p_1ga132e60164711de3c4b31e1058ae34b8b"></span>int <code class="descclassname">MEL::</code><code class="descname">ProbeGetCount</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> Status &amp;<em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13ProbeGetCountERK8DatatypeRK6Status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Probe the length of an incoming message. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Get_count</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the number of elements in the message </dd>
 <dt><strong>Parameters</strong></dt>
@@ -935,6 +954,8 @@
 <span id="MEL::Recv__voidP.iC.DatatypeCR.iC.iC.CommCR"></span><span class="target" id="MELgroup___p2_p_1gab7fefc0cf529addd07980fdf9737aa8f"></span>Status <code class="descclassname">MEL::</code><code class="descname">Recv</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>src</em>, <em class="property">const</em> int <em>tag</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4RecvEPvKiRK8DatatypeKiKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recieve a message of known length into the given pointer. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Recv</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -963,6 +984,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Recieve a message of known length into the given pointer</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Irecv</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>

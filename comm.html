@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Communicators &amp; Groups &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Communicators &amp; Groups &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Synchronization" href="sync.html" />
     <link rel="prev" title="RMA One-Sided Communication" href="win.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::CommCreateErrorHandler__ErrorHandlerFunc"></span><span class="target" id="MELgroup___comm_1ga76cc4c64fd3d35d5862bda52f1e7fdb8"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">CommCreateErrorHandler</code><span class="sig-paren">(</span>ErrorHandlerFunc <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22CommCreateErrorHandlerE16ErrorHandlerFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Comm error handler by directly passing the function to use. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_create_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns an object that MPI can use to reference the error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -171,6 +158,8 @@
 <span id="MEL::CommSetErrorHandler__CommCR.ErrorHandlerCR"></span><span class="target" id="MELgroup___comm_1ga30ecdc11add4c556da8d5d8bd4a19f87"></span>void <code class="descclassname">MEL::</code><code class="descname">CommSetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> ErrorHandler &amp;<em>errHndl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommSetErrorHandlerERK4CommRK12ErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a Comm error handler by passing the a error handler reference. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_set_errhandler</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to attach the error handler to </p>
@@ -205,6 +194,8 @@
 <span id="MEL::CommGetErrorHandler__CommCR"></span><span class="target" id="MELgroup___comm_1gac5736530e96b00bf00c1f4863a839e48"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">CommGetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommGetErrorHandlerERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Comm error handler attached to a comm world. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_get_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a reference to a bound error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -222,6 +213,8 @@
 <span id="MEL::CommRank__CommCR"></span><span class="target" id="MELgroup___comm_1gac1bd06e47e7a5f002e82785fe538b64c"></span>int <code class="descclassname">MEL::</code><code class="descname">CommRank</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommRankERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Comm rank of the process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_rank</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the rank or the process within comm </dd>
 <dt><strong>Parameters</strong></dt>
@@ -239,6 +232,8 @@
 <span id="MEL::CommSize__CommCR"></span><span class="target" id="MELgroup___comm_1ga8421cb6792fd71164bf0db4619da5074"></span>int <code class="descclassname">MEL::</code><code class="descname">CommSize</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommSizeERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Comm world size. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_size</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the size of the comm world </dd>
 <dt><strong>Parameters</strong></dt>
@@ -256,6 +251,8 @@
 <span id="MEL::CommRemoteSize__CommCR"></span><span class="target" id="MELgroup___comm_1ga20652e66f4decde8348bce8053cc624c"></span>int <code class="descclassname">MEL::</code><code class="descname">CommRemoteSize</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14CommRemoteSizeERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Comm world remote size. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_remote_size</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the remote size of the comm world </dd>
 <dt><strong>Parameters</strong></dt>
@@ -274,6 +271,8 @@
 <dd><p>Split a comm world into seperate comms. </p>
 <p>Processes with the same colour will end up in the same comm world</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_split</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new comm world </dd>
 <dt><strong>Parameters</strong></dt>
@@ -293,6 +292,8 @@
 <span id="MEL::CommDuplicate__CommCR"></span><span class="target" id="MELgroup___comm_1gaece977495533e01a7faed32ec719ab7f"></span>Comm <code class="descclassname">MEL::</code><code class="descname">CommDuplicate</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13CommDuplicateERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Duplicate a comm world so that it can be handled independently. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_dup</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new comm world </dd>
 <dt><strong>Parameters</strong></dt>
@@ -310,6 +311,8 @@
 <span id="MEL::CommGetGroup__CommCR"></span><span class="target" id="MELgroup___comm_1gac9fddff6bb394ab081609350c70d14dd"></span>Group <code class="descclassname">MEL::</code><code class="descname">CommGetGroup</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12CommGetGroupERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the group of a comm world. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_group</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a Group object representing the processes in comm </dd>
 <dt><strong>Parameters</strong></dt>
@@ -327,6 +330,8 @@
 <span id="MEL::CommCreateFromGroup__CommCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gaf6af545f753f147f0e8714090154adf9"></span>Comm <code class="descclassname">MEL::</code><code class="descname">CommCreateFromGroup</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19CommCreateFromGroupERK4CommRK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a comm object from an existing comm object and a group object. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_create</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new comm object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -346,6 +351,8 @@
 <span id="MEL::CommFree__CommR"></span><span class="target" id="MELgroup___comm_1ga0fc905376bc4cd67f8e45e6e43496a7c"></span>void <code class="descclassname">MEL::</code><code class="descname">CommFree</code><span class="sig-paren">(</span>Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8CommFreeER4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free a comm world. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_disconnect</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to free </p>
@@ -414,6 +421,8 @@
 <span id="MEL::GroupUnion__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gabb526fc3589782d53b7c3a20db8184ec"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupUnion</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10GroupUnionERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a set union of two comm groups. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_union</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the union of the two groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -433,6 +442,8 @@
 <span id="MEL::GroupDifference__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga98c71d2043888986b07eb2dc3b70b35e"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupDifference</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15GroupDifferenceERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a set difference of two comm groups. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_difference</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the difference of the two groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -452,6 +463,8 @@
 <span id="MEL::GroupIntersection__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1gaed1e59c4edb5de49cc918ce1a06baad4"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupIntersection</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17GroupIntersectionERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a set intersection of two comm groups. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_intersection</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the intersection of the two groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -471,6 +484,8 @@
 <span id="MEL::GroupInclude__GroupCR.iCP.iC"></span><span class="target" id="MELgroup___comm_1ga2a009c1604b3e7ffccbe2621a697e19e"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupInclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> int *<em>ranks</em>, <em class="property">const</em> int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupIncludeERK5GroupPKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a comm group including just the ranks from an exisitng group given in an array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_incl</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the new groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -511,6 +526,8 @@
 <span id="MEL::GroupExclude__GroupCR.iCP.iC"></span><span class="target" id="MELgroup___comm_1ga1b70cb0c4b7aa5647a79614137f040bc"></span>Group <code class="descclassname">MEL::</code><code class="descname">GroupExclude</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em>, <em class="property">const</em> int *<em>ranks</em>, <em class="property">const</em> int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupExcludeERK5GroupPKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a comm group excluding just the ranks from an exisitng group given in an array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_excl</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the new groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -551,6 +568,8 @@
 <span id="MEL::GroupCompare__GroupCR.GroupCR"></span><span class="target" id="MELgroup___comm_1ga691a30d17f825d11f2420684972627ac"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupCompare</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>lhs</em>, <em class="property">const</em> Group &amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12GroupCompareERK5GroupRK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare two comm groups. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_compare</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the comparison of two groups </dd>
 <dt><strong>Parameters</strong></dt>
@@ -663,6 +682,8 @@
 <span id="MEL::GroupRank__GroupCR"></span><span class="target" id="MELgroup___comm_1ga37d99190360bb838325f0b34b597fb2e"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupRank</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupRankERK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the rank of the process within the given comm group. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_rank</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the rank within the given group </dd>
 <dt><strong>Parameters</strong></dt>
@@ -680,6 +701,8 @@
 <span id="MEL::GroupSize__GroupCR"></span><span class="target" id="MELgroup___comm_1gaf9c4f84ef94b4fd3a9302e45eff96fe2"></span>int <code class="descclassname">MEL::</code><code class="descname">GroupSize</code><span class="sig-paren">(</span><em class="property">const</em> Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupSizeERK5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the size of the given comm group. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_size</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the size of the given group </dd>
 <dt><strong>Parameters</strong></dt>
@@ -697,6 +720,8 @@
 <span id="MEL::GroupFree__GroupR"></span><span class="target" id="MELgroup___comm_1gab4c3081a241954ea58ce46c47df0aba6"></span>void <code class="descclassname">MEL::</code><code class="descname">GroupFree</code><span class="sig-paren">(</span>Group &amp;<em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9GroupFreeER5Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frees a comm group. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Group_free</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">group</span></code> - <p>The group to free </p>

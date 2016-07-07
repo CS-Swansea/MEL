@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>RMA One-Sided Communication &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>RMA One-Sided Communication &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Communicators &amp; Groups" href="comm.html" />
     <link rel="prev" title="Collective Communication" href="col.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::WinCreateErrorHandler__ErrorHandlerFunc"></span><span class="target" id="MELgroup___win_1ga31a62325b407ce3bb95f029c28fa8579"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">WinCreateErrorHandler</code><span class="sig-paren">(</span>ErrorHandlerFunc <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21WinCreateErrorHandlerE16ErrorHandlerFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a window error handler. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_create_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to an error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -171,6 +158,8 @@
 <span id="MEL::WinSetErrorHandler__WinCR.ErrorHandlerCR"></span><span class="target" id="MELgroup___win_1ga6b6735a05ec0beb2e6a47001840a6624"></span>void <code class="descclassname">MEL::</code><code class="descname">WinSetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Win &amp;<em>win</em>, <em class="property">const</em> ErrorHandler &amp;<em>errHndl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18WinSetErrorHandlerERK3WinRK12ErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the error handler for a window. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_set_errhandler</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">win</span></code> - <p>The file to attach to </p>
@@ -205,6 +194,8 @@
 <span id="MEL::WinGetErrorHandler__WinCR"></span><span class="target" id="MELgroup___win_1ga4a76d407949471cf75dfed38a1f70a4d"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">WinGetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> Win &amp;<em>win</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18WinGetErrorHandlerERK3Win" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the error handler for a window. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_get_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to the error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -222,6 +213,8 @@
 <span id="MEL::WinCreate__voidP.AintC.iC.CommCR"></span><span class="target" id="MELgroup___win_1ga0cff7ae47bb71026a2ad98fff836f94c"></span>Win <code class="descclassname">MEL::</code><code class="descname">WinCreate</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> Aint <em>size</em>, <em class="property">const</em> int <em>disp_unit</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9WinCreateEPvK4AintKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a window on memory allocated with MPI/MEL alloc functions. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_create, MPI_Win_set_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to the window </dd>
 <dt><strong>Parameters</strong></dt>
@@ -269,6 +262,8 @@
 <span id="MEL::WinFence__WinCR.iC"></span><span class="target" id="MELgroup___win_1gaf35fc9724cccc9100a2648b2d2bbd56a"></span>void <code class="descclassname">MEL::</code><code class="descname">WinFence</code><span class="sig-paren">(</span><em class="property">const</em> Win &amp;<em>win</em>, <em class="property">const</em> int <em>assert_tag</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8WinFenceERK3WinKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronize the RMA access epoch for win across all processes attached to it. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_fence</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">win</span></code> - <p>The window to synchronize </p>
@@ -301,6 +296,8 @@
 <span id="MEL::WinLock__WinCR.iC.iC.LockTypeC"></span><span class="target" id="MELgroup___win_1ga7a716050cc6b63ca8ba1460abd8e5fdd"></span>void <code class="descclassname">MEL::</code><code class="descname">WinLock</code><span class="sig-paren">(</span><em class="property">const</em> Win &amp;<em>win</em>, <em class="property">const</em> int <em>rank</em>, <em class="property">const</em> int <em>assert_tag</em>, <em class="property">const</em> LockType <em>lock_type</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WinLockERK3WinKiKiK8LockType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the lock on an RMA access epoch for a window. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_lock</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">win</span></code> - <p>The window to lock </p>
@@ -413,6 +410,8 @@
 <span id="MEL::WinUnlock__WinCR.iC"></span><span class="target" id="MELgroup___win_1ga02f061ea3ad7c20b431be47cc0741ff8"></span>void <code class="descclassname">MEL::</code><code class="descname">WinUnlock</code><span class="sig-paren">(</span><em class="property">const</em> Win &amp;<em>win</em>, <em class="property">const</em> int <em>rank</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9WinUnlockERK3WinKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Release the lock on an RMA access epoch for a window. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_unlock</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">win</span></code> - <p>The window to lock </p>
@@ -430,6 +429,8 @@
 <span id="MEL::Put__voidP.i.DatatypeCR.AintC.iC.DatatypeCR.iC.WinCR"></span><span class="target" id="MELgroup___win_1gad6b1670d20f97c613b495dc6c53115da"></span>void <code class="descclassname">MEL::</code><code class="descname">Put</code><span class="sig-paren">(</span>void *<em>origin_ptr</em>, int <em>origin_num</em>, <em class="property">const</em> Datatype &amp;<em>origin_datatype</em>, <em class="property">const</em> Aint <em>target_disp</em>, <em class="property">const</em> int <em>target_num</em>, <em class="property">const</em> Datatype &amp;<em>target_datatype</em>, <em class="property">const</em> int <em>target_rank</em>, <em class="property">const</em> Win &amp;<em>win</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL3PutEPviRK8DatatypeK4AintKiRK8DatatypeKiRK3Win" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put data into the mapped window of another process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Put</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">origin_ptr</span></code> - <p>Pointer to the array to put </p>
@@ -459,6 +460,8 @@
 <span id="MEL::Accumulate__voidP.i.DatatypeCR.AintC.iC.DatatypeCR.OpCR.iC.WinCR"></span><span class="target" id="MELgroup___win_1ga1488bca53447d46b760df1bc0c664c9d"></span>void <code class="descclassname">MEL::</code><code class="descname">Accumulate</code><span class="sig-paren">(</span>void *<em>origin_ptr</em>, int <em>origin_num</em>, <em class="property">const</em> Datatype &amp;<em>origin_datatype</em>, <em class="property">const</em> Aint <em>target_disp</em>, <em class="property">const</em> int <em>target_num</em>, <em class="property">const</em> Datatype &amp;<em>target_datatype</em>, <em class="property">const</em> Op &amp;<em>op</em>, <em class="property">const</em> int <em>target_rank</em>, <em class="property">const</em> Win &amp;<em>win</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10AccumulateEPviRK8DatatypeK4AintKiRK8DatatypeRK2OpKiRK3Win" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate data into the mapped window of another process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Accumulate</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">origin_ptr</span></code> - <p>Pointer to the array to put </p>
@@ -490,6 +493,8 @@
 <span id="MEL::Get__voidP.i.DatatypeCR.AintC.iC.DatatypeCR.iC.WinCR"></span><span class="target" id="MELgroup___win_1gae895da1d69be201aa7be2be504caaa5b"></span>void <code class="descclassname">MEL::</code><code class="descname">Get</code><span class="sig-paren">(</span>void *<em>origin_ptr</em>, int <em>origin_num</em>, <em class="property">const</em> Datatype &amp;<em>origin_datatype</em>, <em class="property">const</em> Aint <em>target_disp</em>, <em class="property">const</em> int <em>target_num</em>, <em class="property">const</em> Datatype &amp;<em>target_datatype</em>, <em class="property">const</em> int <em>target_rank</em>, <em class="property">const</em> Win &amp;<em>win</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL3GetEPviRK8DatatypeK4AintKiRK8DatatypeKiRK3Win" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get data from the mapped window of another process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Get</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">origin_ptr</span></code> - <p>Pointer to the array to get </p>
@@ -519,6 +524,8 @@
 <span id="MEL::WinFree__WinR"></span><span class="target" id="MELgroup___win_1ga75efc38d443b7ad468afd61055672958"></span>void <code class="descclassname">MEL::</code><code class="descname">WinFree</code><span class="sig-paren">(</span>Win &amp;<em>win</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WinFreeER3Win" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free an RMA window. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Win_free</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">win</span></code> - <p>The window to free </p>

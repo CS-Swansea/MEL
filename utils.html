@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Utilities &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Utilities &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="OpenMP Extension" href="omp.html" />
     <link rel="prev" title="Error Handling" href="errors.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -155,6 +140,8 @@
 <dd><p>Setup and teardown. </p>
 <p>Tests if MPI_Init has been successfully called</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Initialized</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns whether MPI is initialized as a bool </dd>
 </dl>
@@ -166,6 +153,8 @@
 <span id="MEL::IsFinalized"></span><span class="target" id="MELgroup___utils_1gacc7b3868f809a7cd9a386750c0c0103a"></span>bool <code class="descclassname">MEL::</code><code class="descname">IsFinalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11IsFinalizedEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests if MPI_Finalize has been successfully called. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Finalized</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns whether MPI is finalized as a bool </dd>
 </dl>
@@ -177,6 +166,8 @@
 <span id="MEL::Init__iR.cPPR"></span><span class="target" id="MELgroup___utils_1gad47cb4ad862685fd3eef3823b2c6fac2"></span>void <code class="descclassname">MEL::</code><code class="descname">Init</code><span class="sig-paren">(</span>int &amp;<em>argc</em>, char **&amp;<em>argv</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4InitERiRPPc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call MPI_Init and setup default error handling. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Init, MPI_Comm_set_errhandler</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">argc</span></code> - <p>Forwarded from program main </p>
@@ -193,6 +184,11 @@
 <dt id="_CPPv2N3MEL8FinalizeEv">
 <span id="MEL::Finalize"></span><span class="target" id="MELgroup___utils_1ga1a99b1cac1eab510d1dc2e0999bcb115"></span>void <code class="descclassname">MEL::</code><code class="descname">Finalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8FinalizeEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call MPI_Finalize. </p>
+<p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Finalize </dd>
+</dl>
+</p>
 </dd></dl>
 
 <dl class="function">
@@ -200,6 +196,8 @@
 <span id="MEL::Wtime"></span><span class="target" id="MELgroup___utils_1ga81c70800eab1c8e74c2c396877882aba"></span>double <code class="descclassname">MEL::</code><code class="descname">Wtime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5WtimeEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the current wall time since epoch in seconds. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Wtime</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the current wall time as a double </dd>
 </dl>
@@ -211,6 +209,8 @@
 <span id="MEL::Wtick"></span><span class="target" id="MELgroup___utils_1ga60472f8057f9c3b1754644edfdffe0ff"></span>double <code class="descclassname">MEL::</code><code class="descname">Wtick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5WtickEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the current system tick. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Wtick</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the current system tick as a double </dd>
 </dl>

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Datatypes &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Datatypes &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Operations" href="ops.html" />
     <link rel="prev" title="Memory Allocation" href="mem.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::TypeCreateContiguous__DatatypeCR.iC"></span><span class="target" id="MELgroup___datatype_1ga6855969d0e0d2f09fcaaeb2eb1e28691"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateContiguous</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateContiguousERK8DatatypeKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a contiguous block of an elementary type. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_contiguous, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -173,6 +160,8 @@
 <span id="MEL::TypeCreateStruct__iC.DatatypeCP.iCP.AintCP"></span><span class="target" id="MELgroup___datatype_1gacaae51ddcfa171e4e8cc787367490f32"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateStruct</code><span class="sig-paren">(</span><em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype *<em>datatypes</em>, <em class="property">const</em> int *<em>blockLengths</em>, <em class="property">const</em> Aint *<em>offsets</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TypeCreateStructEKiPK8DatatypePKiPK4Aint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a struct. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_struct, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -213,6 +202,8 @@
 <span id="MEL::TypeCreateSubArray__DatatypeCR.iC.iCP.iCP.iCP"></span><span class="target" id="MELgroup___datatype_1gaca8ab69cbf8c15041a6e1a2a8b187a21"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>starts</em>, <em class="property">const</em> int *<em>subSizes</em>, <em class="property">const</em> int *<em>sizes</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateSubArrayERK8DatatypeKiPKiPKiPKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a sub array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_subarray, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -257,6 +248,8 @@
 <span id="MEL::TypeCreateSubArray1D__DatatypeCR.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga8f84629ea2035fa8dcbd4bd684a5d257"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray1D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>dx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray1DERK8DatatypeKiKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a 1D sub array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_subarray, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -280,6 +273,8 @@
 <span id="MEL::TypeCreateSubArray2D__DatatypeCR.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga6dd2d4a7056d504d12457b3eebdc5383"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray2D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray2DERK8DatatypeKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a 2D sub array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_subarray, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -309,6 +304,8 @@
 <span id="MEL::TypeCreateSubArray3D__DatatypeCR.iC.iC.iC.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga411aa5e9648a5b2612668953bf7654c6"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray3D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>z</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>sz</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em>, <em class="property">const</em> int <em>dz</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray3DERK8DatatypeKiKiKiKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a 3D sub array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_subarray, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -344,6 +341,8 @@
 <span id="MEL::TypeCreateSubArray4D__DatatypeCR.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga66dd59db644e4c0544c899aa4fb34782"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateSubArray4D</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>x</em>, <em class="property">const</em> int <em>y</em>, <em class="property">const</em> int <em>z</em>, <em class="property">const</em> int <em>w</em>, <em class="property">const</em> int <em>sx</em>, <em class="property">const</em> int <em>sy</em>, <em class="property">const</em> int <em>sz</em>, <em class="property">const</em> int <em>sw</em>, <em class="property">const</em> int <em>dx</em>, <em class="property">const</em> int <em>dy</em>, <em class="property">const</em> int <em>dz</em>, <em class="property">const</em> int <em>dw</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL20TypeCreateSubArray4DERK8DatatypeKiKiKiKiKiKiKiKiKiKiKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a 4D sub array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_subarray, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -385,6 +384,8 @@
 <span id="MEL::TypeCreateIndexed__DatatypeCR.iC.iCP.iCP"></span><span class="target" id="MELgroup___datatype_1ga50ee2dc0fd49f1404248c16e39543f78"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>lengths</em>, <em class="property">const</em> int *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TypeCreateIndexedERK8DatatypeKiPKiPKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a set of contiguous blocks at different offsets. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_indexed, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -427,6 +428,8 @@
 <span id="MEL::TypeCreateHIndexed__DatatypeCR.iC.iCP.AintCP"></span><span class="target" id="MELgroup___datatype_1ga0f08a7cee60ac0de8f1f8bc549351df7"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateHIndexed</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int *<em>lengths</em>, <em class="property">const</em> Aint *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL18TypeCreateHIndexedERK8DatatypeKiPKiPK4Aint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a set of contiguous blocks at different offsets, using byte offsets. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_hindexed, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -469,6 +472,8 @@
 <span id="MEL::TypeCreateIndexedBlock__DatatypeCR.iC.iC.iCP"></span><span class="target" id="MELgroup___datatype_1ga08aac0cc112a734f4546f890bfd0b9dd"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateIndexedBlock</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> int *<em>displs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22TypeCreateIndexedBlockERK8DatatypeKiKiPKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a set of contiguous blocks of the same length at different offsets. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_indexed_block, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -513,6 +518,8 @@
 <span id="MEL::TypeCreateVector__DatatypeCR.iC.iC.iC"></span><span class="target" id="MELgroup___datatype_1ga267b1bd0cd73ac2442cc78775f40cb6b"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateVector</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> int <em>stride</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16TypeCreateVectorERK8DatatypeKiKiKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a strided sub array of a parent array. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_vector, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -536,6 +543,8 @@
 <span id="MEL::TypeCreateHVector__DatatypeCR.iC.iC.AintC"></span><span class="target" id="MELgroup___datatype_1gadd8b70f1a158507a9aadd907bfde0e27"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeCreateHVector</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> int <em>length</em>, <em class="property">const</em> Aint <em>stride</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17TypeCreateHVectorERK8DatatypeKiKiK4Aint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a derived type representing a strided sub array of a parent array, using byte offsets. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_create_hvector, MPI_Type_commit</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -559,6 +568,8 @@
 <span id="MEL::TypeDuplicate__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga639323d008ed63af8f4a66c3dc8db72c"></span>Datatype <code class="descclassname">MEL::</code><code class="descname">TypeDuplicate</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13TypeDuplicateERK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Duplicate a derived type so it can be managed independently. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_dup</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a new type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -576,6 +587,8 @@
 <span id="MEL::TypeSize__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga2023777e451889d0025df9e6fefbedd0"></span>int <code class="descclassname">MEL::</code><code class="descname">TypeSize</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeSizeERK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the contiguous packed size of a datatype. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_size</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the contiguous size of the datatype in bytes </dd>
 <dt><strong>Parameters</strong></dt>
@@ -593,6 +606,8 @@
 <span id="MEL::TypeExtent__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1gaa32238d82b27fc5dd0f059009542e8f4"></span>std::pair&lt;Aint, Aint&gt; <code class="descclassname">MEL::</code><code class="descname">TypeExtent</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10TypeExtentERK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the extent of a datatype. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_get_extent</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a std::pair of the datatype extent and lower bound </dd>
 <dt><strong>Parameters</strong></dt>
@@ -610,6 +625,8 @@
 <span id="MEL::TypeGetExtent__DatatypeCR"></span><span class="target" id="MELgroup___datatype_1ga0204c50759f09ae491b9c1ba36510909"></span>Aint <code class="descclassname">MEL::</code><code class="descname">TypeGetExtent</code><span class="sig-paren">(</span><em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13TypeGetExtentERK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the extent of a datatype and discard the lower bound. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_get_extent</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the datatype extent </dd>
 <dt><strong>Parameters</strong></dt>
@@ -627,6 +644,8 @@
 <span id="MEL::TypeFree__DatatypeR"></span><span class="target" id="MELgroup___datatype_1gab24750f82528860a381a4de4464a0542"></span>void <code class="descclassname">MEL::</code><code class="descname">TypeFree</code><span class="sig-paren">(</span>Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TypeFreeER8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free a derived datatype. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Type_free</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">datatype</span></code> - <p>The datatype to free </p>

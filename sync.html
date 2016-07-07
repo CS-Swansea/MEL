@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Synchronization &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Synchronization &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Memory Allocation" href="mem.html" />
     <link rel="prev" title="Communicators &amp; Groups" href="comm.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::Barrier__CommCR"></span><span class="target" id="MELgroup___sync_1ga0d85e07e4b0a7d6bc552c80f1d50de65"></span>void <code class="descclassname">MEL::</code><code class="descname">Barrier</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7BarrierERK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collective operation that forces all processes to wait until they are all at the barrier. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Barrier</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>The comm world to synchronize </p>
@@ -169,6 +156,8 @@
 <span id="MEL::Wait__RequestR"></span><span class="target" id="MELgroup___sync_1gaf3548ca51afd62999fb4e2cb278e3ec2"></span>void <code class="descclassname">MEL::</code><code class="descname">Wait</code><span class="sig-paren">(</span>Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4WaitER7Request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocking operation to wait until a request object has completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Wait</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>The request object to wait for </p>
@@ -184,6 +173,8 @@
 <span id="MEL::Test__RequestR"></span><span class="target" id="MELgroup___sync_1ga8bf2c7d0f1602796002c9f67ea131883"></span>bool <code class="descclassname">MEL::</code><code class="descname">Test</code><span class="sig-paren">(</span>Request &amp;<em>rq</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL4TestER7Request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-Blocking operation to test if a request object has completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Test</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">rq</span></code> - <p>The request object to test </p>
@@ -199,6 +190,8 @@
 <span id="MEL::Waitall__RequestP.i"></span><span class="target" id="MELgroup___sync_1gadb1dc7cb276dcb8291ff0c09510c7237"></span>void <code class="descclassname">MEL::</code><code class="descname">Waitall</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitallEP7Requesti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocking operation to wait until all request objects in an array have completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Waitall</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
@@ -231,6 +224,8 @@
 <span id="MEL::Testall__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga20fd8be0d5ead0cf81d8c4f990724113"></span>bool <code class="descclassname">MEL::</code><code class="descname">Testall</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7TestallEP7Requesti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-Blocking operation to test if all request objects in an array have completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Testall</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the array of request objects </p>
@@ -263,6 +258,8 @@
 <span id="MEL::Waitany__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga3295581c362fa9f1c1ce69209ec3ffb4"></span>int <code class="descclassname">MEL::</code><code class="descname">Waitany</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7WaitanyEP7Requesti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocking operation to wait until any of the request objects in an array have completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Waitany</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the index of the completed request </dd>
 <dt><strong>Parameters</strong></dt>
@@ -300,6 +297,8 @@
 <dd><p>Any test. </p>
 <p>Non-Blocking operation to test if any of the request objects in an array have completed</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Testany</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a std::pair of a bool and int representing if any had completed, and if so what index </dd>
 <dt><strong>Parameters</strong></dt>
@@ -336,6 +335,8 @@
 <span id="MEL::Waitsome__RequestP.i"></span><span class="target" id="MELgroup___sync_1gab8c3f857fcba983b2ddae281a67373ea"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Waitsome</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8WaitsomeEP7Requesti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocking operation to wait until some of the request objects in an array have completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Waitsome</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a std::vector of indices of the completed requests </dd>
 <dt><strong>Parameters</strong></dt>
@@ -372,6 +373,8 @@
 <span id="MEL::Testsome__RequestP.i"></span><span class="target" id="MELgroup___sync_1ga4e99721c9b8dc5ea35ea25881ffc168d"></span>std::vector&lt;int&gt; <code class="descclassname">MEL::</code><code class="descname">Testsome</code><span class="sig-paren">(</span>Request *<em>ptr</em>, int <em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8TestsomeEP7Requesti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-Blocking operation to test if some of the request objects in an array have completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Testsome</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a std::vector of indices of the completed requests </dd>
 <dt><strong>Parameters</strong></dt>

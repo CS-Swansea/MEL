@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>File-IO &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>File-IO &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Mutex" href="mutex.html" />
     <link rel="prev" title="Topology" href="topo.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::FileCreateErrorHandler__ErrorHandlerFunc"></span><span class="target" id="MELgroup___file_1ga6912cbac20836c87544432f2cf06e99c"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">FileCreateErrorHandler</code><span class="sig-paren">(</span>ErrorHandlerFunc <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL22FileCreateErrorHandlerE16ErrorHandlerFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a file error handler. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_create_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to an error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -171,6 +158,8 @@
 <span id="MEL::FileSetErrorHandler__FileCR.ErrorHandlerCR"></span><span class="target" id="MELgroup___file_1gad22d20774db61956b362ee3c92c82f8c"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> ErrorHandler &amp;<em>errHndl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19FileSetErrorHandlerERK4FileRK12ErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the error handler for a file. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_set_errhandler</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to attach to </p>
@@ -205,6 +194,8 @@
 <span id="MEL::FileGetErrorHandler__FileCR"></span><span class="target" id="MELgroup___file_1gabf74faecdd6c7e460ee52c643ccc8bd1"></span>ErrorHandler <code class="descclassname">MEL::</code><code class="descname">FileGetErrorHandler</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19FileGetErrorHandlerERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the error handler for a file. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to the error handler </dd>
 <dt><strong>Parameters</strong></dt>
@@ -222,6 +213,8 @@
 <span id="MEL::FileGetMode__FileCR"></span><span class="target" id="MELgroup___file_1gae07be89c92d837b4422f16e2ca04db6a"></span>FileMode <code class="descclassname">MEL::</code><code class="descname">FileGetMode</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileGetModeERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the mode a file was opened with. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_amode</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the file mode </dd>
 <dt><strong>Parameters</strong></dt>
@@ -239,6 +232,8 @@
 <span id="MEL::FileIsAtomic__FileCR"></span><span class="target" id="MELgroup___file_1ga415dad3876d859d70b13bfabc58f7b97"></span>bool <code class="descclassname">MEL::</code><code class="descname">FileIsAtomic</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12FileIsAtomicERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the file opened in an atomic mode? </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_atomicity</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns true is the file is opened atomically </dd>
 <dt><strong>Parameters</strong></dt>
@@ -256,6 +251,8 @@
 <span id="MEL::FileSetAtomicity__FileCR.bC"></span><span class="target" id="MELgroup___file_1ga9e4f2d0fac18d3f5809be239e8a9d527"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSetAtomicity</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> bool <em>atom</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16FileSetAtomicityERK4FileKb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the atomicity of the file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_set_atomicity</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to attach to </p>
@@ -273,6 +270,8 @@
 <span id="MEL::FileGetByteOffset__FileCR.OffsetC"></span><span class="target" id="MELgroup___file_1gadbdee4615694a0d22ab1eff0f840e19e"></span>Offset <code class="descclassname">MEL::</code><code class="descname">FileGetByteOffset</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17FileGetByteOffsetERK4FileK6Offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the byte position of the file cursor relative to a given location. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_byte_offset</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the number of bytes from the given offset </dd>
 <dt><strong>Parameters</strong></dt>
@@ -292,6 +291,8 @@
 <span id="MEL::FileGetGroup__FileCR"></span><span class="target" id="MELgroup___file_1ga10ee4a0ea66c62084d667793dfa5dfb5"></span>Group <code class="descclassname">MEL::</code><code class="descname">FileGetGroup</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12FileGetGroupERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the comm group a file was opened as a part of. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_group</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns comm group the file handle belongs to </dd>
 <dt><strong>Parameters</strong></dt>
@@ -309,6 +310,8 @@
 <span id="MEL::FileGetInfo__FileCR"></span><span class="target" id="MELgroup___file_1ga1ab6d3326cbca83f85e2b1a159fe3f33"></span>Info <code class="descclassname">MEL::</code><code class="descname">FileGetInfo</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileGetInfoERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the MPI_Info object attached to a file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_info</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the info object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -326,6 +329,8 @@
 <span id="MEL::FileSetInfo__FileCR.InfoCR"></span><span class="target" id="MELgroup___file_1gabe7e5d67eef04900936bd143ef7b2f00"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSetInfo</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Info &amp;<em>info</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileSetInfoERK4FileRK4Info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the MPI_Info object attached to a file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_set_info</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to attach to </p>
@@ -343,6 +348,8 @@
 <span id="MEL::FileGetPosition__FileCR"></span><span class="target" id="MELgroup___file_1ga1abad90077c81275748fabcf9e5d2fe8"></span>Offset <code class="descclassname">MEL::</code><code class="descname">FileGetPosition</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15FileGetPositionERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the position of the file cursor. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_position</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the location of the file cursor in bytes </dd>
 <dt><strong>Parameters</strong></dt>
@@ -360,6 +367,8 @@
 <span id="MEL::FileGetPositionShared__FileCR"></span><span class="target" id="MELgroup___file_1ga318b920a9971f475aec0cce9bd95406e"></span>Offset <code class="descclassname">MEL::</code><code class="descname">FileGetPositionShared</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL21FileGetPositionSharedERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the position of the shared file cursor. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_position_shared</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the location of the shared file cursor in bytes </dd>
 <dt><strong>Parameters</strong></dt>
@@ -377,6 +386,8 @@
 <span id="MEL::FileGetSize__FileCR"></span><span class="target" id="MELgroup___file_1ga7ed08ffe37104a397e50aef2d9fdf260"></span>Offset <code class="descclassname">MEL::</code><code class="descname">FileGetSize</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileGetSizeERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the size of the file in bytes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_size</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the size of the file in bytes </dd>
 <dt><strong>Parameters</strong></dt>
@@ -394,6 +405,8 @@
 <span id="MEL::FileSetSize__FileCR.OffsetC"></span><span class="target" id="MELgroup___file_1ga5d7c8bf64dcab3f87b6d7c91c4beb453"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSetSize</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileSetSizeERK4FileK6Offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the size of the file in bytes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_set_size</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to attach to </p>
@@ -411,6 +424,8 @@
 <span id="MEL::FileGetTypeExtent__FileCR.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga16f0bc8b99b0b54b1ed758eceef7c34d"></span>Aint <code class="descclassname">MEL::</code><code class="descname">FileGetTypeExtent</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL17FileGetTypeExtentERK4FileRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the extent of the derived type set to the file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_type_extent</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the extent of the type </dd>
 <dt><strong>Parameters</strong></dt>
@@ -430,6 +445,8 @@
 <span id="MEL::FileOpen__CommCR.ssCR.FileModeC"></span><span class="target" id="MELgroup___file_1gabbb0ad33bc8c6f1c088fd77ef2b28bc3"></span>File <code class="descclassname">MEL::</code><code class="descname">FileOpen</code><span class="sig-paren">(</span><em class="property">const</em> Comm &amp;<em>comm</em>, <em class="property">const</em> std::string &amp;<em>path</em>, <em class="property">const</em> FileMode <em>amode</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8FileOpenERK4CommRKNSt6stringEK8FileMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a file and return a handle to it. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_open, MPI_File_set_errhandler</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns a handle to the file pointer </dd>
 <dt><strong>Parameters</strong></dt>
@@ -470,6 +487,8 @@
 <span id="MEL::FileDelete__ssCR"></span><span class="target" id="MELgroup___file_1gac2bce04c48e02b290a66b79b837586c4"></span>void <code class="descclassname">MEL::</code><code class="descname">FileDelete</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10FileDeleteERKNSt6stringE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a file by its path. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_delete</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">path</span></code> - <p>The path to the file to be deleted </p>
@@ -485,6 +504,8 @@
 <span id="MEL::FileClose__FileR"></span><span class="target" id="MELgroup___file_1ga3864e367e4780a6ec40b4047c95a3f33"></span>void <code class="descclassname">MEL::</code><code class="descname">FileClose</code><span class="sig-paren">(</span>File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9FileCloseER4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the file attached to the given file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_close</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file handle to be closed </p>
@@ -500,6 +521,8 @@
 <span id="MEL::FilePreallocate__FileCR.OffsetC"></span><span class="target" id="MELgroup___file_1ga5d357ebed0c2401aa945d33f478e6d3c"></span>void <code class="descclassname">MEL::</code><code class="descname">FilePreallocate</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>fileSize</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15FilePreallocateERK4FileK6Offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Preallocate the opened file to the given size on the file system. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_preallocate</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to be preallocated </p>
@@ -517,6 +540,8 @@
 <span id="MEL::FileSeek__FileCR.OffsetC.SeekModeC"></span><span class="target" id="MELgroup___file_1gac91bd7cf15ca0565b033fa6edf7117c5"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSeek</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, <em class="property">const</em> SeekMode <em>seekMode</em> = MEL::SeekMode::SET<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8FileSeekERK4FileK6OffsetK8SeekMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move the file cursor to a specific position. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_seek</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file </p>
@@ -537,6 +562,8 @@
 <dd><p>Move the shared file cursor to a specific position. </p>
 <p>The same values must be provided by all processes</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_seek_shared</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The shared file </p>
@@ -556,6 +583,8 @@
 <span id="MEL::FileSync__FileCR"></span><span class="target" id="MELgroup___file_1gad54aa64161c4647aa860f34b402f1ec1"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSync</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8FileSyncERK4File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force all queued and pending disk operations on a file to be completed. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_sync</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file to be synchronized </p>
@@ -571,6 +600,8 @@
 <span id="MEL::FileSetView__FileCR.OffsetC.DatatypeC.DatatypeC.ssCR"></span><span class="target" id="MELgroup___file_1gaf01c95e5f75ec554e11d23e51cc94793"></span>void <code class="descclassname">MEL::</code><code class="descname">FileSetView</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, <em class="property">const</em> Datatype <em>elementaryType</em>, <em class="property">const</em> Datatype <em>fileType</em>, <em class="property">const</em> std::string &amp;<em>datarep</em> = &quot;native&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileSetViewERK4FileK6OffsetK8DatatypeK8DatatypeRKNSt6stringE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the view of a file handle for subsequent read/writes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_set_view</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file handle </p>
@@ -611,6 +642,8 @@
 <span id="MEL::FileGetView__FileCR.OffsetR.DatatypeR.DatatypeR.ssR"></span><span class="target" id="MELgroup___file_1ga56e916f6cc771e72afc87fb582c57904"></span>void <code class="descclassname">MEL::</code><code class="descname">FileGetView</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, Offset &amp;<em>offset</em>, Datatype &amp;<em>elementaryType</em>, Datatype &amp;<em>fileType</em>, std::string &amp;<em>datarep</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileGetViewERK4FileR6OffsetR8DatatypeR8DatatypeRNSt6stringE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the view attached to a file handle. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_get_view</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">file</span></code> - <p>The file handle </p>
@@ -651,6 +684,8 @@
 <span id="MEL::FileWrite__FileCR.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1gab6234a6ceae56a3d5e9431bff71023d9"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWrite</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9FileWriteERK4FilePKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from a single process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -674,6 +709,8 @@
 <span id="MEL::FileWriteAll__FileCR.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1gadd81e2408b013b8c44d383a4fbf118c8"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWriteAll</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12FileWriteAllERK4FilePKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from all processes that opened the file. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write_all</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -697,6 +734,8 @@
 <span id="MEL::FileWriteAt__FileCR.OffsetC.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga73a64102723aaed6206c771267a7e5aa"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWriteAt</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileWriteAtERK4FileK6OffsetPKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from a single process at the desired offset. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write_at</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -722,6 +761,8 @@
 <span id="MEL::FileWriteAtAll__FileCR.OffsetC.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga43307c6c124f53edf783b83e5d98e885"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWriteAtAll</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14FileWriteAtAllERK4FileK6OffsetPKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from all processes that opened the file at the desired offset. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write_at_all</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -747,6 +788,8 @@
 <span id="MEL::FileWriteOrdered__FileCR.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga6f1dfff6028c7e7ba068adea16409e31"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWriteOrdered</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16FileWriteOrderedERK4FilePKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from all processes that opened the file in sequence. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write_ordered</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -770,6 +813,8 @@
 <span id="MEL::FileWriteShared__FileCR.voidCP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga6917621dad9efe6a6d4ec135155c70f3"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileWriteShared</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15FileWriteSharedERK4FilePKvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write to file from any processes that opened the file in parallel. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_write_shared</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -794,6 +839,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Write to file from a single processes</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iwrite</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -818,6 +865,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Write to file from a single process at the desired offset</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iwrite_at</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -844,6 +893,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Write to file from any processes that opened the file in parallel</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iwrite_shared</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -867,6 +918,8 @@
 <span id="MEL::FileRead__FileCR.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1gac63021b02ec8c1f42bde091e264c1793"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileRead</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8FileReadERK4FilePvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from a single process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -890,6 +943,8 @@
 <span id="MEL::FileReadAll__FileCR.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1gab954d1dfb851e4e7f4d569990c21dde0"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileReadAll</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL11FileReadAllERK4FilePvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from all processes that opened the file. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read_all</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -913,6 +968,8 @@
 <span id="MEL::FileReadAt__FileCR.OffsetC.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1gaab312bb9bd25786cc1fb3ab8298f7e27"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileReadAt</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10FileReadAtERK4FileK6OffsetPvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from a single process at the desired offset. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read_at</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -938,6 +995,8 @@
 <span id="MEL::FileReadAtAll__FileCR.OffsetC.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga55825510b41ce931ca904cb2c5cd6f8e"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileReadAtAll</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, <em class="property">const</em> Offset <em>offset</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13FileReadAtAllERK4FileK6OffsetPvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from all processes that opened the file at the desired offset. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read_at_all</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -963,6 +1022,8 @@
 <span id="MEL::FileReadOrdered__FileCR.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga3044c0496279c46e7f0ac0629b48fced"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileReadOrdered</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL15FileReadOrderedERK4FilePvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from all processes that opened the file in sequence. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read_ordered</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -986,6 +1047,8 @@
 <span id="MEL::FileReadShared__FileCR.voidP.iC.DatatypeCR"></span><span class="target" id="MELgroup___file_1ga5ac82620a1d2cfcec63d443d1039029e"></span>Status <code class="descclassname">MEL::</code><code class="descname">FileReadShared</code><span class="sig-paren">(</span><em class="property">const</em> File &amp;<em>file</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14FileReadSharedERK4FilePvKiRK8Datatype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from file from any processes that opened the file in parallel. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_read_shared</dd>
 <dt><strong>Return</strong></dt>
 <dd>A status object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -1010,6 +1073,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Read from file from a single process</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iread</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -1034,6 +1099,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Read from file from a single process at the desired offset</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iread_at</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>
@@ -1060,6 +1127,8 @@
 <dd><p>Non-Blocking. </p>
 <p>Read from file from any process that opened the file in parallel</p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_File_iread_shared</dd>
 <dt><strong>Return</strong></dt>
 <dd>A request object </dd>
 <dt><strong>Parameters</strong></dt>

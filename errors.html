@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Error Handling &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Error Handling &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="Utilities" href="utils.html" />
     <link rel="prev" title="Shared Arrays" href="shared.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::Abort__i.ssCR"></span><span class="target" id="MELgroup___errors_1ga1c81a97e52645dadae2d21a4985e49bd"></span>void <code class="descclassname">MEL::</code><code class="descname">Abort</code><span class="sig-paren">(</span>int <em>ierr</em>, <em class="property">const</em> std::string &amp;<em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5AbortEiRKNSt6stringE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls MPI_Abort with the given error code and prints a string message to stderr. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_rank, MPI_Comm_size, MPI_Error_class, MPI_Error_string, MPI_Abort</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ierr</span></code> - <p>The error code to throw </p>
@@ -203,6 +190,8 @@
 <span id="MEL::DefaultErrorHandler__MPI_CommP.iP.z"></span><span class="target" id="MELgroup___errors_1ga3bf0ad337b717bb690d49fe9e1512fe2"></span>void <code class="descclassname">MEL::</code><code class="descname">DefaultErrorHandler</code><span class="sig-paren">(</span>MPI_Comm *<em>comm</em>, int *<em>ierr</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL19DefaultErrorHandlerEP8MPI_CommPiz" title="Permalink to this definition">¶</a></dt>
 <dd><p>A default error handler that can be attached to MPI objects to give basic error catching. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Comm_rank, MPI_Comm_size, MPI_Error_class, MPI_Error_string, MPI_Abort</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">comm</span></code> - <p>Comm world in which the error occured </p>
@@ -220,6 +209,8 @@
 <span id="MEL::AddErrorClass"></span><span class="target" id="MELgroup___errors_1ga93ec67be63498dc8df64ee5b81fe6242"></span>int <code class="descclassname">MEL::</code><code class="descname">AddErrorClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13AddErrorClassEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an error class for MPI to reference. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Add_error_class</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the new error class code that was added </dd>
 </dl>
@@ -231,6 +222,8 @@
 <span id="MEL::AddErrorCode__iC"></span><span class="target" id="MELgroup___errors_1ga9b2d3e4ff588ebc4f7877a9cf34ae348"></span>int <code class="descclassname">MEL::</code><code class="descname">AddErrorCode</code><span class="sig-paren">(</span><em class="property">const</em> int <em>errClass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL12AddErrorCodeEKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an error code to an exisiting error class for MPI to reference. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Add_error_code</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the new error code that was added </dd>
 <dt><strong>Parameters</strong></dt>
@@ -259,6 +252,8 @@
 <span id="MEL::AddErrorString__iC.ssCR"></span><span class="target" id="MELgroup___errors_1ga65e0872e1e22a1bd28905643dfef9c2e"></span>void <code class="descclassname">MEL::</code><code class="descname">AddErrorString</code><span class="sig-paren">(</span><em class="property">const</em> int <em>err</em>, <em class="property">const</em> std::string &amp;<em>str</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14AddErrorStringEKiRKNSt6stringE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an error string to an existing error code for MPI to reference. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Add_error_string</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">err</span></code> - <p>The error code to bind the string to </p>
@@ -293,6 +288,8 @@
 <span id="MEL::GetErrorClass__iC"></span><span class="target" id="MELgroup___errors_1gaaa8d5296ddff2b01e3e260865bce5023"></span>int <code class="descclassname">MEL::</code><code class="descname">GetErrorClass</code><span class="sig-paren">(</span><em class="property">const</em> int <em>errCode</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL13GetErrorClassEKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the error class code of the given error code. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Error_class</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the error class </dd>
 <dt><strong>Parameters</strong></dt>
@@ -310,6 +307,8 @@
 <span id="MEL::GetErrorString__iC"></span><span class="target" id="MELgroup___errors_1ga3b15bea75f0de1e69a2d986ef4d588d3"></span>std::string <code class="descclassname">MEL::</code><code class="descname">GetErrorString</code><span class="sig-paren">(</span><em class="property">const</em> int <em>errCode</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL14GetErrorStringEKi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the error class code of the given error code. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Error_string</dd>
 <dt><strong>Return</strong></dt>
 <dd>Returns the error class </dd>
 <dt><strong>Parameters</strong></dt>
@@ -327,6 +326,8 @@
 <span id="MEL::ErrorHandlerFree__ErrorHandlerR"></span><span class="target" id="MELgroup___errors_1ga6f7009a3f6cf1a9ba63c2ca26be20835"></span>void <code class="descclassname">MEL::</code><code class="descname">ErrorHandlerFree</code><span class="sig-paren">(</span>ErrorHandler &amp;<em>errHndl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL16ErrorHandlerFreeER12ErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free an error handler that was previously added. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Errhandler_free</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">errHndl</span></code> - <p>The error handler object that references the bound function </p>

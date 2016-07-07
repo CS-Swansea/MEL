@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Collective Communication &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>Collective Communication &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="index.html" />
+    <link rel="up" title="MEL Core Library" href="core.html" />
     <link rel="next" title="RMA One-Sided Communication" href="win.html" />
     <link rel="prev" title="Point-2-Point Communication" href="p2p.html" />
 <meta charset='utf-8'>
@@ -50,7 +52,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -69,25 +71,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1 current"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -154,6 +139,8 @@
 <span id="MEL::Bcast__voidP.iC.DatatypeCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gaba8999e83ee783e712cf0d80cf334693"></span>void <code class="descclassname">MEL::</code><code class="descname">Bcast</code><span class="sig-paren">(</span>void *<em>ptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL5BcastEPvKiRK8DatatypeKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Broadcast an array to all processes in comm, where all processes know how many elements to expect. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Bcast</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">ptr</span></code> - <p>Pointer to the memory receive into </p>
@@ -177,6 +164,8 @@
 <span id="MEL::Scatter__voidP.iC.DatatypeCR.voidP.iC.DatatypeCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1ga6513a54ffb15d7b9407fb472e447ef1b"></span>void <code class="descclassname">MEL::</code><code class="descname">Scatter</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7ScatterEPvKiRK8DatatypePvKiRK8DatatypeKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter an array to all processes in comm, where all processes know how many elements to expect. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Scatter</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to scatter, significant only on root </p>
@@ -206,6 +195,8 @@
 <span id="MEL::Scatterv__voidP.iCP.iCP.DatatypeCR.voidP.iC.DatatypeCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gaea58dd1a7da60479eaebd9e6558ba19d"></span>void <code class="descclassname">MEL::</code><code class="descname">Scatterv</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int *<em>snum</em>, <em class="property">const</em> int *<em>displs</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8ScattervEPvPKiPKiRK8DatatypePvKiRK8DatatypeKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter an array to all processes in comm, where all processes have an independent number of elements to expect. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Scatterv</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to scatter, significant only on root </p>
@@ -237,6 +228,8 @@
 <span id="MEL::Gather__voidP.iC.DatatypeCR.voidP.iC.DatatypeCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gae9a12a6c74552d0c73aca7924bad327c"></span>void <code class="descclassname">MEL::</code><code class="descname">Gather</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6GatherEPvKiRK8DatatypePvKiRK8DatatypeKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather an array from all processes in comm. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Gather</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to gather </p>
@@ -266,6 +259,8 @@
 <span id="MEL::Gatherv__voidP.iC.DatatypeCR.voidP.iCP.iCP.DatatypeCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gad1309da94cc6c01595143746fee2c191"></span>void <code class="descclassname">MEL::</code><code class="descname">Gatherv</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int *<em>rnum</em>, <em class="property">const</em> int *<em>displs</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL7GathervEPvKiRK8DatatypePvPKiPKiRK8DatatypeKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather an array from all processes in comm, where all processes have an independent number of elements to send. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Gatherv</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to gather </p>
@@ -297,6 +292,8 @@
 <span id="MEL::Allgather__voidP.iC.DatatypeCR.voidP.iC.DatatypeCR.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gae236e65e42b6dc757a86ad761dca49c6"></span>void <code class="descclassname">MEL::</code><code class="descname">Allgather</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9AllgatherEPvKiRK8DatatypePvKiRK8DatatypeRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather an array from all processes in comm and distribute it to all processes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Allgather</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to gather </p>
@@ -324,6 +321,8 @@
 <span id="MEL::Allgatherv__voidP.iC.DatatypeCR.voidP.iCP.iCP.DatatypeCR.CommCR"></span><span class="target" id="MELgroup___c_o_l_1ga2c72a588a5211167225d50fecfcaff9b"></span>void <code class="descclassname">MEL::</code><code class="descname">Allgatherv</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int *<em>rnum</em>, <em class="property">const</em> int *<em>displ</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL10AllgathervEPvKiRK8DatatypePvPKiPKiRK8DatatypeRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather an array from all processes in comm and distribute it to all processes, where all processes have an independent number of elements to send. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Allgatherv</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to the memory to gather </p>
@@ -353,6 +352,8 @@
 <span id="MEL::Alltoall__voidP.iC.DatatypeCR.voidP.iC.DatatypeCR.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gacd0ac5e0ddd91032f07ea7793b26256d"></span>void <code class="descclassname">MEL::</code><code class="descname">Alltoall</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int <em>snum</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>rnum</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL8AlltoallEPvKiRK8DatatypePvKiRK8DatatypeRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Broadcast from all processes to all processes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Alltoall</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to snum elements to send </p>
@@ -380,6 +381,8 @@
 <span id="MEL::Alltoallv__voidP.iCP.iCP.DatatypeCR.voidP.iCP.iCP.DatatypeCR.CommCR"></span><span class="target" id="MELgroup___c_o_l_1ga981a1615502763ae426a7a53bf1ab50a"></span>void <code class="descclassname">MEL::</code><code class="descname">Alltoallv</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int *<em>snum</em>, <em class="property">const</em> int *<em>sdispl</em>, <em class="property">const</em> Datatype &amp;<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int *<em>rnum</em>, <em class="property">const</em> int *<em>rdispl</em>, <em class="property">const</em> Datatype &amp;<em>rdatatype</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9AlltoallvEPvPKiPKiRK8DatatypePvPKiPKiRK8DatatypeRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Broadcast from all processes to all processes with independent number of elements for each process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Alltoallv</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to snum elements to send </p>
@@ -411,6 +414,8 @@
 <span id="MEL::Alltoallw__voidP.iCP.iCP.DatatypeCP.voidP.iCP.iCP.DatatypeCP.CommCR"></span><span class="target" id="MELgroup___c_o_l_1gaa04b9a5eea64886ff87f292c97b5a678"></span>void <code class="descclassname">MEL::</code><code class="descname">Alltoallw</code><span class="sig-paren">(</span>void *<em>sptr</em>, <em class="property">const</em> int *<em>snum</em>, <em class="property">const</em> int *<em>sdispl</em>, <em class="property">const</em> Datatype *<em>sdatatype</em>, void *<em>rptr</em>, <em class="property">const</em> int *<em>rnum</em>, <em class="property">const</em> int *<em>rdispl</em>, <em class="property">const</em> Datatype *<em>rdatatype</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9AlltoallwEPvPKiPKiPK8DatatypePvPKiPKiPK8DatatypeRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Broadcast from all processes to all processes with independent derived datatypes and number of elements for each process. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Alltoallw</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to snum elements to send </p>
@@ -442,6 +447,8 @@
 <span id="MEL::Reduce__voidP.voidP.iC.DatatypeCR.OpCR.iC.CommCR"></span><span class="target" id="MELgroup___c_o_l_1ga80adc62c633742c1d73d2e0e2f80a51f"></span>void <code class="descclassname">MEL::</code><code class="descname">Reduce</code><span class="sig-paren">(</span>void *<em>sptr</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> Op &amp;<em>op</em>, <em class="property">const</em> int <em>root</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL6ReduceEPvPvKiRK8DatatypeRK2OpKiRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an array of known length across all processes in comm using the given operation. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Reduce</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to num elements to send </p>
@@ -469,6 +476,8 @@
 <span id="MEL::Allreduce__voidP.voidP.iC.DatatypeCR.OpCR.CommCR"></span><span class="target" id="MELgroup___c_o_l_1ga5e67c0312ebb02333f79654836a1af2d"></span>void <code class="descclassname">MEL::</code><code class="descname">Allreduce</code><span class="sig-paren">(</span>void *<em>sptr</em>, void *<em>rptr</em>, <em class="property">const</em> int <em>num</em>, <em class="property">const</em> Datatype &amp;<em>datatype</em>, <em class="property">const</em> Op &amp;<em>op</em>, <em class="property">const</em> Comm &amp;<em>comm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3MEL9AllreduceEPvPvKiRK8DatatypeRK2OpRK4Comm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an array of known length across all processes in comm using the given operation, and distribute the result to all processes. </p>
 <p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd>MPI_Allreduce</dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last">
 <li><code class="first docutils literal"><span class="pre">sptr</span></code> - <p>Pointer to num elements to send </p>

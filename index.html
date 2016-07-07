@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>MEL - The MPI Extension Library Documentation &mdash; MEL - The MPI Extension Library 0.1 documentation</title>
+    <title>MEL - The MPI Extension Library Documentation (0.1 Beta) &mdash; MEL Documentation 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="MEL - The MPI Extension Library 0.1 documentation" href="#" />
-    <link rel="next" title="Point-2-Point Communication" href="p2p.html" />
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <link rel="top" title="MEL Documentation 0.1 documentation" href="#" />
+    <link rel="next" title="MEL Core Library" href="core.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -49,7 +50,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#">
-          MEL - The MPI Extension Library</a>
+          MEL Documentation</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
@@ -68,25 +69,8 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-</ul>
-<ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">MEL Core Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
 </ul>
 </ul>
@@ -101,14 +85,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">MEL - The MPI Extension Library Documentation</a><ul>
-<li><a class="reference internal" href="#version-0-01-beta">Version 0.01 Beta</a><ul>
-<li><a class="reference internal" href="#mel-core">MEL Core</a></li>
-<li><a class="reference internal" href="#mel-openmp">MEL OpenMP</a></li>
-<li><a class="reference internal" href="#mel-deep-copy">MEL Deep Copy</a></li>
+<li><a class="reference internal" href="#">MEL - The MPI Extension Library Documentation (0.1 Beta)</a><ul>
 <li><a class="reference internal" href="#todo">Todo</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -120,7 +98,7 @@
               
                 
   <li>
-    <a href="p2p.html" title="Next Chapter: Point-2-Point Communication"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Point-2-Point... &raquo;</span>
+    <a href="core.html" title="Next Chapter: MEL Core Library"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">MEL Core Library &raquo;</span>
     </a>
   </li>
               
@@ -150,44 +128,36 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="mel-the-mpi-extension-library-documentation">
-<h1>MEL - The MPI Extension Library Documentation<a class="headerlink" href="#mel-the-mpi-extension-library-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="version-0-01-beta">
-<h2>Version 0.01 Beta<a class="headerlink" href="#version-0-01-beta" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="mel-core">
-<h3>MEL Core<a class="headerlink" href="#mel-core" title="Permalink to this headline">¶</a></h3>
+  <div class="section" id="mel-the-mpi-extension-library-documentation-0-1-beta">
+<h1>MEL - The MPI Extension Library Documentation (0.1 Beta)<a class="headerlink" href="#mel-the-mpi-extension-library-documentation-0-1-beta" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="col.html">Collective Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sync.html">Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ops.html">Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="topo.html">Topology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file.html">File-IO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mutex.html">Mutex</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
-<li class="toctree-l1"><a class="reference internal" href="errors.html">Error Handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">MEL Core Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="p2p.html">Point-2-Point Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="col.html">Collective Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="win.html">RMA One-Sided Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comm.html">Communicators &amp; Groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sync.html">Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">Memory Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datatype.html">Derived Datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ops.html">Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topo.html">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file.html">File-IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutex.html">Mutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shared.html">Shared Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
 </ul>
-</div>
-</div>
-<div class="section" id="mel-openmp">
-<h3>MEL OpenMP<a class="headerlink" href="#mel-openmp" title="Permalink to this headline">¶</a></h3>
-<div class="toctree-wrapper compound">
-<ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="omp.html">OpenMP Extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deepmsg.html">Message Transport API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeputils.html">Utilities for Deep Copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deepp2p.html">Send/Recv Deep Copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deepcol.html">Bcast Deep Copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deepfile.html">File-IO Deep Copy</a></li>
 </ul>
-</div>
-</div>
-<div class="section" id="mel-deep-copy">
-<h3>MEL Deep Copy<a class="headerlink" href="#mel-deep-copy" title="Permalink to this headline">¶</a></h3>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="deep.html">Deep Copy Extension</a></li>
+</li>
 </ul>
 </div>
 <p>MEL is a C++11, header-only library, being developed with the goal of creating a light weight and robust framework for building parallel applications on top of MPI.
@@ -203,16 +173,14 @@ catastrophic failure at run-time. In contrast, OpenMPI 1.10.2 implements these t
 some higher-level functionality that is not available from the MPI standard such as deep-copy, mutexes, RMA shared memory synchronization, and more.</p>
 <p>We plan to keep MEL in active development and hope that the research community will join us as we continue to grow the features and capabilities encompassed within the project.
 MEL is Open-Source and available on Github under the MIT license at: <a class="reference external" href="https://github.com/CS-Swansea/MEL">https://github.com/CS-Swansea/MEL</a> .</p>
-</div>
 <div class="section" id="todo">
-<h3>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h3>
+<h2>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Add Distributed Graph Topology functions.</li>
 <li>Add overloads for p2p/collective communications for transmitting <code class="code docutils literal"><span class="pre">std::array</span></code>/<code class="code docutils literal"><span class="pre">std::vector</span></code> by start/end iterators.</li>
 <li>Improve error handler implementation. A rough version is currently in place.</li>
 <li>Implement ranged-mutexes.</li>
 </ul>
-</div>
 </div>
 </div>
 
