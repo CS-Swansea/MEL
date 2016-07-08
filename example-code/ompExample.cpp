@@ -69,53 +69,20 @@ int main(int argc, char *argv []) {
     // Create a MEL User Defined Operation using a functor wrapped in a parallel map function
     auto ompSUM = MEL::OMP::OpCreate<int, MEL::Functor::SUM>();
     
-    omp_set_num_threads(2);
-    omp_set_schedule(omp_sched_static, 0);
+    // For 2, 4, 8, 16 threads
+    for (int n = 2; n <= 16; n <<= 1) {
+        omp_set_num_threads(n);
+        omp_set_schedule(omp_sched_static, 0);
 
-    // Perform the Reduction on 4 threads
-    start = MEL::Wtime();
-    MEL::Reduce(src, dst, LEN, ompSUM, 0, comm);
-    end   = MEL::Wtime();
+        // Perform the Reduction on n threads
+        start = MEL::Wtime();
+        MEL::Reduce(src, dst, LEN, ompSUM, 0, comm);
+        end   = MEL::Wtime();
     
-    if (rank == 0)
-        std::cout << "Reduced " << LEN << " elements in " << std::setw(10) << (end - start)
-        << " seconds on 2 threads with parallel mapped MEL::FUNCTOR::SUM." << std::endl;
-
-    omp_set_num_threads(4);
-    omp_set_schedule(omp_sched_static, 0);
-
-    // Perform the Reduction on 8 threads
-    start = MEL::Wtime();
-    MEL::Reduce(src, dst, LEN, ompSUM, 0, comm);
-    end = MEL::Wtime();
-
-    if (rank == 0)
-        std::cout << "Reduced " << LEN << " elements in " << std::setw(10) << (end - start)
-        << " seconds on 4 threads with parallel mapped MEL::FUNCTOR::SUM." << std::endl;
-    
-    omp_set_num_threads(8);
-    omp_set_schedule(omp_sched_static, 0);
-
-    // Perform the Reduction on 8 threads
-    start = MEL::Wtime();
-    MEL::Reduce(src, dst, LEN, ompSUM, 0, comm);
-    end = MEL::Wtime();
-
-    if (rank == 0)
-        std::cout << "Reduced " << LEN << " elements in " << std::setw(10) << (end - start)
-        << " seconds on 8 threads with parallel mapped MEL::FUNCTOR::SUM." << std::endl;
-
-    omp_set_num_threads(16);
-    omp_set_schedule(omp_sched_static, 0);
-
-    // Perform the Reduction on 16 threads
-    start = MEL::Wtime();
-    MEL::Reduce(src, dst, LEN, ompSUM, 0, comm);
-    end = MEL::Wtime();
-
-    if (rank == 0)
-        std::cout << "Reduced " << LEN << " elements in " << std::setw(10) << (end - start)
-        << " seconds on 16 threads with parallel mapped MEL::FUNCTOR::SUM." << std::endl;
+        if (rank == 0)
+            std::cout << "Reduced " << LEN << " elements in " << std::setw(10) << (end - start)
+            << " seconds on " << n << " threads with parallel mapped MEL::FUNCTOR::SUM." << std::endl;
+    }
 
     // Clean up the operations when we are done with them
     MEL::OpFree(SUM, ompSUM);
