@@ -38,16 +38,6 @@ namespace MEL {
          * Extensions to MEL that leverage OpenMP for within node paralellism
          */
 
-        /**
-         * \ingroup  OMP
-         */
-        enum Schedule : int {
-            STATIC  = omp_sched_static,
-            DYNAMIC = omp_sched_dynamic,
-            GUIDED  = omp_sched_guided,
-            AUTO    = omp_sched_auto
-        };
-
         namespace Functor {
 
             /**
@@ -59,10 +49,9 @@ namespace MEL {
              * \param[in] len		Pointer to a single int representing the number of elements to be processed
              * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
              */
-            template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
+            template<typename T, T(*F)(T&, T&)>
             void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
-                omp_set_schedule((omp_sched_t) SCHEDULE, CHUNK);
-                #pragma omp parallel for num_threads(NUM_THREADS) schedule(dynamic)
+                #pragma omp parallel for
                 for (int i = 0; i < *len; ++i) 
                     inout[i] = F(in[i], inout[i]);
             };
@@ -76,10 +65,9 @@ namespace MEL {
              * \param[in] len		Pointer to a single int representing the number of elements to be processed
              * \param[in] dptr		Pointer to a single derived datatype representing the data to be processed
              */
-            template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&, MEL::Datatype)>
+            template<typename T, T(*F)(T&, T&, MEL::Datatype)>
             void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
-                omp_set_schedule((omp_sched_t) SCHEDULE, CHUNK);
-                #pragma omp parallel for num_threads(NUM_THREADS) schedule(dynamic)
+                #pragma omp parallel for
                 for (int i = 0; i < *len; ++i) 
                     inout[i] = F(in[i], inout[i], dt);
             };
@@ -94,10 +82,10 @@ namespace MEL {
          * \param[in] commute		Is the operation commutative
          * \return					Returns a handle to a new Op
          */
-        template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&)>
+        template<typename T, T(*F)(T&, T&)>
         inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
-            MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
+            MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
         };
 
@@ -110,12 +98,11 @@ namespace MEL {
          * \param[in] commute		Is the operation commutative
          * \return					Returns a handle to a new Op
          */
-        template<int NUM_THREADS, int CHUNK, Schedule SCHEDULE, typename T, T(*F)(T&, T&, MEL::Datatype)>
+        template<typename T, T(*F)(T&, T&, MEL::Datatype)>
         inline MEL::Op OpCreate(bool commute = true) {
             MPI_Op op;
-            MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<NUM_THREADS, CHUNK, SCHEDULE, T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
+            MEL_THROW( MPI_Op_create((void(*)(void*, void*, int*, MPI_Datatype*)) MEL::OMP::Functor::ARRAY_OP_FUNC<T, F>, commute, (MPI_Op*) &op), "OMP::Op::CreatOp" );
             return MEL::Op(op);
         };
-
     };
 };
