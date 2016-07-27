@@ -69,7 +69,7 @@ namespace MEL {
             void ARRAY_OP_FUNC(T *in, T *inout, int *len, MPI_Datatype *dptr) {
                 #pragma omp parallel for
                 for (int i = 0; i < *len; ++i) 
-                    inout[i] = F(in[i], inout[i], dt);
+					inout[i] = F(in[i], inout[i], dptr);
             };
         };
 
