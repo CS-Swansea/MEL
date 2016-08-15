@@ -23,7 +23,7 @@ SOFTWARE.
 */
 #define  MEL_IMPLEMENTATION
 #include "MEL.hpp"
-#include "MEL_deepcopy.hpp"
+#include "MEL_deepcopy_experimental.hpp"
 
 #include <random>
 #include <iostream>
@@ -49,7 +49,8 @@ struct DiGraphNode {
 		edges.push_back(node);
 	};
 
-	inline void DeepCopy(MEL::Deep::Message &msg) {
+    template<typename MSG>
+	inline void DeepCopy(MSG &msg) {
 		msg & edges;
 
 		for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -80,7 +81,8 @@ struct DiGraph {
 		return *it;
 	};
 
-	inline void DeepCopy(MEL::Deep::Message &msg) {
+    template<typename MSG>
+	inline void DeepCopy(MSG &msg) {
 		msg & nodes;
 
 		for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -224,6 +226,8 @@ int main(int argc, char *argv[]) {
 			graph = MakeFullyConnectedGraph(numNodes);
 			break;
 		}
+
+        std::cout << "Graph size " << MEL::Deep::BufferSize(graph) << " bytes..." << std::endl;
 	}
 
 	MEL::Barrier(comm);
