@@ -234,7 +234,7 @@ int main(int argc, char *argv[]) {
 	auto startTime = MEL::Wtime(); // Start the clock!
 
 	// Deep copy the graph to all nodes
-	MEL::Deep::Bcast(graph, 0, comm);
+	MEL::Deep::BcastStream(graph, 0, comm);
 
 	MEL::Barrier(comm);
 	auto endTime = MEL::Wtime(); // Stop the clock!

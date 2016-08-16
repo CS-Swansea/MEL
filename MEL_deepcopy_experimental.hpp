@@ -24,6 +24,7 @@ SOFTWARE.
 #pragma once
 
 #include "MEL.hpp"
+#include "MEL_stream.hpp"
 
 #include <string>
 #include <vector>
@@ -37,6 +38,122 @@ namespace MEL {
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        class TransportSendStream {
+        private:
+            /// Members
+            int offset;
+            MEL::send_stream stream;
+
+        public:
+            static constexpr bool SOURCE = true;
+            
+            TransportSendStream(const int _pid, const int _tag, const MEL::Comm &_comm, const int _blockSize = 512) 
+                                : offset(0), stream(_pid, _tag, _comm, _blockSize) {};
+
+            template<typename T>
+            inline void transport(T *&ptr, const int len) {
+                stream.write(ptr, len);
+                offset += len * sizeof(T);
+            };
+
+            template<typename T>
+            inline void transportAlloc(T *&ptr, const int len) {
+                transport(ptr, len);
+            };
+
+            inline int getOffset() const {
+                return offset;
+            };
+        };
+
+        class TransportRecvStream {
+        private:
+            /// Members
+            int offset;
+            recv_stream stream;
+
+        public:
+            static constexpr bool SOURCE = false;
+
+            TransportRecvStream(const int _pid, const int _tag, const MEL::Comm &_comm, const int _blockSize = 512) 
+                                : offset(0), stream(_pid, _tag, _comm, _blockSize) {};
+
+            template<typename T>
+            inline void transport(T *&ptr, const int len) {
+                stream.read(ptr, len);
+                offset += len * sizeof(T);
+            };
+
+            template<typename T>
+            inline void transportAlloc(T *&ptr, const int len) {
+                ptr = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+                transport(ptr, len);
+            };
+
+            inline int getOffset() const {
+                return offset;
+            };
+        };
+
+        class TransportBcastStreamRoot {
+        private:
+            /// Members
+            int offset;
+            bcast_stream stream;
+
+        public:
+            static constexpr bool SOURCE = true;
+
+            TransportBcastStreamRoot(const int _root, const MEL::Comm &_comm, const int _blockSize) 
+                                    : offset(0), stream(_root, _comm, _blockSize) {};
+
+            template<typename T>
+            inline void transport(T *&ptr, const int len) {
+                stream.write(ptr, len);
+                offset += len * sizeof(T);
+            };
+
+            template<typename T>
+            inline void transportAlloc(T *&ptr, const int len) {
+                transport(ptr, len);
+            };
+
+            inline int getOffset() const {
+                return offset;
+            };
+        };
+
+        class TransportBcastStream {
+        private:
+            /// Members
+            int offset;
+            bcast_stream stream;
+
+        public:
+            static constexpr bool SOURCE = false;
+
+            TransportBcastStream(const int _root, const MEL::Comm &_comm, const int _blockSize) 
+                                    : offset(0), stream(_root, _comm, _blockSize) {};
+
+            template<typename T>
+            inline void transport(T *&ptr, const int len) {
+                stream.read(ptr, len);
+                offset += len * sizeof(T);
+            };
+
+            template<typename T>
+            inline void transportAlloc(T *&ptr, const int len) {
+                ptr = (len > 0) ? MEL::MemAlloc<T>(len) : nullptr;
+                transport(ptr, len);
+            };
+
+            inline int getOffset() const {
+                return offset;
+            };
+        };
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         class TransportSend {
         private:
             /// Members
@@ -46,7 +163,7 @@ namespace MEL {
 
         public:
             static constexpr bool SOURCE = true;
-            
+
             TransportSend(const int _pid, const int _tag, const MEL::Comm &_comm) : offset(0), pid(_pid), tag(_tag), comm(_comm) {};
 
             template<typename T>
@@ -330,7 +447,7 @@ namespace MEL {
         public:
             static constexpr bool SOURCE = true; 
         
-            NoTransport() : offset(0) {};
+            explicit NoTransport(const int dummy) : offset(0) {};
 
             template<typename T>
             inline void transport(T *&ptr, const int len) {
@@ -430,7 +547,8 @@ namespace MEL {
 
         public:
             
-            Message(TRANSPORT_METHOD _transporter) : transporter(_transporter) {};
+            template<typename ...Args>
+            Message(Args &&...args) : transporter(std::forward<Args>(args)...) {};
 
             Message()                           = delete;
             Message(const Message &)            = delete;
@@ -584,21 +702,21 @@ namespace MEL {
 
         template<typename T>
         inline enable_if_deep_not_pointer<T, int> BufferSize(T &obj) {
-            Message<NoTransport> msg(NoTransport::NoTransport());
+            Message<NoTransport> msg(0);
             msg & obj;
             return msg.getOffset();
         };
 
         template<typename P>
         inline enable_if_pointer<P, int> BufferSize(P &ptr) {
-            Message<NoTransport> msg(NoTransport::NoTransport());
+            Message<NoTransport> msg(0);
             msg.packPtr(ptr);
             return msg.getOffset();
         };
 
         template<typename P>
         inline enable_if_pointer<P, int> BufferSize(P &ptr, const int len) {
-            Message<NoTransport> msg(NoTransport::NoTransport());
+            Message<NoTransport> msg(0);
             msg.packVar(len);
             msg.packPtr(ptr, len);
             return msg.getOffset();
@@ -608,19 +726,19 @@ namespace MEL {
 
         template<typename T>
         inline enable_if_not_pointer<T> Send(T &obj, const int dst, const int tag, const Comm &comm) {
-            Message<TransportSend> msg(TransportSend::TransportSend(dst, tag, comm));
+            Message<TransportSend> msg(dst, tag, comm);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> Send(P &ptr, const int dst, const int tag, const Comm &comm) {
-            Message<TransportSend> msg(TransportSend::TransportSend(dst, tag, comm));
+            Message<TransportSend> msg(dst, tag, comm);
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> Send(P &ptr, const int len, const int dst, const int tag, const Comm &comm) {
-            Message<TransportSend> msg(TransportSend::TransportSend(dst, tag, comm));
+            Message<TransportSend> msg(dst, tag, comm);
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
@@ -628,7 +746,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedSend(T &obj, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
@@ -644,7 +762,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedSend(P &ptr, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packPtr(ptr);
 
             MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
@@ -660,7 +778,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedSend(P &ptr, const int len, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packVar(len);
             msg.packPtr(ptr, len);
 
@@ -674,24 +792,43 @@ namespace MEL {
             MEL::Deep::BufferedSend(ptr, len, dst, tag, comm, MEL::Deep::BufferSize(ptr, len));
         };
 
+        template<typename T>
+        inline enable_if_not_pointer<T> SendStream(T &obj, const int dst, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportSendStream> msg(dst, tag, comm, blockSize);
+            msg & obj;
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> SendStream(P &ptr, const int dst, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportSendStream> msg(dst, tag, comm, blockSize);
+            msg.packPtr(ptr);
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> SendStream(P &ptr, const int len, const int dst, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportSendStream> msg(dst, tag, comm, blockSize);
+            msg.packVar(len);
+            msg.packPtr(ptr, len);
+        };
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename T>
         inline enable_if_not_pointer<T> Recv(T &obj, const int src, const int tag, const Comm &comm) {
-            Message<TransportRecv> msg(TransportRecv::TransportRecv(src, tag, comm));
+            Message<TransportRecv> msg(src, tag, comm);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> Recv(P &ptr, const int src, const int tag, const Comm &comm) {
-            Message<TransportRecv> msg(TransportRecv::TransportRecv(src, tag, comm));
+            Message<TransportRecv> msg(src, tag, comm);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> Recv(P &ptr, int &len, const int src, const int tag, const Comm &comm) {
-            Message<TransportRecv> msg(TransportRecv::TransportRecv(src, tag, comm));
+            Message<TransportRecv> msg(src, tag, comm);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -699,7 +836,7 @@ namespace MEL {
 
         template<typename P>
         inline enable_if_pointer<P> Recv(P &ptr, const int len, const int src, const int tag, const Comm &comm) {
-            Message<TransportRecv> msg(TransportRecv::TransportRecv(src, tag, comm));
+            Message<TransportRecv> msg(src, tag, comm);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
@@ -713,7 +850,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::MemFree(buffer);
@@ -725,7 +862,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
 
@@ -738,7 +875,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -752,7 +889,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
@@ -762,16 +899,47 @@ namespace MEL {
             MEL::MemFree(buffer);
         };
 
+        template<typename T>
+        inline enable_if_not_pointer<T> RecvStream(T &obj, const int src, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportRecvStream> msg(src, tag, comm, blockSize);
+            msg & obj;
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> RecvStream(P &ptr, const int src, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportRecvStream> msg(src, tag, comm, blockSize);
+            ptr = (P) 0x1;
+            msg.packPtr(ptr);
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> RecvStream(P &ptr, int &len, const int src, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportRecvStream> msg(src, tag, comm, blockSize);
+            ptr = (P) 0x1;
+            msg.packVar(len);
+            msg.packPtr(ptr, len);
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> RecvStream(P &ptr, const int len, const int src, const int tag, const Comm &comm, const int blockSize = 512) {
+            Message<TransportRecvStream> msg(src, tag, comm, blockSize);
+            int _len = len;
+            ptr = (P) 0x1;
+            msg.packVar(_len);
+            if (len != _len) MEL::Exit(-1, "MEL::Deep::RecvStream(ptr, len) const int len provided does not match incomming message size.");
+            msg.packPtr(ptr, _len);
+        };
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename T>
         inline enable_if_not_pointer<T> Bcast(T &obj, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
-                Message<TransportBcastRoot> msg(TransportBcastRoot::TransportBcastRoot(root, comm));
+                Message<TransportBcastRoot> msg(root, comm);
                 msg & obj;
             }
             else {
-                Message<TransportBcast> msg(TransportBcast::TransportBcast(root, comm));
+                Message<TransportBcast> msg(root, comm);
                 msg & obj;
             }
         };
@@ -779,11 +947,11 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> Bcast(P &ptr, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
-                Message<TransportBcastRoot> msg(TransportBcastRoot::TransportBcastRoot(root, comm));
+                Message<TransportBcastRoot> msg(root, comm);
                 msg.packPtr(ptr);
             }
             else {
-                Message<TransportBcast> msg(TransportBcast::TransportBcast(root, comm));
+                Message<TransportBcast> msg(root, comm);
                 ptr = (P) 0x1;
                 msg.packPtr(ptr);
             }
@@ -792,12 +960,12 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> Bcast(P &ptr, const int len, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
-                Message<TransportBcastRoot> msg(TransportBcastRoot::TransportBcastRoot(root, comm));
+                Message<TransportBcastRoot> msg(root, comm);
                 msg.packVar(len);
                 msg.packPtr(ptr, len);
             }
             else {
-                Message<TransportBcast> msg(TransportBcast::TransportBcast(root, comm));
+                Message<TransportBcast> msg(root, comm);
                 ptr = (P) 0x1;
                 int _len = len;
                 msg.packVar(_len);
@@ -809,12 +977,12 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> Bcast(P &ptr, int &len, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
-                Message<TransportBcastRoot> msg(TransportBcastRoot::TransportBcastRoot(root, comm));
+                Message<TransportBcastRoot> msg(root, comm);
                 msg.packVar(len);
                 msg.packPtr(ptr, len);
             }
             else {
-                Message<TransportBcast> msg(TransportBcast::TransportBcast(root, comm));
+                Message<TransportBcast> msg(root, comm);
                 ptr = (P) 0x1;
                 msg.packVar(len);
                 msg.packPtr(ptr, len);
@@ -825,7 +993,7 @@ namespace MEL {
         inline enable_if_deep_not_pointer<T> BufferedBcast(T &obj, const int root, const Comm &comm, const int bufferSize) {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
-                Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+                Message<TransportBufferWrite> msg(buffer, bufferSize);
                 msg & obj;
 
                 MEL::Deep::Bcast(buffer, bufferSize, root, comm);
@@ -837,7 +1005,7 @@ namespace MEL {
                 char *buffer = nullptr;
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
-                Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, _bufferSize));
+                Message<TransportBufferRead> msg(buffer, _bufferSize);
                 msg & obj;
 
                 MEL::MemFree(buffer);
@@ -858,7 +1026,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedBcast(P &ptr, const int root, const Comm &comm, const int bufferSize) {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
-                Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+                Message<TransportBufferWrite> msg(buffer, bufferSize);
                 msg.packPtr(ptr);
 
                 MEL::Deep::Bcast(buffer, bufferSize, root, comm);
@@ -870,7 +1038,7 @@ namespace MEL {
                 char *buffer = nullptr;
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
-                Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, _bufferSize));
+                Message<TransportBufferRead> msg(buffer, _bufferSize);
                 ptr = (P) 0x1;
                 msg.packPtr(ptr);
 
@@ -892,7 +1060,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedBcast(P &ptr, int &len, const int root, const Comm &comm, const int bufferSize) {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
-                Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+                Message<TransportBufferWrite> msg(buffer, bufferSize);
                 msg.packVar(len); 
                 msg.packPtr(ptr);
 
@@ -905,7 +1073,7 @@ namespace MEL {
                 char *buffer = nullptr;
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
-                Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, _bufferSize));
+                Message<TransportBufferRead> msg(buffer, _bufferSize);
                 ptr = (P) 0x1;
                 msg.packVar(len); 
                 msg.packPtr(ptr);
@@ -928,7 +1096,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedBcast(P &ptr, const int len, const int root, const Comm &comm, const int bufferSize) {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
-                Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+                Message<TransportBufferWrite> msg(buffer, bufferSize);
                 msg.packVar(len);
                 msg.packPtr(ptr);
 
@@ -941,7 +1109,7 @@ namespace MEL {
                 char *buffer = nullptr;
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
-                Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, _bufferSize));
+                Message<TransportBufferRead> msg(buffer, _bufferSize);
                 ptr = (P) 0x1;
                 int _len = len;
                 msg.packVar(_len);
@@ -962,23 +1130,80 @@ namespace MEL {
             }
         };
 
+        template<typename T>
+        inline enable_if_not_pointer<T> BcastStream(T &obj, const int root, const Comm &comm, const int blockSize = 512) {
+            if (MEL::CommRank(comm) == root) {
+                Message<TransportBcastStreamRoot> msg(root, comm, blockSize);
+                msg & obj;
+            }
+            else {
+                Message<TransportBcastStream> msg(root, comm, blockSize);
+                msg & obj;
+            }
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> BcastStream(P &ptr, const int root, const Comm &comm, const int blockSize = 512) {
+            if (MEL::CommRank(comm) == root) {
+                Message<TransportBcastStreamRoot> msg(root, comm, blockSize);
+                msg.packPtr(ptr);
+            }
+            else {
+                Message<TransportBcastStream> msg(root, comm, blockSize);
+                ptr = (P) 0x1;
+                msg.packPtr(ptr);
+            }
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> BcastStream(P &ptr, const int len, const int root, const Comm &comm, const int blockSize = 512) {
+            if (MEL::CommRank(comm) == root) {
+                Message<TransportBcastStreamRoot> msg(root, comm, blockSize);
+                msg.packVar(len);
+                msg.packPtr(ptr, len);
+            }
+            else {
+                Message<TransportBcastStream> msg(root, comm, blockSize);
+                ptr = (P) 0x1;
+                int _len = len;
+                msg.packVar(_len);
+                if (len != _len) MEL::Exit(-1, "MEL::Deep::BcastStream(ptr, len) const int len provided does not match incomming message size.");
+                msg.packPtr(ptr, _len);
+            }
+        };
+
+        template<typename P>
+        inline enable_if_pointer<P> BcastStream(P &ptr, int &len, const int root, const Comm &comm, const int blockSize = 512) {
+            if (MEL::CommRank(comm) == root) {
+                Message<TransportBcastStreamRoot> msg(root, comm, blockSize);
+                msg.packVar(len);
+                msg.packPtr(ptr, len);
+            }
+            else {
+                Message<TransportBcastStream> msg(root, comm, blockSize);
+                ptr = (P) 0x1;
+                msg.packVar(len);
+                msg.packPtr(ptr, len);
+            }
+        };
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename T>
         inline enable_if_not_pointer<T> FileWrite(T &obj, MEL::File &file) {
-            Message<TransportFileWrite> msg(TransportFileWrite::TransportFileWrite(file));
+            Message<TransportFileWrite> msg(file);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileWrite(P &ptr, MEL::File &file) {
-            Message<TransportFileWrite> msg(TransportFileWrite::TransportFileWrite(file));
+            Message<TransportFileWrite> msg(file);
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileWrite(P &ptr, const int len, MEL::File &file) {
-            Message<TransportFileWrite> msg(TransportFileWrite::TransportFileWrite(file));
+            Message<TransportFileWrite> msg(file);
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
@@ -986,7 +1211,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, MEL::File &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
@@ -1002,7 +1227,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, MEL::File &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packPtr(ptr);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
@@ -1018,7 +1243,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, MEL::File &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packVar(len);
             msg.packPtr(ptr, len);
 
@@ -1036,20 +1261,20 @@ namespace MEL {
 
         template<typename T>
         inline enable_if_not_pointer<T> FileRead(T &obj, MEL::File &file) {
-            Message<TransportFileRead> msg(TransportFileRead::TransportFileRead(file));
+            Message<TransportFileRead> msg(file);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, MEL::File &file) {
-            Message<TransportFileRead> msg(TransportFileRead::TransportFileRead(file));
+            Message<TransportFileRead> msg(file);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, const int len, MEL::File &file) {
-            Message<TransportFileRead> msg(TransportFileRead::TransportFileRead(file));
+            Message<TransportFileRead> msg(file);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
@@ -1059,7 +1284,7 @@ namespace MEL {
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, MEL::File &file) {
-            Message<TransportFileRead> msg(TransportFileRead::TransportFileRead(file));
+            Message<TransportFileRead> msg(file);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -1071,7 +1296,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::MemFree(buffer);
@@ -1083,7 +1308,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
 
@@ -1096,7 +1321,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -1110,7 +1335,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
@@ -1124,19 +1349,19 @@ namespace MEL {
 
         template<typename T>
         inline enable_if_not_pointer<T> FileWrite(T &obj, std::ofstream &file) {
-            Message<TransportSTLFileWrite> msg(TransportSTLFileWrite::TransportSTLFileWrite(file));
+            Message<TransportSTLFileWrite> msg(file);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileWrite(P &ptr, std::ofstream &file) {
-            Message<TransportSTLFileWrite> msg(TransportSTLFileWrite::TransportSTLFileWrite(file));
+            Message<TransportSTLFileWrite> msg(file);
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileWrite(P &ptr, const int len, std::ofstream &file) {
-            Message<TransportSTLFileWrite> msg(TransportSTLFileWrite::TransportSTLFileWrite(file));
+            Message<TransportSTLFileWrite> msg(file);
             msg.packVar(len);
             msg.packPtr(ptr, len);
         };
@@ -1144,7 +1369,7 @@ namespace MEL {
         template<typename T>
         inline enable_if_deep_not_pointer<T> BufferedFileWrite(T &obj, std::ofstream &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
@@ -1160,7 +1385,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, std::ofstream &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packPtr(ptr);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
@@ -1176,7 +1401,7 @@ namespace MEL {
         template<typename P>
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, const int len, std::ofstream &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
-            Message<TransportBufferWrite> msg(TransportBufferWrite::TransportBufferWrite(buffer, bufferSize));
+            Message<TransportBufferWrite> msg(buffer, bufferSize);
             msg.packVar(len);
             msg.packPtr(ptr, len);
 
@@ -1194,20 +1419,20 @@ namespace MEL {
 
         template<typename T>
         inline enable_if_not_pointer<T> FileRead(T &obj, std::ifstream &file) {
-            Message<TransportSTLFileRead> msg(TransportSTLFileRead::TransportSTLFileRead(file));
+            Message<TransportSTLFileRead> msg(file);
             msg & obj;
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, std::ifstream &file) {
-            Message<TransportSTLFileRead> msg(TransportSTLFileRead::TransportSTLFileRead(file));
+            Message<TransportSTLFileRead> msg(file);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
         };
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, const int len, std::ifstream &file) {
-            Message<TransportSTLFileRead> msg(TransportSTLFileRead::TransportSTLFileRead(file));
+            Message<TransportSTLFileRead> msg(file);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
@@ -1217,7 +1442,7 @@ namespace MEL {
 
         template<typename P>
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, std::ifstream &file) {
-            Message<TransportSTLFileRead> msg(TransportSTLFileRead::TransportSTLFileRead(file));
+            Message<TransportSTLFileRead> msg(file);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -1229,7 +1454,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             msg & obj;
 
             MEL::MemFree(buffer);
@@ -1241,7 +1466,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, src, tag, comm);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packPtr(ptr);
 
@@ -1254,7 +1479,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVar(len);
             msg.packPtr(ptr, len);
@@ -1268,7 +1493,7 @@ namespace MEL {
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
-            Message<TransportBufferRead> msg(TransportBufferRead::TransportBufferRead(buffer, bufferSize));
+            Message<TransportBufferRead> msg(buffer, bufferSize);
             int _len = len;
             ptr = (P) 0x1;
             msg.packVar(_len);
