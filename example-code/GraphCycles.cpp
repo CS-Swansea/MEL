@@ -190,6 +190,50 @@ inline DiGraph<int>* MakeFullyConnectedGraph(const int numNodes) {
 	return graph;
 };
 
+inline void TEST_STREAMS() {
+    MEL::Comm comm = MEL::Comm::WORLD;
+	const int rank = MEL::CommRank(comm),
+		      size = MEL::CommSize(comm);
+    
+    if (rank == 0) {
+		MEL::send_stream sstream(1, 0, comm, 7);
+
+		for (int i = 0; i < 10; ++i) {
+			sstream << i;
+		}
+
+	}
+	else if (rank == 1) {
+		MEL::recv_stream rstream(0, 0, comm, 7);
+
+		for (int i = 0; i < 10; ++i) {
+			int j;
+			rstream >> j;
+
+			std::cout << "Received j = " << j << std::endl;
+		}
+	}
+
+	if (rank == 0) {
+		MEL::bcast_stream bstream(0, comm, 7);
+
+		for (int i = 0; i < 10; ++i) {
+			bstream << i;
+		}
+
+	}
+	else {
+		MEL::bcast_stream bstream(0, comm, 7);
+
+		for (int i = 0; i < 10; ++i) {
+			int j;
+			bstream >> j;
+
+			std::cout << "Rank " << rank << " Received j = " << j << std::endl;
+		}
+	}
+};
+
 //------------------------------------------------------------------------------------------------------------//
 // Example Usage: mpirun -n [number of processes] ./GraphCycles [num nodes: 0 <= n] [graph type: 0 <= t <= 3] //
 //                mpirun -n 8 ./GraphCycles 11 0                                                              //
@@ -199,7 +243,9 @@ int main(int argc, char *argv[]) {
 
 	MEL::Comm comm = MEL::Comm::WORLD;
 	const int rank = MEL::CommRank(comm),
-		size = MEL::CommSize(comm);
+		      size = MEL::CommSize(comm);
+
+    TEST_STREAMS();
 
 	if (argc != 3) {
 		if (rank == 0)
