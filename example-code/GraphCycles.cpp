@@ -76,9 +76,7 @@ struct DiGraph {
 	};
 
 	inline DiGraphNode<T>* getNode(const int nodeId) const {
-		auto it = nodes.begin();
-		std::advance(it, nodeId);
-		return *it;
+		return nodes[nodeId];
 	};
 
     template<typename MSG>
@@ -176,62 +174,24 @@ inline DiGraph<int>* MakeFullyConnectedGraph(const int numNodes) {
 	DiGraph<int>* graph = MEL::MemConstruct<DiGraph<int>>();
 
 	/// Create graph nodes
+    std::cout << "Adding nodes..." << std::endl;
+
 	for (int i = 0; i < numNodes; ++i) {
 		graph->addNode(i);
 	}
 
 	/// Connect each node to all neighbours
+    std::cout << "Linking nodes..." << std::endl;
+
 	for (int i = 0; i < numNodes; ++i) {
 		DiGraphNode<int> *node = graph->getNode(i);
 		for (int j = 0; j < numNodes; ++j) {
 			node->addEdge(graph->getNode(j));
 		}
 	}
+
+    std::cout << "Done..." << std::endl;
 	return graph;
-};
-
-inline void TEST_STREAMS() {
-    MEL::Comm comm = MEL::Comm::WORLD;
-	const int rank = MEL::CommRank(comm),
-		      size = MEL::CommSize(comm);
-    
-    if (rank == 0) {
-		MEL::send_stream sstream(1, 0, comm, 7);
-
-		for (int i = 0; i < 10; ++i) {
-			sstream << i;
-		}
-
-	}
-	else if (rank == 1) {
-		MEL::recv_stream rstream(0, 0, comm, 7);
-
-		for (int i = 0; i < 10; ++i) {
-			int j;
-			rstream >> j;
-
-			std::cout << "Received j = " << j << std::endl;
-		}
-	}
-
-	if (rank == 0) {
-		MEL::bcast_stream bstream(0, comm, 7);
-
-		for (int i = 0; i < 10; ++i) {
-			bstream << i;
-		}
-
-	}
-	else {
-		MEL::bcast_stream bstream(0, comm, 7);
-
-		for (int i = 0; i < 10; ++i) {
-			int j;
-			bstream >> j;
-
-			std::cout << "Rank " << rank << " Received j = " << j << std::endl;
-		}
-	}
 };
 
 //------------------------------------------------------------------------------------------------------------//
@@ -245,16 +205,16 @@ int main(int argc, char *argv[]) {
 	const int rank = MEL::CommRank(comm),
 		      size = MEL::CommSize(comm);
 
-    TEST_STREAMS();
+    //TEST_STREAMS();
 
-	if (argc != 3) {
+    if (argc != 3) {
 		if (rank == 0)
 			std::cout << "Wrong number of parameters..." << std::endl;
 		MEL::Exit(-1);
 	}
 
 	const int numNodes = 1 << std::stoi(argv[1]), // 2^n nodes
-		graphType = std::stoi(argv[2]);
+		     graphType = std::stoi(argv[2]);
 
 	DiGraph<int> *graph = nullptr;
 	if (rank == 0) {
@@ -280,7 +240,7 @@ int main(int argc, char *argv[]) {
 	auto startTime = MEL::Wtime(); // Start the clock!
 
 	// Deep copy the graph to all nodes
-	MEL::Deep::BcastStream(graph, 0, comm);
+    MEL::Deep::BcastStream(graph, 0, comm, 4 * 1024 * 1024);
 
 	MEL::Barrier(comm);
 	auto endTime = MEL::Wtime(); // Stop the clock!
