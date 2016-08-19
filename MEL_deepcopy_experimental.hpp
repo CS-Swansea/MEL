@@ -290,7 +290,7 @@ namespace MEL {
                 else {
                     MEL::Abort(-1, "TransportBufferRead : Offset longer than buffer...");
                 }
-            };
+            }
         };
 
         class NoTransport {
@@ -324,21 +324,18 @@ namespace MEL {
 
         public:
             template<typename T>
-            inline bool checkPointerCache(T* &ptr) {
-                return pointerMap.find(HashPtr(ptr)) != pointerMap.end();
+            inline bool checkPointerCache(T* oldPtr, T* &ptr) {
+                auto it = pointerMap.find(HashPtr(oldPtr));
+                if (it != pointerMap.end()) {
+                    ptr = (T*) it->second;
+                    return true;
+                }
+                return false;
             };
 
             template<typename T>
             inline void cachePointer(T* oldPtr, T* ptr) {
                 pointerMap.insert(std::make_pair(HashPtr(oldPtr), (void*) ptr));
-            };
-
-            template<typename T>
-            inline void getCachedPointer(T* &ptr) {
-                auto it = pointerMap.find(HashPtr(ptr));
-                if (it != pointerMap.end()) {
-                    ptr = (T*) it->second;
-                }
             };
         };
         
@@ -449,12 +446,7 @@ namespace MEL {
             template<typename T>
             inline enable_if_not_deep<T> packSharedPtr(T* &ptr, int len = 1) {
                 T *oldPtr = ptr;
-                if (pointerMap.checkPointerCache(ptr)) {
-                    if (!TRANSPORT_METHOD::SOURCE) {
-                        pointerMap.getCachedPointer(ptr);
-                    }
-                    return;
-                }
+                if (pointerMap.checkPointerCache(oldPtr, ptr)) return;
 
                 transportAlloc(ptr, len);
                 pointerMap.cachePointer(oldPtr, ptr);
@@ -463,12 +455,7 @@ namespace MEL {
             template<typename D>
             inline enable_if_deep<D> packSharedPtr(D* &ptr, int len = 1) {
                 D *oldPtr = ptr;
-                if (pointerMap.checkPointerCache(ptr)) {
-                    if (!TRANSPORT_METHOD::SOURCE) {
-                        pointerMap.getCachedPointer(ptr);
-                    }
-                    return;
-                }
+                if (pointerMap.checkPointerCache(oldPtr, ptr)) return;
 
                 transportAlloc(ptr, len);
                 pointerMap.cachePointer(oldPtr, ptr);
@@ -567,7 +554,7 @@ namespace MEL {
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P, int> BufferSize(P &ptr) {
             Message<NoTransport, HASH_MAP> msg(0);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
             return msg.getOffset();
         };
 
@@ -575,7 +562,7 @@ namespace MEL {
         inline enable_if_pointer<P, int> BufferSize(P &ptr, const int len) {
             Message<NoTransport, HASH_MAP> msg(0);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
             return msg.getOffset();
         };
 
@@ -590,14 +577,14 @@ namespace MEL {
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> Send(P &ptr, const int dst, const int tag, const Comm &comm) {
             Message<TransportSend, HASH_MAP> msg(dst, tag, comm);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> Send(P &ptr, int const &len, const int dst, const int tag, const Comm &comm) {
             Message<TransportSend, HASH_MAP> msg(dst, tag, comm);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -620,7 +607,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedSend(P &ptr, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
 
@@ -637,7 +624,7 @@ namespace MEL {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
 
@@ -658,14 +645,14 @@ namespace MEL {
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> SendStream(P &ptr, const int dst, const int tag, const Comm &comm, const int blockSize = 512) {
             Message<TransportSendStream, HASH_MAP> msg(dst, tag, comm, blockSize);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> SendStream(P &ptr, int const &len, const int dst, const int tag, const Comm &comm, const int blockSize = 512) {
             Message<TransportSendStream, HASH_MAP> msg(dst, tag, comm, blockSize);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -680,7 +667,7 @@ namespace MEL {
         inline enable_if_pointer<P> Recv(P &ptr, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -688,7 +675,7 @@ namespace MEL {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -698,7 +685,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::Recv(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -721,7 +708,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::MemFree(buffer);
         };
@@ -735,7 +722,7 @@ namespace MEL {
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::MemFree(buffer);
         };
@@ -751,7 +738,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedRecv(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
 
             MEL::MemFree(buffer);
         };
@@ -766,7 +753,7 @@ namespace MEL {
         inline enable_if_pointer<P> RecvStream(P &ptr, const int src, const int tag, const Comm &comm, const int blockSize = 512) {
             Message<TransportRecvStream, HASH_MAP> msg(src, tag, comm, blockSize);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -774,7 +761,7 @@ namespace MEL {
             Message<TransportRecvStream, HASH_MAP> msg(src, tag, comm, blockSize);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -784,7 +771,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::RecvStream(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -805,12 +792,12 @@ namespace MEL {
         inline enable_if_pointer<P> Bcast(P &ptr, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
                 Message<TransportBcastRoot, HASH_MAP> msg(root, comm);
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
                 ptr = (P) 0x1;
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
             }
         };
 
@@ -820,7 +807,7 @@ namespace MEL {
                 Message<TransportBcastRoot, HASH_MAP> msg(root, comm);
                 int _len = len;
                 msg.packVarFootprint(_len);
-                msg.packPtr(ptr, _len);
+                msg.packSharedPtr(ptr, _len);
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
@@ -828,7 +815,7 @@ namespace MEL {
                 int _len = len;
                 msg.packVarFootprint(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::Bcast(ptr, len) const int len provided does not match incomming message size.");
-                msg.packPtr(ptr, _len);
+                msg.packSharedPtr(ptr, _len);
             }
         };
 
@@ -837,13 +824,13 @@ namespace MEL {
             if (MEL::CommRank(comm) == root) {
                 Message<TransportBcastRoot, HASH_MAP> msg(root, comm);
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr, len);
+                msg.packSharedPtr(ptr, len);
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
                 ptr = (P) 0x1;
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr, len);
+                msg.packSharedPtr(ptr, len);
             }
         };
 
@@ -885,7 +872,7 @@ namespace MEL {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::Deep::Bcast(buffer, bufferSize, root, comm);
 
@@ -898,7 +885,7 @@ namespace MEL {
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
                 ptr = (P) 0x1;
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::MemFree(buffer);
             }
@@ -920,7 +907,7 @@ namespace MEL {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packVarFootprint(len); 
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::Deep::Bcast(buffer, bufferSize, root, comm);
 
@@ -934,7 +921,7 @@ namespace MEL {
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
                 ptr = (P) 0x1;
                 msg.packVarFootprint(len); 
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::MemFree(buffer);
             }
@@ -956,7 +943,7 @@ namespace MEL {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::Deep::Bcast(buffer, bufferSize, root, comm);
 
@@ -972,7 +959,7 @@ namespace MEL {
                 int _len = len;
                 msg.packVarFootprint(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedBcast(ptr, len) const int len provided does not match incomming message size.");
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
 
                 MEL::MemFree(buffer);
             }
@@ -1004,12 +991,12 @@ namespace MEL {
         inline enable_if_pointer<P> BcastStream(P &ptr, const int root, const Comm &comm, const int blockSize = 512) {
             if (MEL::CommRank(comm) == root) {
                 Message<TransportBcastStreamRoot, HASH_MAP> msg(root, comm, blockSize);
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
             }
             else {
                 Message<TransportBcastStream, HASH_MAP> msg(root, comm, blockSize);
                 ptr = (P) 0x1;
-                msg.packPtr(ptr);
+                msg.packSharedPtr(ptr);
             }
         };
 
@@ -1018,7 +1005,7 @@ namespace MEL {
             if (MEL::CommRank(comm) == root) {
                 Message<TransportBcastStreamRoot, HASH_MAP> msg(root, comm, blockSize);
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr, len);
+                msg.packSharedPtr(ptr, len);
             }
             else {
                 Message<TransportBcastStream, HASH_MAP> msg(root, comm, blockSize);
@@ -1026,7 +1013,7 @@ namespace MEL {
                 int _len = len;
                 msg.packVarFootprint(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::BcastStream(ptr, len) const int len provided does not match incomming message size.");
-                msg.packPtr(ptr, _len);
+                msg.packSharedPtr(ptr, _len);
             }
         };
 
@@ -1035,13 +1022,13 @@ namespace MEL {
             if (MEL::CommRank(comm) == root) {
                 Message<TransportBcastStreamRoot, HASH_MAP> msg(root, comm, blockSize);
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr, len);
+                msg.packSharedPtr(ptr, len);
             }
             else {
                 Message<TransportBcastStream, HASH_MAP> msg(root, comm, blockSize);
                 ptr = (P) 0x1;
                 msg.packVarFootprint(len);
-                msg.packPtr(ptr, len);
+                msg.packSharedPtr(ptr, len);
             }
         };
 
@@ -1056,14 +1043,14 @@ namespace MEL {
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> FileWrite(P &ptr, MEL::File &file) {
             Message<TransportFileWrite, HASH_MAP> msg(file);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> FileWrite(P &ptr, int const &len, MEL::File &file) {
             Message<TransportFileWrite, HASH_MAP> msg(file);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1086,7 +1073,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, MEL::File &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
 
@@ -1103,7 +1090,7 @@ namespace MEL {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
 
@@ -1127,7 +1114,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1137,7 +1124,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1145,7 +1132,7 @@ namespace MEL {
             Message<TransportFileRead, HASH_MAP> msg(file);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1168,7 +1155,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::MemFree(buffer);
         };
@@ -1182,7 +1169,7 @@ namespace MEL {
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::MemFree(buffer);
         };
@@ -1198,7 +1185,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
 
             MEL::MemFree(buffer);
         };
@@ -1214,14 +1201,14 @@ namespace MEL {
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> FileWrite(P &ptr, std::ofstream &file) {
             Message<TransportSTLFileWrite, HASH_MAP> msg(file);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
         inline enable_if_pointer<P> FileWrite(P &ptr, int const &len, std::ofstream &file) {
             Message<TransportSTLFileWrite, HASH_MAP> msg(file);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1244,7 +1231,7 @@ namespace MEL {
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, std::ofstream &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
 
@@ -1261,7 +1248,7 @@ namespace MEL {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::Deep::FileWrite(buffer, bufferSize, dst, tag, comm);
 
@@ -1285,7 +1272,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1295,7 +1282,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
         };
 
         template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1303,7 +1290,7 @@ namespace MEL {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
         };
 
         template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -1326,7 +1313,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
-            msg.packPtr(ptr);
+            msg.packSharedPtr(ptr);
 
             MEL::MemFree(buffer);
         };
@@ -1340,7 +1327,7 @@ namespace MEL {
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             ptr = (P) 0x1;
             msg.packVarFootprint(len);
-            msg.packPtr(ptr, len);
+            msg.packSharedPtr(ptr, len);
 
             MEL::MemFree(buffer);
         };
@@ -1356,7 +1343,7 @@ namespace MEL {
             ptr = (P) 0x1;
             msg.packVarFootprint(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
-            msg.packPtr(ptr, _len);
+            msg.packSharedPtr(ptr, _len);
 
             MEL::MemFree(buffer);
         };
