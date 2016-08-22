@@ -307,35 +307,48 @@ namespace MEL {
 
         class PointerHashMap {
         private:
+            // Maximum number of hashmaps is the bit size of a pointer
+            static constexpr size_t NUM_HASH_MAPS = sizeof(void*) * 8; // == 32 or 64 based on system
+
+            // We hash pointers explicitly before giving them to the hashmaps, so the hash function
+            // for the std::unordered_map becomes just returning the already hashed value.
             struct PassThroughHash {
-                size_t operator()(const size_t val) const {
-                    return val;
-                }
+                inline size_t operator()(const size_t val) const { return val; }
             };
 
-            template<typename T>
-            inline size_t HashPtr(const T *val) const {
-                static const size_t shift = (size_t) log2(1 + sizeof(T));
-                return (size_t) (val) >> shift;
+            // Array of hashmaps for storing pointers to types of any size
+            std::unordered_map<size_t, void*, PassThroughHash> pointerMap[NUM_HASH_MAPS];
+
+            // Compute log2(n) at compile time
+            static constexpr size_t log2(const size_t n) {
+                return ((n < 2) ? 1 : 1 + log2(n / 2));
             };
-
-            /// Members
-            std::unordered_map<size_t, void*, PassThroughHash> pointerMap;
-
         public:
+            // Pointer hashmap public interface
+
+            // Returns true if oldPtr is found in the hash-map and sets ptr equal to the stored value
+            // Otherwise returns false and ptr is unaltered
             template<typename T>
             inline bool checkPointerCache(T* oldPtr, T* &ptr) {
-                auto it = pointerMap.find(HashPtr(oldPtr));
-                if (it != pointerMap.end()) {
+                // The shift value to use for a type T
+                static constexpr size_t shift = log2(1 + sizeof(T));
+
+                // Is oldPtr already in the hashmap for T?
+                const auto it = pointerMap[shift - 1].find(((size_t) oldPtr >> shift));
+                if (it != pointerMap[shift - 1].end()) {
+                    // If so set ptr equal to the value stored in the hashmap
                     ptr = (T*) it->second;
                     return true;
                 }
                 return false;
             };
 
+            // Insert ptr into the hashmap using oldptr as the key
             template<typename T>
             inline void cachePointer(T* oldPtr, T* ptr) {
-                pointerMap.insert(std::make_pair(HashPtr(oldPtr), (void*) ptr));
+                // The shift value to use for a type T
+                static constexpr size_t shift = log2(1 + sizeof(T));
+                pointerMap[shift - 1].insert(std::make_pair(((size_t) oldPtr >> shift), (void*) ptr));
             };
         };
         
@@ -360,7 +373,6 @@ namespace MEL {
         using enable_if_pointer = typename std::enable_if<std::is_pointer<T>::value, R>::type;
         template<typename T, typename R = void>
         using enable_if_not_pointer = typename std::enable_if<!std::is_pointer<T>::value, R>::type;
-
         template<typename T, typename R = void>
         using enable_if_deep_not_pointer = typename std::enable_if<HasDeepCopyMethod<T>::Has && !std::is_pointer<T>::value, R>::type;
         template<typename T, typename R = void>
