@@ -273,7 +273,7 @@ namespace MEL {
                 write(&val);
             }
             else {
-                read(&val));
+                read(&val);
             }
             return *this;
         };

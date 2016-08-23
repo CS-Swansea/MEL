@@ -33,8 +33,6 @@ SOFTWARE.
 #include <stack>
 #include <unordered_set>
 
-static size_t count = 0;
-
 template<typename T>
 struct DiGraphNode {
     T value;
@@ -45,9 +43,8 @@ struct DiGraphNode {
 
     template<typename MSG>
     inline void DeepCopy(MSG &msg) {
-        count++;
         msg & edges;
-        for (auto e : edges) msg.packSharedPtr(e);
+        for (auto &e : edges) msg.packSharedPtr(e);
     };
 };
 
@@ -56,13 +53,13 @@ inline DiGraphNode<int>* MakeBTreeGraph(const int numNodes) {
     std::vector<DiGraphNode<int>*> nodes(numNodes);
     for (int i = 0; i < numNodes; ++i) {
         nodes[i] = MEL::MemConstruct<DiGraphNode<int>>(i);
-        nodes[i]->edges.reserve(2);
     }
 
     if (numNodes > 1) nodes[0]->edges.push_back(nodes[1]);
 
     for (int i = 1; i < numNodes; ++i) {
         const int j = ((i - 1) * 2) + 2;
+        nodes[i]->edges.reserve(2);
         if (j < numNodes)		nodes[i]->edges.push_back(nodes[j]);
         if ((j + 1) < numNodes) nodes[i]->edges.push_back(nodes[j + 1]);
     }
@@ -71,12 +68,13 @@ inline DiGraphNode<int>* MakeBTreeGraph(const int numNodes) {
 
 inline DiGraphNode<int>* MakeRingGraph(const int numNodes) {
     /// Ring Graph
-    std::vector<DiGraphNode<int>*> nodes;
+    std::vector<DiGraphNode<int>*> nodes(numNodes);
     for (int i = 0; i < numNodes; ++i) {
-        nodes.push_back(MEL::MemConstruct<DiGraphNode<int>>(i));
+        nodes[i] = MEL::MemConstruct<DiGraphNode<int>>(i);
     }
 
     for (int i = 0; i < numNodes; ++i) {
+        nodes[i]->edges.reserve(1);
         nodes[i]->edges.push_back(nodes[(i + 1) % numNodes]);
     }
     return nodes[0];
@@ -86,13 +84,14 @@ inline DiGraphNode<int>* MakeRandomGraph(const int numNodes) {
     srand(1234567);
 
     /// Random Graph
-    std::vector<DiGraphNode<int>*> nodes;
+    std::vector<DiGraphNode<int>*> nodes(numNodes);
     for (int i = 0; i < numNodes; ++i) {
-        nodes.push_back(MEL::MemConstruct<DiGraphNode<int>>(i));
+        nodes[i] = MEL::MemConstruct<DiGraphNode<int>>(i);
     }
 
     for (int i = 0; i < numNodes; ++i) {
         const int numEdges = rand() % numNodes;
+        nodes[i]->edges.reserve(numEdges);
         for (int j = 0; j < numEdges; ++j) {
             nodes[i]->edges.push_back(nodes[rand() % numNodes]);
         }
@@ -102,12 +101,13 @@ inline DiGraphNode<int>* MakeRandomGraph(const int numNodes) {
 
 inline DiGraphNode<int>* MakeFullyConnectedGraph(const int numNodes) {
     /// Fully Connected Graph
-    std::vector<DiGraphNode<int>*> nodes;
+    std::vector<DiGraphNode<int>*> nodes(numNodes);
     for (int i = 0; i < numNodes; ++i) {
-        nodes.push_back(MEL::MemConstruct<DiGraphNode<int>>(i));
+        nodes[i] = MEL::MemConstruct<DiGraphNode<int>>(i);
     }
 
     for (int i = 0; i < numNodes; ++i) {
+        nodes[i]->edges.reserve(numNodes);
         for (int j = 0; j < numNodes; ++j) {
             nodes[i]->edges.push_back(nodes[j]);
         }
@@ -134,7 +134,6 @@ inline void DestructGraph(DiGraphNode<int> *&root) {
     }
 };
 
-
 int main(int argc, char *argv[]) {
     MEL::Init(argc, argv);
 
@@ -148,8 +147,9 @@ int main(int argc, char *argv[]) {
         MEL::Exit(-1);
     }
 
-    const int numNodes = 1 << std::stoi(argv[1]), // 2^n nodes
+    const int numNodes  = 1 << std::stoi(argv[1]), // 2^n nodes
               graphType = std::stoi(argv[2]);
+
 
     DiGraphNode<int> *graph = nullptr;
     if (rank == 0) {
@@ -184,6 +184,8 @@ int main(int argc, char *argv[]) {
         std::cout << "Broadcast Graph in " << (endTime - startTime) << " seconds..." << std::endl;
     }
 
+    MEL::Barrier(comm);
+
     // File name for output
     std::stringstream sstr;
     sstr << "rank=" << rank << " type=" << graphType << " nodes=" << numNodes << ".graph";
@@ -195,8 +197,11 @@ int main(int argc, char *argv[]) {
         graphFile.close();
     }
 
+    MEL::Barrier(comm);
+
     DestructGraph(graph);
-    std::cout << "Done." << std::endl;
+
+    if (rank == 0) std::cout << "Done." << std::endl;
 
     MEL::Finalize();
     return 0;
