@@ -116,7 +116,7 @@ inline DiGraphNode<int>* MakeFullyConnectedGraph(const int numNodes) {
     return nodes[0];
 };
 
-inline void DestructGraph(DiGraphNode<int> *&root) {
+inline void VisitGraph(DiGraphNode<int> *&root, std::function<void(DiGraphNode<int> *&node)> func) {
     std::unordered_set<DiGraphNode<int>*> pointerMap;
     std::stack<DiGraphNode<int>*> stack;
 
@@ -129,9 +129,15 @@ inline void DestructGraph(DiGraphNode<int> *&root) {
         if (pointerMap.find(node) == pointerMap.end()) {
             pointerMap.insert(node);
             for (auto e : node->edges) stack.push(e);
-            MEL::MemDestruct(node);
+            func(node);
         }
     }
+};
+
+inline void DestructGraph(DiGraphNode<int> *&root) {
+    VisitGraph(root, [](DiGraphNode<int> *&node) -> void {
+        MEL::MemDestruct(node);
+    });
 };
 
 int main(int argc, char *argv[]) {
