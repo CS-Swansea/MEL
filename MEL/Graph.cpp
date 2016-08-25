@@ -43,9 +43,19 @@ struct DiGraphNode {
 
     template<typename MSG>
     inline void DeepCopy(MSG &msg) {
+        std::cout << "Object Deep Copy" << std::endl;
+
         msg & edges;
         for (auto &e : edges) msg.packSharedPtr(e);
     };
+};
+
+template<typename T, typename MSG>
+inline void MyDeepCopy(DiGraphNode<T> &obj, MSG &msg) {
+    std::cout << "My Deep Copy" << std::endl;
+
+    msg & obj.edges;
+    for (auto &e : obj.edges) msg.packSharedPtr<DiGraphNode<T>, MyDeepCopy>(e);
 };
 
 inline DiGraphNode<int>* MakeBTreeGraph(const int numNodes) {
