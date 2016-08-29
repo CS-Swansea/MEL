@@ -644,9 +644,12 @@ namespace MEL {
             template<typename T>
             inline enable_if_not_deep<T> packSTL(std::list<T> &obj) {
                 int len;
-                if (TRANSPORT_METHOD::SOURCE) len = obj.size();
-                transport(len);
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::list<T>(len, T());
+                if (TRANSPORT_METHOD::SOURCE) {
+                    len = obj.size(); transport(len);
+                }
+                else {
+                    transport(len); new (&obj) std::list<T>(len, T());
+                }
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
                     *this & *it;
@@ -656,9 +659,12 @@ namespace MEL {
             template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packSTL(std::list<T> &obj) {
                 int len;
-                if (TRANSPORT_METHOD::SOURCE) len = obj.size();
-                transport(len);
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::list<T>(len, T());
+                if (TRANSPORT_METHOD::SOURCE) {
+                    len = obj.size(); transport(len);
+                }
+                else {
+                    transport(len); new (&obj) std::list<T>(len, T());
+                }
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
                     *this & *it;
@@ -669,9 +675,13 @@ namespace MEL {
             template<typename D>
             inline enable_if_deep<D> packSTL(std::list<D> &obj) {
                 int len;
-                if (TRANSPORT_METHOD::SOURCE) len = obj.size();
-                transport(len);
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::list<D>(len, D());
+                if (TRANSPORT_METHOD::SOURCE) {
+                    len = obj.size(); transport(len);
+                }
+                else {
+                    transport(len); new (&obj) std::list<D>(len, D());
+                }
+
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
                     *this & *it;
