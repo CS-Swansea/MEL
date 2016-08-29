@@ -978,7 +978,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferWrite)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedSend(T &obj, const int dst, const int tag, const Comm &comm, const int bufferSize) {
+        inline enable_if_not_pointer_not_stl<T> BufferedSend(T &obj, const int dst, const int tag, const Comm &comm, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar<T, F>(obj);
@@ -994,7 +994,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferWrite)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedSend(T &obj, const int dst, const int tag, const Comm &comm) {
+        inline enable_if_not_pointer_not_stl<T> BufferedSend(T &obj, const int dst, const int tag, const Comm &comm) {
             MEL::Deep::BufferedSend<T, HASH_MAP, F>(obj, dst, tag, comm, MEL::Deep::BufferSize<T, HASH_MAP, F>(obj));
         };
 
@@ -1167,7 +1167,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferRead)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedRecv(T &obj, const int src, const int tag, const Comm &comm) {
+        inline enable_if_not_pointer_not_stl<T> BufferedRecv(T &obj, const int src, const int tag, const Comm &comm) {
             int bufferSize;
             char *buffer = nullptr;
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
@@ -1468,7 +1468,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F2(TransportBufferWrite, TransportBufferRead)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedBcast(T &obj, const int root, const Comm &comm, const int bufferSize) {
+        inline enable_if_not_pointer_not_stl<T> BufferedBcast(T &obj, const int root, const Comm &comm, const int bufferSize) {
             if (MEL::CommRank(comm) == root) {
                 char *buffer = MEL::MemAlloc<char>(bufferSize);
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
@@ -1501,7 +1501,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F2(TransportBufferWrite, TransportBufferRead)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedBcast(T &obj, const int root, const Comm &comm) {
+        inline enable_if_not_pointer_not_stl<T> BufferedBcast(T &obj, const int root, const Comm &comm) {
             if (MEL::CommRank(comm) == root) {
                 MEL::Deep::BufferedBcast<T, HASH_MAP, F1>(obj, root, comm, MEL::Deep::BufferSize<T, HASH_MAP, F1>(obj));
             }
@@ -1896,7 +1896,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferWrite)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedFileWrite(T &obj, MEL::File &file) {
+        inline enable_if_not_pointer_not_stl<T> BufferedFileWrite(T &obj, MEL::File &file) {
             MEL::Deep::BufferedFileWrite<T, HASH_MAP, F>(obj, file, MEL::Deep::BufferSize<T, HASH_MAP, F>(obj));
         };
 
@@ -2069,7 +2069,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferRead)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedFileRead(T &obj, MEL::File &file) {
+        inline enable_if_not_pointer_not_stl<T> BufferedFileRead(T &obj, MEL::File &file) {
             int bufferSize;
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);
@@ -2300,7 +2300,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferWrite)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedFileWrite(T &obj, std::ofstream &file, const int bufferSize) {
+        inline enable_if_not_pointer_not_stl<T> BufferedFileWrite(T &obj, std::ofstream &file, const int bufferSize) {
             char *buffer = MEL::MemAlloc<char>(bufferSize);
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar<T, F>(obj);
@@ -2316,7 +2316,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferWrite)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedFileWrite(T &obj, std::ofstream &file) {
+        inline enable_if_not_pointer_not_stl<T> BufferedFileWrite(T &obj, std::ofstream &file) {
             MEL::Deep::BufferedFileWrite<T, HASH_MAP, F>(obj, file, MEL::Deep::BufferSize<T, HASH_MAP, F>(obj));
         };
 
@@ -2489,7 +2489,7 @@ namespace MEL {
         };
 
         TEMPLATE_T_F(TransportBufferRead)
-        inline enable_if_deep_not_pointer_not_stl<T> BufferedFileRead(T &obj, std::ifstream &file) {
+        inline enable_if_not_pointer_not_stl<T> BufferedFileRead(T &obj, std::ifstream &file) {
             int bufferSize;
             char *buffer = nullptr;
             MEL::Deep::FileRead(buffer, bufferSize, file);

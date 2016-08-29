@@ -43,19 +43,15 @@ struct DiGraphNode {
 
     template<typename MSG>
     inline void DeepCopy(MSG &msg) {
-        std::cout << "Object Deep Copy" << std::endl;
-
         msg & edges;
         for (auto &e : edges) msg.packSharedPtr(e);
     };
 };
 
 template<typename T, typename MSG>
-inline void MyDeepCopy(DiGraphNode<T> &obj, MSG &msg) {
-    std::cout << "My Deep Copy" << std::endl;
-
+inline void DiGraphNode_DeepCopy(DiGraphNode<T> &obj, MSG &msg) {
     msg & obj.edges;
-    for (auto &e : obj.edges) msg.packSharedPtr<DiGraphNode<T>, MyDeepCopy>(e);
+    for (auto &e : obj.edges) msg.packSharedPtr<DiGraphNode<T>, DiGraphNode_DeepCopy>(e);
 };
 
 inline DiGraphNode<int>* MakeBTreeGraph(const int numNodes) {
@@ -191,7 +187,7 @@ int main(int argc, char *argv[]) {
     auto startTime = MEL::Wtime(); // Start the clock!
 
     // Deep copy the graph to all nodes
-    MEL::Deep::Bcast<DiGraphNode<int>*, MEL::Deep::PointerHashMap, MyDeepCopy, MyDeepCopy>(graph, 0, comm);
+    MEL::Deep::Bcast<decltype(graph), MEL::Deep::PointerHashMap, DiGraphNode_DeepCopy, DiGraphNode_DeepCopy>(graph, 0, comm);
 
     MEL::Barrier(comm);
     auto endTime = MEL::Wtime(); // Stop the clock!
