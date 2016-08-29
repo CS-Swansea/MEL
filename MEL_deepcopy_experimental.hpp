@@ -354,9 +354,17 @@ namespace MEL {
 
         template<typename T>
         struct HasDeepCopyMethod {
+            // This pseudo-type does not exist unless type U has the a member function of 
+            // the desired form: template<typename MSG> void DeepCopy(MSG &msg)
             template<typename U, void(U::*)(MEL::Deep::Message<NoTransport>&)> struct SFINAE {};
+            
+            // If this succeeds Test<T> will be a function that returns char
             template<typename U> static char Test(SFINAE<U, &U::DeepCopy>*);
-            template<typename U> static int Test(...);
+            // Otherwise Test<T> will return an int 
+            template<typename U> static int  Test(...);
+
+            // We can now test if type T has the desired member function by seeing if the result is the size
+            // of a char or an int.
             static const bool Has = sizeof(Test<T>(0)) == sizeof(char);
         };
 
@@ -386,6 +394,9 @@ namespace MEL {
         using enable_if_not_pointer_not_stl = typename std::enable_if<(!is_vector<T>::value || is_list<T>::value || is_string<T>::value) && !std::is_pointer<T>::value, R>::type;
         template<typename T, typename R = void>
         using enable_if_deep_not_pointer_not_stl = typename std::enable_if<HasDeepCopyMethod<T>::Has && (!is_vector<T>::value || is_list<T>::value || is_string<T>::value) && !std::is_pointer<T>::value, R>::type;
+
+        template<typename T, typename TRANSPORT_METHOD, typename HASH_MAP>
+        using DEEP_FUNCTOR = void(*)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -440,7 +451,7 @@ namespace MEL {
                 obj.DeepCopy(*this);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packVar(T &obj) {
                 F(obj, *this);
             };
@@ -450,7 +461,7 @@ namespace MEL {
                 transport(obj);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packRootVar(T &obj) {
                 transport(obj);
                 F(obj, *this);
@@ -467,7 +478,7 @@ namespace MEL {
                 transportAlloc(ptr, len);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packPtr(T* &ptr, int len = 1) {
                 transportAlloc(ptr, len);
                 /// Copy elements
@@ -498,7 +509,7 @@ namespace MEL {
                 pointerMap.cachePointer(oldPtr, ptr);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packSharedPtr(T* &ptr, int len = 1) {
                 T *oldPtr = ptr;
                 if (pointerMap.checkPointerCache(oldPtr, ptr)) return;
@@ -544,7 +555,7 @@ namespace MEL {
                 pointerMap.cachePointer(oldPtr, ptr);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packRootPtr(T* &ptr, int len = 1) {
                 // Explicitly transport the pointer value for the root node
                 size_t addr = (size_t) ptr;
@@ -603,7 +614,7 @@ namespace MEL {
                 if (len > 0) transport(p, len);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packSTL(std::vector<T> &obj) {
                 int len = obj.size();
                 if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::vector<T>(len, T());
@@ -642,7 +653,7 @@ namespace MEL {
                 }
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packSTL(std::list<T> &obj) {
                 int len;
                 if (TRANSPORT_METHOD::SOURCE) len = obj.size();
@@ -695,7 +706,7 @@ namespace MEL {
                 if (len > 0) transport(p, len);
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packRootSTL(std::vector<T> &obj) {
                 int len;
                 if (TRANSPORT_METHOD::SOURCE) {
@@ -747,7 +758,7 @@ namespace MEL {
                 }
             };
 
-            template<typename T, void(*F)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&)>
+            template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packRootSTL(std::list<T> &obj) {
                 int len;
                 if (TRANSPORT_METHOD::SOURCE) {
@@ -804,16 +815,16 @@ namespace MEL {
 #define TEMPLATE_T   template<typename T, typename HASH_MAP = MEL::Deep::PointerHashMap>
 #define TEMPLATE_P   template<typename P, typename HASH_MAP = MEL::Deep::PointerHashMap>
 
-#define TEMPLATE_STL_F(transport_method) template<typename S, typename HASH_MAP, void(*F)(typename S::value_type &, MEL::Deep::Message<transport_method, HASH_MAP>&)>
-#define TEMPLATE_T_F(transport_method)   template<typename T, typename HASH_MAP, void(*F)(T&, MEL::Deep::Message<transport_method, HASH_MAP>&)>
-#define TEMPLATE_P_F(transport_method)   template<typename P, typename HASH_MAP, void(*F)(typename std::remove_pointer<P>::type&, MEL::Deep::Message<transport_method, HASH_MAP>&)>
+#define TEMPLATE_STL_F(transport_method) template<typename S, typename HASH_MAP, DEEP_FUNCTOR<typename S::value_type, transport_method, HASH_MAP> F>
+#define TEMPLATE_T_F(transport_method)   template<typename T, typename HASH_MAP, DEEP_FUNCTOR<T, transport_method, HASH_MAP> F>
+#define TEMPLATE_P_F(transport_method)   template<typename P, typename HASH_MAP, DEEP_FUNCTOR<typename std::remove_pointer<P>::type, transport_method, HASH_MAP> F>
 
-#define TEMPLATE_STL_F2(transport_method1, transport_method2) template<typename S, typename HASH_MAP, void(*F1)(typename S::value_type &, MEL::Deep::Message<transport_method1, HASH_MAP>&),               \
-                                                                                                      void(*F2)(typename S::value_type &, MEL::Deep::Message<transport_method2, HASH_MAP>&)>
-#define TEMPLATE_T_F2(transport_method1, transport_method2)   template<typename T, typename HASH_MAP, void(*F1)(T&, MEL::Deep::Message<transport_method1, HASH_MAP>&),                                     \
-                                                                                                      void(*F2)(T&, MEL::Deep::Message<transport_method2, HASH_MAP>&)>
-#define TEMPLATE_P_F2(transport_method1, transport_method2)   template<typename P, typename HASH_MAP, void(*F1)(typename std::remove_pointer<P>::type&, MEL::Deep::Message<transport_method1, HASH_MAP>&), \
-                                                                                                      void(*F2)(typename std::remove_pointer<P>::type&, MEL::Deep::Message<transport_method2, HASH_MAP>&)>
+#define TEMPLATE_STL_F2(transport_method1, transport_method2) template<typename S, typename HASH_MAP, DEEP_FUNCTOR<typename S::value_type, transport_method1, HASH_MAP> F1,                \
+                                                                                                      DEEP_FUNCTOR<typename S::value_type, transport_method2, HASH_MAP> F2>
+#define TEMPLATE_T_F2(transport_method1, transport_method2)   template<typename T, typename HASH_MAP, DEEP_FUNCTOR<T, transport_method1, HASH_MAP> F1,                                     \
+                                                                                                      DEEP_FUNCTOR<T, transport_method2, HASH_MAP> F2>
+#define TEMPLATE_P_F2(transport_method1, transport_method2)   template<typename P, typename HASH_MAP, DEEP_FUNCTOR<typename std::remove_pointer<P>::type, transport_method1, HASH_MAP> F1, \
+                                                                                                      DEEP_FUNCTOR<typename std::remove_pointer<P>::type, transport_method2, HASH_MAP> F2>
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Buffer Size
@@ -914,7 +925,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL(obj);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -925,7 +936,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL<S, F>(obj);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -961,7 +972,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar(obj);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -972,7 +983,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar<T, F>(obj);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -1008,7 +1019,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr(ptr);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -1019,7 +1030,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -1058,7 +1069,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -1070,7 +1081,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
-            MEL::Deep::Send(buffer, bufferSize, dst, tag, comm);
+            MEL::Deep::Send(buffer, msg.getOffset(), dst, tag, comm);
 
             MEL::MemFree(buffer);
         };
@@ -1173,14 +1184,14 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> Recv(P &ptr, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
         };
 
         TEMPLATE_P_F(TransportRecv)
         inline enable_if_pointer<P> Recv(P &ptr, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
         };
 
@@ -1191,7 +1202,7 @@ namespace MEL {
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
 
             MEL::MemFree(buffer);
@@ -1204,7 +1215,7 @@ namespace MEL {
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
 
             MEL::MemFree(buffer);
@@ -1216,7 +1227,7 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> Recv(P &ptr, int &len, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
         };
@@ -1224,7 +1235,7 @@ namespace MEL {
         TEMPLATE_P_F(TransportRecv)
         inline enable_if_pointer<P> Recv(P &ptr, int &len, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
         };
@@ -1233,7 +1244,7 @@ namespace MEL {
         inline enable_if_pointer<P> Recv(P &ptr, int const &len, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::Recv(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -1243,7 +1254,7 @@ namespace MEL {
         inline enable_if_pointer<P> Recv(P &ptr, int const &len, const int src, const int tag, const Comm &comm) {
             Message<TransportRecv, HASH_MAP> msg(src, tag, comm);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::Recv(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
@@ -1256,7 +1267,7 @@ namespace MEL {
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
@@ -1270,7 +1281,7 @@ namespace MEL {
             MEL::Deep::Recv(buffer, bufferSize, src, tag, comm);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
@@ -1285,7 +1296,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedRecv(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -1301,7 +1312,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedRecv(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
@@ -1347,7 +1358,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootSTL(obj);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1370,7 +1381,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootSTL<S, F1>(obj);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1440,7 +1451,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootVar(obj);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1463,7 +1474,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootVar<T, F1>(obj);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1510,7 +1521,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 msg.packRootPtr(ptr);
             }
         };
@@ -1523,7 +1534,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F2>(ptr);
             }
         };
@@ -1535,7 +1546,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootPtr(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1545,7 +1556,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 msg.packRootPtr(ptr);
 
                 MEL::MemFree(buffer);
@@ -1559,7 +1570,7 @@ namespace MEL {
                 Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F1>(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1569,7 +1580,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F2>(ptr);
 
                 MEL::MemFree(buffer);
@@ -1609,7 +1620,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 int _len = len;
                 msg.packRootVar(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::Bcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1627,7 +1638,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 int _len = len;
                 msg.packRootVar(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::Bcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1644,7 +1655,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 msg.packRootVar(len);
                 msg.packRootPtr(ptr, len);
             }
@@ -1659,7 +1670,7 @@ namespace MEL {
             }
             else {
                 Message<TransportBcast, HASH_MAP> msg(root, comm);
-                ptr = (P) 0x1;
+                
                 msg.packRootVar(len);
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F2>(ptr, len);
             }
@@ -1673,7 +1684,7 @@ namespace MEL {
                 msg.packRootVar(len); 
                 msg.packRootPtr(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1683,7 +1694,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 msg.packRootVar(len); 
                 msg.packRootPtr(ptr);
 
@@ -1699,7 +1710,7 @@ namespace MEL {
                 msg.packRootVar(len); 
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F1>(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1709,7 +1720,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 msg.packRootVar(len); 
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F2>(ptr);
 
@@ -1745,7 +1756,7 @@ namespace MEL {
                 msg.packRootVar(len);
                 msg.packRootPtr(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1755,7 +1766,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 int _len = len;
                 msg.packRootVar(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedBcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1773,7 +1784,7 @@ namespace MEL {
                 msg.packRootVar(len);
                 msg.packRootPtr<typename std::remove_pointer<P>::type, F1>(ptr);
 
-                MEL::Deep::Bcast(buffer, bufferSize, root, comm);
+                MEL::Deep::Bcast(buffer, msg.getOffset(), root, comm);
 
                 MEL::MemFree(buffer);
             }
@@ -1783,7 +1794,7 @@ namespace MEL {
                 MEL::Deep::Bcast(buffer, _bufferSize, root, comm);
 
                 Message<TransportBufferRead, HASH_MAP> msg(buffer, _bufferSize);
-                ptr = (P) 0x1;
+                
                 int _len = len;
                 msg.packRootVar(_len);
                 if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedBcast(ptr, len) const int len provided does not match incomming message size.");
@@ -1838,7 +1849,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -1849,7 +1860,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL<S, F>(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -1910,7 +1921,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr(ptr);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -1921,7 +1932,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr<P, F>(ptr);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -1960,7 +1971,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -1972,7 +1983,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2075,14 +2086,14 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> FileRead(P &ptr, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
         };
 
         TEMPLATE_P_F(TransportFileRead)
         inline enable_if_pointer<P> FileRead(P &ptr, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
         };
 
@@ -2093,7 +2104,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
 
             MEL::MemFree(buffer);
@@ -2106,7 +2117,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
 
             MEL::MemFree(buffer);
@@ -2119,7 +2130,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, int const &len, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -2129,7 +2140,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, int const &len, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
@@ -2138,7 +2149,7 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
         };
@@ -2146,7 +2157,7 @@ namespace MEL {
         TEMPLATE_P_F(TransportFileRead)
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, MEL::File &file) {
             Message<TransportFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
         };
@@ -2158,7 +2169,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
@@ -2172,7 +2183,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
@@ -2187,7 +2198,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -2203,7 +2214,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
@@ -2236,7 +2247,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2247,7 +2258,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootSTL<S, F>(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2283,7 +2294,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2294,7 +2305,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootVar<T, F>(obj);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2330,7 +2341,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr(ptr);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2341,7 +2352,7 @@ namespace MEL {
             Message<TransportBufferWrite, HASH_MAP> msg(buffer, bufferSize);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2380,7 +2391,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2392,7 +2403,7 @@ namespace MEL {
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
-            MEL::Deep::FileWrite(buffer, bufferSize, file);
+            MEL::Deep::FileWrite(buffer, msg.getOffset(), file);
 
             MEL::MemFree(buffer);
         };
@@ -2495,14 +2506,14 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> FileRead(P &ptr, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
         };
 
         TEMPLATE_P_F(TransportSTLFileRead)
         inline enable_if_pointer<P> FileRead(P &ptr, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
         };
 
@@ -2513,7 +2524,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr(ptr);
 
             MEL::MemFree(buffer);
@@ -2526,7 +2537,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr);
 
             MEL::MemFree(buffer);
@@ -2539,7 +2550,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, int const &len, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -2549,7 +2560,7 @@ namespace MEL {
         inline enable_if_pointer<P> FileRead(P &ptr, int const &len, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::FileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
@@ -2558,7 +2569,7 @@ namespace MEL {
         TEMPLATE_P
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
         };
@@ -2566,7 +2577,7 @@ namespace MEL {
         TEMPLATE_P_F(TransportSTLFileRead)
         inline enable_if_pointer<P> FileRead(P &ptr, int &len, std::ifstream &file) {
             Message<TransportSTLFileRead, HASH_MAP> msg(file);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
         };
@@ -2578,7 +2589,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr(ptr, len);
 
@@ -2592,7 +2603,7 @@ namespace MEL {
             MEL::Deep::FileRead(buffer, bufferSize, file);
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
-            ptr = (P) 0x1;
+            
             msg.packRootVar(len);
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, len);
 
@@ -2607,7 +2618,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr(ptr, _len);
@@ -2623,7 +2634,7 @@ namespace MEL {
 
             Message<TransportBufferRead, HASH_MAP> msg(buffer, bufferSize);
             int _len = len;
-            ptr = (P) 0x1;
+            
             msg.packRootVar(_len);
             if (len != _len) MEL::Exit(-1, "MEL::Deep::BufferedFileRead(ptr, len) const int len provided does not match incomming message size.");
             msg.packRootPtr<typename std::remove_pointer<P>::type, F>(ptr, _len);
