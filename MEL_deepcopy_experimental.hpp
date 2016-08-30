@@ -608,7 +608,10 @@ namespace MEL {
             template<typename T>
             inline enable_if_not_deep<T> packSTL(std::vector<T> &obj) {
                 int len = obj.size();
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::vector<T>(len, T());
+                if (!TRANSPORT_METHOD::SOURCE) {
+                    new (&obj) std::vector<T>(len, T());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~T();
+                }
 
                 T *p = &obj[0];
                 if (len > 0) transport(p, len);
@@ -617,7 +620,10 @@ namespace MEL {
             template<typename T, DEEP_FUNCTOR<T, TRANSPORT_METHOD, HASH_MAP> F>
             inline void packSTL(std::vector<T> &obj) {
                 int len = obj.size();
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::vector<T>(len, T());
+                if (!TRANSPORT_METHOD::SOURCE) {
+                    new (&obj) std::vector<T>(len, T());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~T();
+                }
 
                 T *p = &obj[0];
                 if (len > 0) transport(p, len);
@@ -631,7 +637,10 @@ namespace MEL {
             template<typename D>
             inline enable_if_deep<D> packSTL(std::vector<D> &obj) {
                 int len = obj.size();
-                if (!TRANSPORT_METHOD::SOURCE) new (&obj) std::vector<D>(len, D());
+                if (!TRANSPORT_METHOD::SOURCE) {
+                    new (&obj) std::vector<T>(len, D());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~D();
+                }
 
                 D *p = &obj[0];
                 if (len > 0) transport(p, len);
