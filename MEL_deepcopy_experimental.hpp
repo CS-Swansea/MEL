@@ -661,7 +661,8 @@ namespace MEL {
                 }
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
+                    (it)->~T();
+                    this->packRootVar(*it);
                 }
             };
 
@@ -676,8 +677,8 @@ namespace MEL {
                 }
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
-                    F(*it, *this);
+                    (it)->~T();
+                    this->packRootVar<T, F>(*it);
                 }
             };
 
@@ -693,8 +694,8 @@ namespace MEL {
 
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
-                    it->DeepCopy(*this);
+                    (it)->~D();
+                    this->packRootVar(*it);
                 }
             };
 
@@ -719,6 +720,7 @@ namespace MEL {
                 }
                 else {
                     transport(len); obj.resize(len, T());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~T();
                 }
 
                 T *p = &obj[0];
@@ -733,6 +735,7 @@ namespace MEL {
                 }
                 else {
                     transport(len); obj.resize(len, T());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~T();
                 }
 
                 T *p = &obj[0];
@@ -751,6 +754,7 @@ namespace MEL {
                 }
                 else {
                     transport(len); obj.resize(len, D());
+                    for (int i = 0; i < len; ++i) (&obj[i])->~D();
                 }
 
                 D *p = &obj[0];
@@ -773,7 +777,8 @@ namespace MEL {
 
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
+                    (it)->~T();
+                    this->packRootVar(*it);
                 }
             };
 
@@ -789,8 +794,8 @@ namespace MEL {
 
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
-                    F(*it, *this);
+                    (it)->~T();
+                    this->packRootVar<T, F>(*it);
                 }
             };
 
@@ -806,8 +811,8 @@ namespace MEL {
 
                 /// Copy content
                 for (auto it = obj.begin(); it != obj.end(); ++it) {
-                    *this & *it;
-                    it->DeepCopy(*this);
+                    (it)->~D();
+                    this->packRootVar(*it);
                 }
             };
 
