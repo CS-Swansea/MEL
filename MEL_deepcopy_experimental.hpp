@@ -410,10 +410,12 @@ namespace MEL {
             
             template<typename P>
             inline enable_if_pointer<P> transport(P &ptr, const int len) {
-                typedef typename std::remove_pointer<P>::type T; // where P == T*, find T
+                if (len > 0 && ptr != nullptr) {
+                    typedef typename std::remove_pointer<P>::type T; // where P == T*, find T
 
-                offset += len * sizeof(T);
-                transporter.transport(ptr, len);
+                    offset += len * sizeof(T);
+                    transporter.transport(ptr, len);
+                }
             };
 
             template<typename T>

@@ -23,7 +23,7 @@ SOFTWARE.
 */
 #define MEL_IMPLEMENTATION
 #include "MEL.hpp"
-#include "MEL_deepcopy.hpp"
+#include "MEL_deepcopy_experimental.hpp"
 #include <omp.h>
 
 #include <ctime>
@@ -38,53 +38,53 @@ SOFTWARE.
 /// C++11 RNG
 struct RNG {
 #if !defined(USE_C_RNG)
-	std::uniform_real_distribution<double> dist;
+    std::uniform_real_distribution<double> dist;
     std::mt19937 eng;
-	RNG() : RNG(0) {};
-	RNG(const unsigned long s) : dist(0., 1.), eng() { seed(s); };
+    RNG() : RNG(0) {};
+    RNG(const unsigned long s) : dist(0., 1.), eng() { seed(s); };
     inline void seed(const unsigned long s) { eng.seed(s); };
     inline double operator()() { return dist(eng); };
 #else
-	RNG() {};
-	RNG(const unsigned long s) { seed(s); };
-	inline void seed(const unsigned long s) { srand(s); };
-	inline double operator()() { 
-		double r;
-		#pragma omp critical
-		r = (double) rand() / (double) RAND_MAX;
-		return r; 
-	};
+    RNG() {};
+    RNG(const unsigned long s) { seed(s); };
+    inline void seed(const unsigned long s) { srand(s); };
+    inline double operator()() { 
+        double r;
+        #pragma omp critical
+        r = (double) rand() / (double) RAND_MAX;
+        return r; 
+    };
 #endif
 };
 
 /// C++11 Multi-Threaded RNG
 struct MT_RNG {
     RNG *rngs = nullptr;
-	int num_threads = 0;
-	MT_RNG(const unsigned long s) {
-		num_threads = omp_get_max_threads();
-		rngs = new RNG[num_threads];
-		const unsigned long t = time(nullptr);
+    int num_threads = 0;
+    MT_RNG(const unsigned long s) {
+        num_threads = omp_get_max_threads();
+        rngs = new RNG[num_threads];
+        const unsigned long t = time(nullptr);
         for (int i = 0; i < num_threads; ++i) rngs[i] = RNG(t + s + i);
     };
-	MT_RNG(const MT_RNG &old) = delete;
-	MT_RNG operator=(const MT_RNG &old) = delete;
-	MT_RNG(MT_RNG &&old)                = delete;
-	MT_RNG operator=(MT_RNG &&old)      = delete;
-	~MT_RNG() {
-		delete [] rngs;
-	};
+    MT_RNG(const MT_RNG &old) = delete;
+    MT_RNG operator=(const MT_RNG &old) = delete;
+    MT_RNG(MT_RNG &&old)                = delete;
+    MT_RNG operator=(MT_RNG &&old)      = delete;
+    ~MT_RNG() {
+        delete [] rngs;
+    };
     inline double operator()() { return rngs[omp_get_thread_num()](); };
 };
 
 /// Colour Correction
 inline unsigned char ColourCorrect(const double x) {
-	const auto Gamma_Uncharted = [](const double x) -> double {
+    const auto Gamma_Uncharted = [](const double x) -> double {
         constexpr double A = 0.15, B = 0.5, C = 0.1, D = 0.2, E = 0.02, F = 0.30;
         return ((x * (A * x + C * B) + D * E) / (x * (A * x * B) + D * F)) - E / F;
     };
     constexpr double gamma = (1.0 / 2.2), exposure = 1.0, exposureBias = 2.0, whitePoint = 11.2;
-	const double y = std::fmax(0., std::fmin(1., (std::pow((Gamma_Uncharted(x * exposure * exposureBias) / Gamma_Uncharted(whitePoint)), gamma))));
+    const double y = std::fmax(0., std::fmin(1., (std::pow((Gamma_Uncharted(x * exposure * exposureBias) / Gamma_Uncharted(whitePoint)), gamma))));
     return (unsigned char) (y * 255.);
 };
 
@@ -162,10 +162,10 @@ struct Triangle {
 
         t = ((E2 | Q) * inv_det);
         if (t > EPS && t < isect.distance) {
-			/// Face Normal by Winding
+            /// Face Normal by Winding
             //Vec norm = (E1 ^ E2).normal();
-			/// Interpolated Normal from Vertex Normals
-			Vec norm = ((n1 * u) + (n2 * v) + (n0 * (1.0 - u - v))).normal(); 
+            /// Interpolated Normal from Vertex Normals
+            Vec norm = ((n1 * u) + (n2 * v) + (n0 * (1.0 - u - v))).normal(); 
 
             /// Back-face culling
             if ((ray.d | norm) > 0.) return false;
@@ -181,9 +181,9 @@ struct Triangle {
 };
 
 struct Material { 
-	Vec kd, ke; 
-	Material() {};
-	Material(const Vec &_kd, const Vec &_ke) : kd(_kd), ke(_ke) {};
+    Vec kd, ke; 
+    Material() {};
+    Material(const Vec &_kd, const Vec &_ke) : kd(_kd), ke(_ke) {};
 };
 
 struct Camera {
@@ -229,7 +229,8 @@ struct TreeNode {
         return !(tmax < EPS || tmin > tmax || tmin > dist);
     };
 
-    inline void DeepCopy(MEL::Deep::Message &msg) {
+    template<typename MSG>
+    inline void DeepCopy(MSG &msg) {
         msg.packPtr( leftChild);
         msg.packPtr(rightChild);
     };
@@ -252,9 +253,9 @@ struct Scene {
     };
     inline Scene& operator=(Scene &&old) {
         mesh            = std::move(old.mesh);
-        materials        = std::move(old.materials);
+        materials       = std::move(old.materials);
         rootNode        = old.rootNode;
-        camera            = old.camera;
+        camera          = old.camera;
         old.mesh.clear();
         old.materials.clear();
         old.rootNode    = nullptr;
@@ -264,12 +265,13 @@ struct Scene {
         MEL::MemDestruct(rootNode);
     };
 
-	inline void DeepCopy(MEL::Deep::Message &msg) {
-		msg & mesh & materials;
-		msg.packPtr(rootNode);
-	};
+    template<typename MSG>
+    inline void DeepCopy(MSG &msg) {
+        msg & mesh & materials;
+        msg.packPtr(rootNode);
+    };
 
-	// Ray BVH-Tree(Triangle) intersection
+    // Ray BVH-Tree(Triangle) intersection
     inline bool intersect(const Ray &ray, Intersection &isect) const {
         const Ray invRay{ ray.o, ray.d.inv() };
 
@@ -305,310 +307,310 @@ struct Scene {
             if (lHit && rHit) {
                 if (lDist < rDist) {
                     treeStack.emplace( currentNode->rightChild, rDist );
-					treeStack.emplace( currentNode->leftChild, lDist );
+                    treeStack.emplace( currentNode->leftChild, lDist );
                 }
                 else {
-					treeStack.emplace( currentNode->leftChild, lDist );
-					treeStack.emplace( currentNode->rightChild, rDist );
+                    treeStack.emplace( currentNode->leftChild, lDist );
+                    treeStack.emplace( currentNode->rightChild, rDist );
                 }
             }
             else if (lHit) {
-				treeStack.emplace( currentNode->leftChild, lDist );
+                treeStack.emplace( currentNode->leftChild, lDist );
             }
             else if (rHit) {
-				treeStack.emplace( currentNode->rightChild, rDist );
+                treeStack.emplace( currentNode->rightChild, rDist );
             }
         }
         return found;
     };
 
-	// Scene loading helpers
-	template<typename ...Args>
-	inline void setCamera(Args &&...args) {
-		camera = Camera(args...);
-	};
-	template<typename ...Args>
-	inline void addMaterial(Args &&...args) {
-		materials.emplace_back(args...);
-	};
-	inline void addObj(const int material, const std::string &meshPath) {
-		/// Helpers
-		const auto hasPrefix = [](const std::string &str, const std::string &prefix) -> bool {
-			return (str.size() >= prefix.size()) && (std::mismatch(prefix.begin(), prefix.end(), str.begin()).first == prefix.end());
-		};
-		const auto split = [](const std::string &str, const char delim) -> std::vector<std::string> {
-			std::vector<std::string> result; result.reserve(16);
-			size_t start = 0, end;
-			while ((end = str.find(delim, start)) != std::string::npos) {
-				if (str[start] != ' ') result.push_back(str.substr(start, (end - start)));
-				start = end + 1;
-			}
-			result.push_back(str.substr(start));
-			return result;
-		};
+    // Scene loading helpers
+    template<typename ...Args>
+    inline void setCamera(Args &&...args) {
+        camera = Camera(args...);
+    };
+    template<typename ...Args>
+    inline void addMaterial(Args &&...args) {
+        materials.emplace_back(args...);
+    };
+    inline void addObj(const int material, const std::string &meshPath) {
+        /// Helpers
+        const auto hasPrefix = [](const std::string &str, const std::string &prefix) -> bool {
+            return (str.size() >= prefix.size()) && (std::mismatch(prefix.begin(), prefix.end(), str.begin()).first == prefix.end());
+        };
+        const auto split = [](const std::string &str, const char delim) -> std::vector<std::string> {
+            std::vector<std::string> result; result.reserve(16);
+            size_t start = 0, end;
+            while ((end = str.find(delim, start)) != std::string::npos) {
+                if (str[start] != ' ') result.push_back(str.substr(start, (end - start)));
+                start = end + 1;
+            }
+            result.push_back(str.substr(start));
+            return result;
+        };
 
-		/// Load .obj file
-		std::vector<Vec> vertices, normals;
-		std::ifstream meshFile(meshPath, std::ios::in);
-		if (meshFile.is_open()) {
-			std::string meshLine;
-			while (std::getline(meshFile, meshLine)) {
-				/// Vertex Declaration
-				if (hasPrefix(meshLine, "v ")) {
-					std::vector<std::string> sm = split(meshLine, ' ');
-					Vec v{ std::stod(sm[1]), std::stod(sm[2]), std::stod(sm[3]) };
-					vertices.push_back(v);
-					continue;
-				}
-				/// Vertex Normal Declaration
-				if (hasPrefix(meshLine, "vn ")) {
-					std::vector<std::string> sm = split(meshLine, ' ');
-					Vec v{ std::stod(sm[1]), std::stod(sm[2]), std::stod(sm[3]) };
-					normals.push_back(v.normal());
-					continue;
-				}
-				/// Face Declaration
-				if (hasPrefix(meshLine, "f ")) {
-					std::vector<std::string> fm = split(meshLine, ' '), sm;
-					sm = split(fm[1], '/'); int v0 = std::stoi(sm[0]), n0 = std::stoi(sm[2]);
-					sm = split(fm[2], '/'); int v1 = std::stoi(sm[0]), n1 = std::stoi(sm[2]);
-					sm = split(fm[3], '/'); int v2 = std::stoi(sm[0]), n2 = std::stoi(sm[2]);
-					Vec V0{}, V1{}, V2{}, N0{}, N1{}, N2{};
-					V0 = (v0 > 0) ? vertices[v0 - 1] : (v0 < 0) ? vertices[vertices.size() + v0] : Vec{};
-					V1 = (v1 > 0) ? vertices[v1 - 1] : (v1 < 0) ? vertices[vertices.size() + v1] : Vec{};
-					V2 = (v2 > 0) ? vertices[v2 - 1] : (v2 < 0) ? vertices[vertices.size() + v2] : Vec{};
-					N0 = (n0 > 0) ? normals[n0 - 1] : (n0 < 0) ? normals[normals.size() + n0] : Vec{};
-					N1 = (n1 > 0) ? normals[n1 - 1] : (n1 < 0) ? normals[normals.size() + n1] : Vec{};
-					N2 = (n2 > 0) ? normals[n2 - 1] : (n2 < 0) ? normals[normals.size() + n2] : Vec{};
-					mesh.push_back(Triangle{ V0, V1, V2, N0, N1, N2, material });
-					continue;
-				}
-			}
-			meshFile.close();
-			std::cout << "Successfully loaded: " << meshPath << std::endl;
-		}
-		else {
-			std::cout << "Error loading: " << meshPath << std::endl;
-			MEL::Exit(-1);
-		}
-	};
-	inline void buildBVHTree() {
-		std::cout << "Building BVH Tree with SAH Splits" << std::endl;
-		auto startTime = MEL::Wtime();
+        /// Load .obj file
+        std::vector<Vec> vertices, normals;
+        std::ifstream meshFile(meshPath, std::ios::in);
+        if (meshFile.is_open()) {
+            std::string meshLine;
+            while (std::getline(meshFile, meshLine)) {
+                /// Vertex Declaration
+                if (hasPrefix(meshLine, "v ")) {
+                    std::vector<std::string> sm = split(meshLine, ' ');
+                    Vec v{ std::stod(sm[1]), std::stod(sm[2]), std::stod(sm[3]) };
+                    vertices.push_back(v);
+                    continue;
+                }
+                /// Vertex Normal Declaration
+                if (hasPrefix(meshLine, "vn ")) {
+                    std::vector<std::string> sm = split(meshLine, ' ');
+                    Vec v{ std::stod(sm[1]), std::stod(sm[2]), std::stod(sm[3]) };
+                    normals.push_back(v.normal());
+                    continue;
+                }
+                /// Face Declaration
+                if (hasPrefix(meshLine, "f ")) {
+                    std::vector<std::string> fm = split(meshLine, ' '), sm;
+                    sm = split(fm[1], '/'); int v0 = std::stoi(sm[0]), n0 = std::stoi(sm[2]);
+                    sm = split(fm[2], '/'); int v1 = std::stoi(sm[0]), n1 = std::stoi(sm[2]);
+                    sm = split(fm[3], '/'); int v2 = std::stoi(sm[0]), n2 = std::stoi(sm[2]);
+                    Vec V0{}, V1{}, V2{}, N0{}, N1{}, N2{};
+                    V0 = (v0 > 0) ? vertices[v0 - 1] : (v0 < 0) ? vertices[vertices.size() + v0] : Vec{};
+                    V1 = (v1 > 0) ? vertices[v1 - 1] : (v1 < 0) ? vertices[vertices.size() + v1] : Vec{};
+                    V2 = (v2 > 0) ? vertices[v2 - 1] : (v2 < 0) ? vertices[vertices.size() + v2] : Vec{};
+                    N0 = (n0 > 0) ? normals[n0 - 1] : (n0 < 0) ? normals[normals.size() + n0] : Vec{};
+                    N1 = (n1 > 0) ? normals[n1 - 1] : (n1 < 0) ? normals[normals.size() + n1] : Vec{};
+                    N2 = (n2 > 0) ? normals[n2 - 1] : (n2 < 0) ? normals[normals.size() + n2] : Vec{};
+                    mesh.push_back(Triangle{ V0, V1, V2, N0, N1, N2, material });
+                    continue;
+                }
+            }
+            meshFile.close();
+            std::cout << "Successfully loaded: " << meshPath << std::endl;
+        }
+        else {
+            std::cout << "Error loading: " << meshPath << std::endl;
+            MEL::Exit(-1);
+        }
+    };
+    inline void buildBVHTree() {
+        std::cout << "Building BVH Tree with SAH Splits" << std::endl;
+        auto startTime = MEL::Wtime();
 
-		// Clear root node if it already exists
-		MEL::MemDestruct(rootNode);
-		// Create root node
-		int numNodes = 1;
-		rootNode = MEL::MemConstruct<TreeNode>(0, mesh.size());
+        // Clear root node if it already exists
+        MEL::MemDestruct(rootNode);
+        // Create root node
+        int numNodes = 1;
+        rootNode = MEL::MemConstruct<TreeNode>(0, mesh.size());
 
-		// Stack based traversal
-		// We track tree nodes and their depth in the tree
-		std::stack<std::pair<TreeNode*, int>> treeStack;
-		treeStack.emplace( rootNode, 0 ); // <- Depth 0
+        // Stack based traversal
+        // We track tree nodes and their depth in the tree
+        std::stack<std::pair<TreeNode*, int>> treeStack;
+        treeStack.emplace( rootNode, 0 ); // <- Depth 0
 
-		// While the stack is not empty there is work to be done
-		while (!treeStack.empty()) {
-			// Get the current node to traverse
-			auto top = treeStack.top();
-			TreeNode *currentNode = top.first;
-			const int depth = top.second;
-			treeStack.pop();
+        // While the stack is not empty there is work to be done
+        while (!treeStack.empty()) {
+            // Get the current node to traverse
+            auto top = treeStack.top();
+            TreeNode *currentNode = top.first;
+            const int depth = top.second;
+            treeStack.pop();
 
-			const int numGeom = currentNode->endElem - currentNode->startElem;
+            const int numGeom = currentNode->endElem - currentNode->startElem;
 
-			// Compute the nodes bounding box
-			Vec b0{ INF, INF, INF }, b1{ -INF, -INF, -INF };
-			for (int i = currentNode->startElem; i < currentNode->endElem; ++i) {
-				currentNode->v0 = currentNode->v0.min(mesh[i].min());
-				currentNode->v1 = currentNode->v1.max(mesh[i].max());
-				const Vec c = mesh[i].centroid();
-				b0 = b0.min(c);
-				b1 = b1.max(c);
-			}
+            // Compute the nodes bounding box
+            Vec b0{ INF, INF, INF }, b1{ -INF, -INF, -INF };
+            for (int i = currentNode->startElem; i < currentNode->endElem; ++i) {
+                currentNode->v0 = currentNode->v0.min(mesh[i].min());
+                currentNode->v1 = currentNode->v1.max(mesh[i].max());
+                const Vec c = mesh[i].centroid();
+                b0 = b0.min(c);
+                b1 = b1.max(c);
+            }
 
-			// Mid index for partitioning
-			int midElem = -1;
-			typename std::vector<Triangle>::iterator start = mesh.begin() + currentNode->startElem,
-													 end   = mesh.begin() + currentNode->endElem,
-													 mid;
+            // Mid index for partitioning
+            int midElem = -1;
+            typename std::vector<Triangle>::iterator start = mesh.begin() + currentNode->startElem,
+                                                     end   = mesh.begin() + currentNode->endElem,
+                                                     mid;
 
-			// Is it worth splitting?
-			if (numGeom <= 1) {
-				continue;
-			}
-			else if (numGeom <= 4) {
-				// Median Splits
-				midElem = (currentNode->startElem + (numGeom / 2));
-				mid = mesh.begin() + midElem;
+            // Is it worth splitting?
+            if (numGeom <= 1) {
+                continue;
+            }
+            else if (numGeom <= 4) {
+                // Median Splits
+                midElem = (currentNode->startElem + (numGeom / 2));
+                mid = mesh.begin() + midElem;
 
-				// Sort the tree such that all nodes before the split plane are in the first half of the vector
-				const int splitAxis = (b1 - b0).maxAxis();
-				std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
-					const Vec ac = a.centroid(), bc = b.centroid();
-					switch (splitAxis) {
-					case 0:
-						return ac.x < bc.x;
-					case 1:
-						return ac.y < bc.y;
-					case 2:
-						return ac.z < bc.z;
-					};
-					return false;
-				});
-			}
-			else {
-				// SAH Splits
-				const int numBuckets = 8;
-				struct SAH_Bucket {
-					int count;
-					Vec b0, b1;
-					SAH_Bucket() : count(0), b0{ INF, INF, INF }, b1{ -INF, -INF, -INF } {};
-				} bucketsX[numBuckets], bucketsY[numBuckets], bucketsZ[numBuckets];
+                // Sort the tree such that all nodes before the split plane are in the first half of the vector
+                const int splitAxis = (b1 - b0).maxAxis();
+                std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
+                    const Vec ac = a.centroid(), bc = b.centroid();
+                    switch (splitAxis) {
+                    case 0:
+                        return ac.x < bc.x;
+                    case 1:
+                        return ac.y < bc.y;
+                    case 2:
+                        return ac.z < bc.z;
+                    };
+                    return false;
+                });
+            }
+            else {
+                // SAH Splits
+                const int numBuckets = 8;
+                struct SAH_Bucket {
+                    int count;
+                    Vec b0, b1;
+                    SAH_Bucket() : count(0), b0{ INF, INF, INF }, b1{ -INF, -INF, -INF } {};
+                } bucketsX[numBuckets], bucketsY[numBuckets], bucketsZ[numBuckets];
 
-				// Current node data
-				const Vec bboxMin = currentNode->v0;
-				const Vec bboxMax = currentNode->v1;
+                // Current node data
+                const Vec bboxMin = currentNode->v0;
+                const Vec bboxMax = currentNode->v1;
 
-				// Compute the nodes bounding box
-				Vec dBox0{ INF, INF, INF }, dBox1{ -INF, -INF, -INF };
-				for (int i = currentNode->startElem; i < currentNode->endElem; ++i) {
-					// Geom elem data
-					const Triangle &elem = mesh[i];
-					const Vec elemBox0 = elem.min(), elemBox1 = elem.max();
-					const Vec elemCentroid = elem.centroid();
-					dBox0 = dBox0.min(elemCentroid);
-					dBox1 = dBox1.max(elemCentroid);
+                // Compute the nodes bounding box
+                Vec dBox0{ INF, INF, INF }, dBox1{ -INF, -INF, -INF };
+                for (int i = currentNode->startElem; i < currentNode->endElem; ++i) {
+                    // Geom elem data
+                    const Triangle &elem = mesh[i];
+                    const Vec elemBox0 = elem.min(), elemBox1 = elem.max();
+                    const Vec elemCentroid = elem.centroid();
+                    dBox0 = dBox0.min(elemCentroid);
+                    dBox1 = dBox1.max(elemCentroid);
 
-					// Work out which bucket the current elems goes in
-					int bX = (int) floor((double) numBuckets * ((elemCentroid.x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
-					int bY = (int) floor((double) numBuckets * ((elemCentroid.y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
-					int bZ = (int) floor((double) numBuckets * ((elemCentroid.z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
-					bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
-					bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
-					bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
+                    // Work out which bucket the current elems goes in
+                    int bX = (int) floor((double) numBuckets * ((elemCentroid.x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
+                    int bY = (int) floor((double) numBuckets * ((elemCentroid.y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
+                    int bZ = (int) floor((double) numBuckets * ((elemCentroid.z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
+                    bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
+                    bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
+                    bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
 
-					// Update the buckets
-					bucketsX[bX].count++; bucketsX[bX].b0 = bucketsX[bX].b0.min(elemBox0); bucketsX[bX].b1 = bucketsX[bX].b1.max(elemBox1);
-					bucketsY[bY].count++; bucketsY[bY].b0 = bucketsY[bY].b0.min(elemBox0); bucketsY[bY].b1 = bucketsY[bY].b1.max(elemBox1); 
-					bucketsZ[bZ].count++; bucketsZ[bZ].b0 = bucketsZ[bZ].b0.min(elemBox0); bucketsZ[bZ].b1 = bucketsZ[bZ].b1.max(elemBox1);
-				}
+                    // Update the buckets
+                    bucketsX[bX].count++; bucketsX[bX].b0 = bucketsX[bX].b0.min(elemBox0); bucketsX[bX].b1 = bucketsX[bX].b1.max(elemBox1);
+                    bucketsY[bY].count++; bucketsY[bY].b0 = bucketsY[bY].b0.min(elemBox0); bucketsY[bY].b1 = bucketsY[bY].b1.max(elemBox1); 
+                    bucketsZ[bZ].count++; bucketsZ[bZ].b0 = bucketsZ[bZ].b0.min(elemBox0); bucketsZ[bZ].b1 = bucketsZ[bZ].b1.max(elemBox1);
+                }
 
-				// A neat structure to make calculating relative costs easier
-				struct SAH_CostBucket {
-					Vec b0b0, b0b1, b1b0, b1b1;
-					int c0, c1;
-					SAH_CostBucket() : c0(0), c1(0), 
-					                   b0b0{ INF, INF, INF }, b0b1{ -INF, -INF, -INF }, 
-									   b1b0{ INF, INF, INF }, b1b1{ -INF, -INF, -INF } {};
-				};
+                // A neat structure to make calculating relative costs easier
+                struct SAH_CostBucket {
+                    Vec b0b0, b0b1, b1b0, b1b1;
+                    int c0, c1;
+                    SAH_CostBucket() : c0(0), c1(0), 
+                                       b0b0{ INF, INF, INF }, b0b1{ -INF, -INF, -INF }, 
+                                       b1b0{ INF, INF, INF }, b1b1{ -INF, -INF, -INF } {};
+                };
 
-				// Initial cost values
-				double cXCost = INF, cYCost = INF, cZCost = INF;
-				int cXi = 0, cYi = 0, cZi = 0;
+                // Initial cost values
+                double cXCost = INF, cYCost = INF, cZCost = INF;
+                int cXi = 0, cYi = 0, cZi = 0;
 
-				// Calculate costs for each bucket and track smallest cost indices
-				for (int i = 0; i < numBuckets; ++i) {
-					// Cost data
-					SAH_CostBucket cX, cY, cZ;
+                // Calculate costs for each bucket and track smallest cost indices
+                for (int i = 0; i < numBuckets; ++i) {
+                    // Cost data
+                    SAH_CostBucket cX, cY, cZ;
 
-					// Left node sweep
-					for (int j = 0; j <= i; ++j) {
-						cX.b0b0 = cX.b0b0.min(bucketsX[j].b0); cX.b0b1 = cX.b0b1.max(bucketsX[j].b1); cX.c0 += bucketsX[j].count;
-						cY.b0b0 = cY.b0b0.min(bucketsY[j].b0); cY.b0b1 = cY.b0b1.max(bucketsY[j].b1); cY.c0 += bucketsY[j].count;
-						cZ.b0b0 = cZ.b0b0.min(bucketsZ[j].b0); cZ.b0b1 = cZ.b0b1.max(bucketsZ[j].b1); cZ.c0 += bucketsZ[j].count;
-					}
+                    // Left node sweep
+                    for (int j = 0; j <= i; ++j) {
+                        cX.b0b0 = cX.b0b0.min(bucketsX[j].b0); cX.b0b1 = cX.b0b1.max(bucketsX[j].b1); cX.c0 += bucketsX[j].count;
+                        cY.b0b0 = cY.b0b0.min(bucketsY[j].b0); cY.b0b1 = cY.b0b1.max(bucketsY[j].b1); cY.c0 += bucketsY[j].count;
+                        cZ.b0b0 = cZ.b0b0.min(bucketsZ[j].b0); cZ.b0b1 = cZ.b0b1.max(bucketsZ[j].b1); cZ.c0 += bucketsZ[j].count;
+                    }
 
-					// Right node sweep
-					for (int j = (i + 1); j < numBuckets; ++j) {
-						cX.b1b0 = cX.b1b0.min(bucketsX[j].b0); cX.b1b1 = cX.b1b1.max(bucketsX[j].b1); cX.c1 += bucketsX[j].count;
-						cY.b1b0 = cY.b1b0.min(bucketsY[j].b0); cY.b1b1 = cY.b1b1.max(bucketsY[j].b1); cY.c1 += bucketsY[j].count;
-						cZ.b1b0 = cZ.b1b0.min(bucketsZ[j].b0); cZ.b1b1 = cZ.b1b1.max(bucketsZ[j].b1); cZ.c1 += bucketsZ[j].count;
-					}
+                    // Right node sweep
+                    for (int j = (i + 1); j < numBuckets; ++j) {
+                        cX.b1b0 = cX.b1b0.min(bucketsX[j].b0); cX.b1b1 = cX.b1b1.max(bucketsX[j].b1); cX.c1 += bucketsX[j].count;
+                        cY.b1b0 = cY.b1b0.min(bucketsY[j].b0); cY.b1b1 = cY.b1b1.max(bucketsY[j].b1); cY.c1 += bucketsY[j].count;
+                        cZ.b1b0 = cZ.b1b0.min(bucketsZ[j].b0); cZ.b1b1 = cZ.b1b1.max(bucketsZ[j].b1); cZ.c1 += bucketsZ[j].count;
+                    }
 
-					auto surfaceArea = [](Vec v0, Vec v1) -> double {
-						const Vec s = (v1 - v0); return ((s.x * s.y) + (s.x * s.z) + (s.y * s.z)) * 2.0;
-					};
+                    auto surfaceArea = [](Vec v0, Vec v1) -> double {
+                        const Vec s = (v1 - v0); return ((s.x * s.y) + (s.x * s.z) + (s.y * s.z)) * 2.0;
+                    };
 
-					// Calculate cost per axis
-					const double SA = surfaceArea(currentNode->v0, currentNode->v1);
-					const double costX = .125 * ((((double) cX.c0 * surfaceArea(cX.b0b0, cX.b0b1)) + ((double) cX.c1 * surfaceArea(cX.b1b0, cX.b1b1))) / SA);
-					const double costY = .125 * ((((double) cY.c0 * surfaceArea(cY.b0b0, cY.b0b1)) + ((double) cY.c1 * surfaceArea(cY.b1b0, cY.b1b1))) / SA);
-					const double costZ = .125 * ((((double) cZ.c0 * surfaceArea(cZ.b0b0, cZ.b0b1)) + ((double) cZ.c1 * surfaceArea(cZ.b1b0, cZ.b1b1))) / SA);
+                    // Calculate cost per axis
+                    const double SA = surfaceArea(currentNode->v0, currentNode->v1);
+                    const double costX = .125 * ((((double) cX.c0 * surfaceArea(cX.b0b0, cX.b0b1)) + ((double) cX.c1 * surfaceArea(cX.b1b0, cX.b1b1))) / SA);
+                    const double costY = .125 * ((((double) cY.c0 * surfaceArea(cY.b0b0, cY.b0b1)) + ((double) cY.c1 * surfaceArea(cY.b1b0, cY.b1b1))) / SA);
+                    const double costZ = .125 * ((((double) cZ.c0 * surfaceArea(cZ.b0b0, cZ.b0b1)) + ((double) cZ.c1 * surfaceArea(cZ.b1b0, cZ.b1b1))) / SA);
 
-					// Update costs if less than current minimums
-					if (i == 0 || costX < cXCost) { cXCost = costX; cXi = i; }
-					if (i == 0 || costY < cYCost) { cYCost = costY; cYi = i; }
-					if (i == 0 || costZ < cZCost) { cZCost = costZ; cZi = i; }
-				}
+                    // Update costs if less than current minimums
+                    if (i == 0 || costX < cXCost) { cXCost = costX; cXi = i; }
+                    if (i == 0 || costY < cYCost) { cYCost = costY; cYi = i; }
+                    if (i == 0 || costZ < cZCost) { cZCost = costZ; cZi = i; }
+                }
 
-				Vec dim = dBox1 - dBox0;
-				const double DTHRESH = (EPS * 2.);
-				if (dim.x < DTHRESH) cXCost = INF;
-				if (dim.y < DTHRESH) cYCost = INF;
-				if (dim.z < DTHRESH) cZCost = INF;
+                Vec dim = dBox1 - dBox0;
+                const double DTHRESH = (EPS * 2.);
+                if (dim.x < DTHRESH) cXCost = INF;
+                if (dim.y < DTHRESH) cYCost = INF;
+                if (dim.z < DTHRESH) cZCost = INF;
 
-				// Select the best axis and use std::partition to split the current 
-				// sub-section of the original vector into a "left" and "right" sub-list
-				if (cXCost < cYCost && cXCost < cZCost) {
-					mid = std::partition(start, end, [&](const Triangle &a) -> bool {
-						int bX = (int) floor((double) numBuckets * ((a.centroid().x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
-						bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
-						return (bX <= cXi);
-					});
-					midElem = std::distance(mesh.begin(), mid);
-				}
-				else if (cYCost < cXCost && cYCost < cZCost) {
-					mid = std::partition(start, end, [&](const Triangle &a) -> bool {
-						int bY = (int) floor((double) numBuckets * ((a.centroid().y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
-						bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
-						return (bY <= cYi);
-					});
-					midElem = std::distance(mesh.begin(), mid);
-				}
-				else if (cZCost < cXCost && cZCost < cYCost) {
-					mid = std::partition(start, end, [&](const Triangle &a) -> bool {
-						int bZ = (int) floor((double) numBuckets * ((a.centroid().z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
-						bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
-						return (bZ <= cZi);
-					});
-					midElem = std::distance(mesh.begin(), mid);
-				}
-				else {
-					// Median Splits
-					midElem = (currentNode->startElem + (numGeom / 2));
-					mid = mesh.begin() + midElem;
+                // Select the best axis and use std::partition to split the current 
+                // sub-section of the original vector into a "left" and "right" sub-list
+                if (cXCost < cYCost && cXCost < cZCost) {
+                    mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+                        int bX = (int) floor((double) numBuckets * ((a.centroid().x - bboxMin.x) / (bboxMax.x - bboxMin.x)));
+                        bX = ((bX < numBuckets) ? bX : (numBuckets - 1));
+                        return (bX <= cXi);
+                    });
+                    midElem = std::distance(mesh.begin(), mid);
+                }
+                else if (cYCost < cXCost && cYCost < cZCost) {
+                    mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+                        int bY = (int) floor((double) numBuckets * ((a.centroid().y - bboxMin.y) / (bboxMax.y - bboxMin.y)));
+                        bY = ((bY < numBuckets) ? bY : (numBuckets - 1));
+                        return (bY <= cYi);
+                    });
+                    midElem = std::distance(mesh.begin(), mid);
+                }
+                else if (cZCost < cXCost && cZCost < cYCost) {
+                    mid = std::partition(start, end, [&](const Triangle &a) -> bool {
+                        int bZ = (int) floor((double) numBuckets * ((a.centroid().z - bboxMin.z) / (bboxMax.z - bboxMin.z)));
+                        bZ = ((bZ < numBuckets) ? bZ : (numBuckets - 1));
+                        return (bZ <= cZi);
+                    });
+                    midElem = std::distance(mesh.begin(), mid);
+                }
+                else {
+                    // Median Splits
+                    midElem = (currentNode->startElem + (numGeom / 2));
+                    mid = mesh.begin() + midElem;
 
-					// Sort the tree such that all nodes before the split plane are in the first half of the vector
-					const int splitAxis = (b1 - b0).maxAxis();
-					std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
-						const Vec ac = a.centroid(), bc = b.centroid();
-						switch (splitAxis) {
-						case 0:
-							return ac.x < bc.x;
-						case 1:
-							return ac.y < bc.y;
-						case 2:
-							return ac.z < bc.z;
-						};
-						return false;
-					});
-				}
-			}        
+                    // Sort the tree such that all nodes before the split plane are in the first half of the vector
+                    const int splitAxis = (b1 - b0).maxAxis();
+                    std::nth_element(start, mid, end, [&](const Triangle &a, const Triangle &b) -> bool {
+                        const Vec ac = a.centroid(), bc = b.centroid();
+                        switch (splitAxis) {
+                        case 0:
+                            return ac.x < bc.x;
+                        case 1:
+                            return ac.y < bc.y;
+                        case 2:
+                            return ac.z < bc.z;
+                        };
+                        return false;
+                    });
+                }
+            }        
 
-			// Create child nodes based on partition
-			numNodes += 2;
-			currentNode->leftChild  = MEL::MemConstruct<TreeNode>(currentNode->startElem, midElem);
-			currentNode->rightChild = MEL::MemConstruct<TreeNode>(midElem,   currentNode->endElem);
+            // Create child nodes based on partition
+            numNodes += 2;
+            currentNode->leftChild  = MEL::MemConstruct<TreeNode>(currentNode->startElem, midElem);
+            currentNode->rightChild = MEL::MemConstruct<TreeNode>(midElem,   currentNode->endElem);
 
-			// Push new nodes onto the working stack
-			treeStack.emplace( currentNode->rightChild, depth + 1 );
-			treeStack.emplace( currentNode->leftChild,  depth + 1 );
-		}
-		auto endTime = MEL::Wtime();
-		std::cout << "BVH Tree constructed of ( " << numNodes <<  " ) nodes in " 
-				  << std::setprecision(4) << (endTime - startTime) << "s" << std::endl;
-	};
+            // Push new nodes onto the working stack
+            treeStack.emplace( currentNode->rightChild, depth + 1 );
+            treeStack.emplace( currentNode->leftChild,  depth + 1 );
+        }
+        auto endTime = MEL::Wtime();
+        std::cout << "BVH Tree constructed of ( " << numNodes <<  " ) nodes in " 
+                  << std::setprecision(4) << (endTime - startTime) << "s" << std::endl;
+    };
 };
 
 inline void MPI_NonBufferedBcast_Scene(Scene *&scene, const int rank, const int root, const MPI_Comm comm) {
@@ -867,26 +869,26 @@ int main(int argc, char *argv[]) {
     /// ****************************************** ///
     Scene *scene = nullptr;
     if (rank == 0) {
-		scene = MEL::MemConstruct<Scene>();
+        scene = MEL::MemConstruct<Scene>();
 
-		// Set the camera setCamera(pos, dir, fov, width, height)
-		scene->setCamera(Vec{ 0., 500., -1700. }, Vec{ 0., 0., 1. }.normal(), 42.501, 1024, 1024);
+        // Set the camera setCamera(pos, dir, fov, width, height)
+        scene->setCamera(Vec{ 0., 500., -1700. }, Vec{ 0., 0., 1. }.normal(), 42.501, 1024, 1024);
 
-		// Add materials addMaterial(kd, ke)
-		scene->addMaterial(Vec{  .9,  .9,  .9 }, Vec{ 0, 0, 0 }); // White
-		scene->addMaterial(Vec{ .81, .23, .14 }, Vec{ 0, 0, 0 }); // Red
-		scene->addMaterial(Vec{ .23, .41, .24 }, Vec{ 0, 0, 0 }); // Green
-		scene->addMaterial(Vec{ .62, .71, .13 }, Vec{ 0, 0, 0 }); // Yellow
-		scene->addMaterial(Vec{   0.,  0.,  0.}, Vec{ 100, 100, 100 }); // Light Source
+        // Add materials addMaterial(kd, ke)
+        scene->addMaterial(Vec{  .9,  .9,  .9 }, Vec{ 0, 0, 0 }); // White
+        scene->addMaterial(Vec{ .81, .23, .14 }, Vec{ 0, 0, 0 }); // Red
+        scene->addMaterial(Vec{ .23, .41, .24 }, Vec{ 0, 0, 0 }); // Green
+        scene->addMaterial(Vec{ .62, .71, .13 }, Vec{ 0, 0, 0 }); // Yellow
+        scene->addMaterial(Vec{   0.,  0.,  0.}, Vec{ 100, 100, 100 }); // Light Source
 
-		// Load Meshes addObj(material_index, mesh_path)
-		scene->addObj(0, "assets/cornellbox-white.obj");
-		scene->addObj(1, "assets/cornellbox-red.obj");
-		scene->addObj(2, "assets/cornellbox-green.obj");
-		scene->addObj(3, "assets/bunny.obj");
+        // Load Meshes addObj(material_index, mesh_path)
+        scene->addObj(0, "assets/cornellbox-white.obj");
+        scene->addObj(1, "assets/cornellbox-red.obj");
+        scene->addObj(2, "assets/cornellbox-green.obj");
+        scene->addObj(3, "assets/bunny.obj");
 
-		scene->buildBVHTree();
-	}
+        scene->buildBVHTree();
+    }
     
     /// ****************************************** ///
     /// Broadcast the scene object to all nodes    ///
@@ -921,8 +923,8 @@ int main(int argc, char *argv[]) {
     /// EVERYTHING FROM HERE ON IS RENDERING STUFF ///
     /// ****************************************** ///
     
-	/// Multi-Threaded Random Number Generator
-	MT_RNG rng(rank); // Seed with MPI rank
+    /// Multi-Threaded Random Number Generator
+    MT_RNG rng(rank); // Seed with MPI rank
 
     /// Allocate image plane
     const int w = scene->camera.w, h = scene->camera.h;
@@ -944,8 +946,7 @@ int main(int argc, char *argv[]) {
 
     auto typeColour  = MEL::TypeCreateContiguous(MEL::Datatype::UNSIGNED_CHAR, 3);
     auto typeFilm    = MEL::TypeCreateContiguous(MEL::Datatype::UNSIGNED_CHAR, wR * h);
-    auto sharedIndex = MEL::SharedCreate<int>(1, rank, size, 0, comm);
-
+    
     /// Work distribution by blocks
     const int blockSize = 1 << 6, // 64
               blockSize2 = blockSize * blockSize,
@@ -956,14 +957,7 @@ int main(int argc, char *argv[]) {
     /// ****************************************** ///
     /// Render the image block by block            ///
     /// ****************************************** ///
-    while (true) {
-        /// Get the next block (dynamic load balancing)
-        MEL::SharedLock(sharedIndex);
-        const int localIndex = (*sharedIndex)++;
-        MEL::SharedUnlock(sharedIndex);
-
-        /// No more work to do
-        if (localIndex >= tBlocks) break;
+    for (int localIndex = rank; localIndex < tBlocks; localIndex += size) {
         std::cout << "Rank: " << std::setw(4) << rank << " Starting block " 
                               << std::setw(4) << (localIndex + 1) << " of " 
                               << std::setw(4) << tBlocks << std::endl;
@@ -982,7 +976,7 @@ int main(int argc, char *argv[]) {
         unsigned char *blockPtr = MEL::MemAlloc<unsigned char>(bw * bh * 3);
 
         /// Use openmp to render pixels within block
-		#pragma omp parallel for schedule(dynamic) shared(rng)
+        #pragma omp parallel for schedule(dynamic) shared(rng)
         for (int i = 0; i < bw * bh; ++i) {
             const int x = i % bw, y = (i - x) / bw, j = i * 3;
             const Vec col = render(rng, scene, (bx + x), (by + y), spp);
@@ -1001,7 +995,6 @@ int main(int argc, char *argv[]) {
         MEL::TypeFree(typeGlobalBlock, typeLocalBlock);
     }
     
-    MEL::SharedFree(sharedIndex);
     MEL::Barrier(comm);
 
     /// ****************************************** ///
