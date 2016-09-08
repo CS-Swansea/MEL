@@ -306,6 +306,35 @@ namespace MEL {
 
         class PointerHashMap {
         private:
+            std::unordered_map<void*, void*> pointerMap;
+
+        public:
+            // Pointer hashmap public interface
+
+            // Returns true if oldPtr is found in the hash-map and sets ptr equal to the stored value
+            // Otherwise returns false and ptr is unaltered
+            template<typename T>
+            inline bool checkPointerCache(T* oldPtr, T* &ptr) {
+                // Is oldPtr already in the hashmap?
+                const auto it = pointerMap.find((void*) oldPtr);
+                if (it != pointerMap.end()) {
+                    // If so set ptr equal to the value stored in the hashmap
+                    ptr = (T*) it->second;
+                    return true;
+                }
+                return false;
+            };
+
+            // Insert ptr into the hashmap using oldptr as the key
+            template<typename T>
+            inline void cachePointer(T* oldPtr, T* ptr) {
+                // The shift value to use for a type T
+                pointerMap.insert(std::make_pair((void*) oldPtr, (void*) ptr));
+            };
+        };
+
+        class AdvancedPointerHashMap {
+        private:
             // Maximum number of hashmaps is the bit size of a pointer
             static constexpr size_t NUM_HASH_MAPS = sizeof(void*) * 8; // == 32 or 64 based on system
 
