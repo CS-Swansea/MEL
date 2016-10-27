@@ -294,19 +294,22 @@ namespace MEL {
         template<typename T, typename R = void>
         using enable_if_not_deep_not_pointer = typename std::enable_if<!HasDeepCopyMethod<T>::Has && !std::is_pointer<T>::value, R>::type;
 
-        template <typename T>
-        using is_vector = typename std::is_same<T, std::vector<typename T::value_type, typename T::allocator_type>>;
-        template <typename T>
-        using is_list =   typename std::is_same<T, std::list<typename T::value_type, typename T::allocator_type>>;
+        template<typename T> struct is_vector : public std::false_type {};
+        template<typename T, typename A>
+        struct is_vector<std::vector<T, A>> : public std::true_type{};
+
+        template<typename T> struct is_list : public std::false_type {};
+        template<typename T, typename A>
+        struct is_list<std::list<T, A>> : public std::true_type{};
         //template <typename T>
         //using is_string = typename std::is_same<T, std::string>;
         
         template<typename T, typename R = void>
         using enable_if_stl = typename std::enable_if<is_vector<T>::value || is_list<T>::value, R>::type; //  || is_string<T>::value
         template<typename T, typename R = void>
-        using enable_if_not_pointer_not_stl = typename std::enable_if<(!is_vector<T>::value || is_list<T>::value) && !std::is_pointer<T>::value, R>::type; //  || is_string<T>::value
+        using enable_if_not_pointer_not_stl = typename std::enable_if<!(is_vector<T>::value || is_list<T>::value) && !std::is_pointer<T>::value, R>::type; //  || is_string<T>::value
         template<typename T, typename R = void>
-        using enable_if_deep_not_pointer_not_stl = typename std::enable_if<HasDeepCopyMethod<T>::Has && (!is_vector<T>::value || is_list<T>::value) && !std::is_pointer<T>::value, R>::type; //  || is_string<T>::value
+        using enable_if_deep_not_pointer_not_stl = typename std::enable_if<HasDeepCopyMethod<T>::Has && !(is_vector<T>::value || is_list<T>::value) && !std::is_pointer<T>::value, R>::type; //  || is_string<T>::value
 
         template<typename T, typename TRANSPORT_METHOD, typename HASH_MAP>
         using DEEP_FUNCTOR = void(*)(T&, MEL::Deep::Message<TRANSPORT_METHOD, HASH_MAP>&); 
@@ -531,6 +534,21 @@ namespace MEL {
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // STL
 
+            inline void packSTL(std::string &obj) {
+                int len;
+                if (TRANSPORT_METHOD::SOURCE) {
+                    len = obj.size();
+                    transport(len);
+                }
+                else {
+                    transport(len);
+                    new (&obj) std::string(len, ' ');
+                }
+
+                char *p = &obj[0];
+                if (len > 0) transport(p, len);
+            };
+
             template<typename T>
             inline enable_if_not_deep<T> packSTL(std::vector<T> &obj) {
                 int len = obj.size();
@@ -752,6 +770,11 @@ namespace MEL {
                 packVar(obj);
                 return *this;
             };
+
+            inline Message<TRANSPORT_METHOD, HASH_MAP>& operator&(std::string &obj) {
+                packSTL(obj);
+                return *this;
+            };
         };
 
 #define TEMPLATE_STL template<typename S, typename HASH_MAP = MEL::Deep::PointerHashMap>
@@ -905,6 +928,11 @@ namespace MEL {
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Pointer
+
+        TEMPLATE_P
+        inline enable_if_pointer<P> Send(const P &ptr, const int dst, const int tag, const Comm &comm) {
+            Send((P) ptr, dst, tag, comm);
+        };
 
         TEMPLATE_P
         inline enable_if_pointer<P> Send(P &ptr, const int dst, const int tag, const Comm &comm) {
@@ -2247,6 +2275,11 @@ namespace MEL {
 
         TEMPLATE_P
         inline enable_if_pointer<P> BufferedFileWrite(P &ptr, std::ofstream &file) {
+            MEL::Deep::BufferedFileWrite(ptr, file, MEL::Deep::BufferSize(ptr));
+        };
+
+        TEMPLATE_P
+            inline enable_if_pointer<P> BufferedFileWrite_FUCK(P &ptr, std::ofstream &file) {
             MEL::Deep::BufferedFileWrite(ptr, file, MEL::Deep::BufferSize(ptr));
         };
 
