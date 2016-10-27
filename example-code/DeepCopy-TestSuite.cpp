@@ -21,9 +21,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
+/// Run this test suite using mpirun -n 2 ./DeepCopy-TestSuite
+/// It will produce two output files "DeepCopy - Test - Rank <i> of 2.out" and ".err"
+/// for each process.
+
 #define  MEL_IMPLEMENTATION
 #include "MEL.hpp"
 #include "MEL_deepcopy.hpp"
+
+/// This file depends on the "Catch" testing framework
+/// available here https://github.com/philsquared/Catch 
+/// under the Boost Software License, Version 1.0
 
 #define CATCH_CONFIG_NOSTDOUT
 #define CATCH_CONFIG_RUNNER
